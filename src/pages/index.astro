@@ -7,6 +7,8 @@ import ContentPage from '../layouts/ContentPage.astro';
 import Quote from '../components/Quote.astro';
 import { site } from '../data/site.ts';
 
+const siteUrl = Astro.site?.href;
+
 const org = {
   '@context': 'https://schema.org',
   '@type': 'NGO',
@@ -17,8 +19,16 @@ const org = {
     addressRegion: 'Bihar',
     addressCountry: 'IN',
   },
-  url: Astro.site?.href,
+  url: siteUrl,
   ...(site.contactEmail ? { email: site.contactEmail } : {}),
+};
+
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: site.name,
+  url: siteUrl,
+  inLanguage: site.locale,
 };
 ---
 
@@ -44,4 +54,5 @@ const org = {
   </p>
 
   <script type="application/ld+json" set:html={JSON.stringify(org)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(website)} is:inline />
 </ContentPage>

@@ -16,9 +16,14 @@ interface Props {
   description: string;
   /** Optional per-page OG image override (path under /public). */
   ogImage?: string;
+  /** Keep the page out of search indexes (e.g. the 404 page). */
+  noindex?: boolean;
 }
 
-const { title, description, ogImage } = Astro.props;
+const { title, description, ogImage, noindex = false } = Astro.props;
+const robots = noindex
+  ? 'noindex, follow'
+  : 'index, follow, max-image-preview:large';
 
 // Home uses the bare institution name; inner pages append it.
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
@@ -36,6 +41,8 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content="#f7f4ee" />
     <link rel="canonical" href={canonical} />
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -47,9 +54,14 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:alt" content={site.name} />
     <meta property="og:locale" content={site.locale} />
 
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>

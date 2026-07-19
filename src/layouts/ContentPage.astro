@@ -18,12 +18,36 @@ interface Props {
   description: string;
   heading?: string;
   standfirst?: string;
+  /** An intermediate breadcrumb level, e.g. Updates for an update entry. */
+  parent?: { name: string; href: string };
+  /** Keep this page out of search indexes. */
+  noindex?: boolean;
 }
 
-const { title, description, heading, standfirst } = Astro.props;
+const { title, description, heading, standfirst, parent, noindex } =
+  Astro.props;
+
+// BreadcrumbList structured data for inner pages (skip the home root).
+const isHome = Astro.url.pathname === '/';
+const abs = (path: string) => new URL(path, Astro.site).href;
+const crumbs = [
+  { name: 'Home', url: abs('/') },
+  ...(parent ? [{ name: parent.name, url: abs(parent.href) }] : []),
+  { name: heading ?? title, url: abs(Astro.url.pathname) },
+];
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    item: c.url,
+  })),
+};
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} noindex={noindex}>
   <Container>
     <article class="content-page">
       <PageIntro title={heading ?? title} standfirst={standfirst} />
@@ -32,6 +56,15 @@ const { title, description, heading, standfirst } = Astro.props;
       </div>
     </article>
   </Container>
+  {
+    !isHome && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(breadcrumbLd)}
+        is:inline
+      />
+    )
+  }
 </BaseLayout>
 
 <style>

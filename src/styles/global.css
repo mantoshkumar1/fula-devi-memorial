@@ -60,6 +60,17 @@ li {
   text-wrap: pretty;
 }
 
+/* Step headings down one notch on small screens so the long institution name
+ * and page titles stay comfortable on phones. */
+@media (max-width: 30rem) {
+  h1 {
+    font-size: var(--text-2xl);
+  }
+  h2 {
+    font-size: var(--text-xl);
+  }
+}
+
 /* ---- Links ---- */
 a {
   color: var(--color-brown);

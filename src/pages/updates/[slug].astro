@@ -28,7 +28,11 @@ const label = date.toLocaleDateString('en-IN', {
 });
 ---
 
-<ContentPage title={title} description={summary}>
+<ContentPage
+  title={title}
+  description={summary}
+  parent={{ name: 'Updates', href: '/updates/' }}
+>
   <p class="update-date"><time datetime={iso}>{label}</time></p>
   {image && <Figure src={image.src} alt={image.alt} caption={image.caption} />}
   <Content />
