@@ -1,0 +1,27 @@
+---
+/**
+ * Contact. An email link when one is configured; otherwise an honest note.
+ * No form (there is no backend), and no fabricated address or email.
+ */
+import ContentPage from '../layouts/ContentPage.astro';
+import Button from '../components/Button.astro';
+import { site } from '../data/site.ts';
+---
+
+<ContentPage
+  title="Contact"
+  description="How to reach Fula Devi Memorial Sewa Sansthan."
+>
+  <p>Fula Devi Memorial Sewa Sansthan is based in {site.jurisdiction}.</p>
+  {
+    site.contactEmail ? (
+      <p>
+        <Button href={`mailto:${site.contactEmail}`}>
+          Email the institution
+        </Button>
+      </p>
+    ) : (
+      <p>An official contact email will be published here.</p>
+    )
+  }
+</ContentPage>

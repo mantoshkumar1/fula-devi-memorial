@@ -1,0 +1,43 @@
+---
+/**
+ * A single update entry. Renders the Markdown body, with optional attached
+ * document and image. Drafts build in dev only.
+ */
+import ContentPage from '../../layouts/ContentPage.astro';
+import DocumentLink from '../../components/DocumentLink.astro';
+import Figure from '../../components/Figure.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const entries = await getCollection(
+    'updates',
+    ({ data }) => data.status === 'published' || import.meta.env.DEV,
+  );
+  return entries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, date, summary, document, image } = entry.data;
+
+const iso = date.toISOString().slice(0, 10);
+const label = date.toLocaleDateString('en-IN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<ContentPage title={title} description={summary}>
+  <p class="update-date"><time datetime={iso}>{label}</time></p>
+  {image && <Figure src={image.src} alt={image.alt} caption={image.caption} />}
+  <Content />
+  {document && <DocumentLink title="Attached document" file={document} />}
+</ContentPage>
+
+<style>
+  .update-date {
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+</style>

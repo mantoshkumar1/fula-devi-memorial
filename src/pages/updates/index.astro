@@ -1,0 +1,31 @@
+---
+/**
+ * Updates index. Reverse-chronological list of published updates.
+ * Drafts are shown in dev only; excluded from the production build.
+ * Shows an honest empty state when there are none.
+ */
+import ContentPage from '../../layouts/ContentPage.astro';
+import UpdateList from '../../components/UpdateList.astro';
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection(
+  'updates',
+  ({ data }) => data.status === 'published' || import.meta.env.DEV,
+);
+entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const items = entries.map((e) => ({
+  href: `/updates/${e.slug}/`,
+  title: e.data.title,
+  date: e.data.date,
+  summary: e.data.summary,
+}));
+---
+
+<ContentPage
+  title="Updates"
+  description="Short notes on the institution's work as it happens."
+  standfirst="Short notes as the work continues."
+>
+  <UpdateList items={items} />
+</ContentPage>

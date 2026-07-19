@@ -1,0 +1,34 @@
+---
+/**
+ * Governance. The institution's registration and governing documents.
+ * Documents are served as-is; pending ones show as "Not yet published" rather
+ * than a broken or fake link.
+ */
+import ContentPage from '../layouts/ContentPage.astro';
+import DocumentLink from '../components/DocumentLink.astro';
+import { governanceDocs } from '../data/governance.ts';
+import { site } from '../data/site.ts';
+---
+
+<ContentPage
+  title="Governance"
+  description="Fula Devi Memorial Sewa Sansthan is a registered charitable institution in Bihar, India. Its governing documents are listed here."
+>
+  <p>
+    Fula Devi Memorial Sewa Sansthan is a registered charitable institution in
+    {site.jurisdiction}, established in {site.registeredYear}.
+  </p>
+  <p>Its governing documents:</p>
+  <div class="doc-list">
+    {
+      governanceDocs.map((d) => (
+        <DocumentLink
+          title={d.title}
+          file={d.file}
+          sizeLabel={d.sizeLabel}
+          pending={d.pending}
+        />
+      ))
+    }
+  </div>
+</ContentPage>
