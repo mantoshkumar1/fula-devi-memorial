@@ -1,33 +1,77 @@
 ---
 /**
- * SCAFFOLD PLACEHOLDER home page.
- * Exercises the ContentPage template and prose rhythm so the design system can
- * be verified. Final Home copy is Stage 3 — replace this then.
+ * SCAFFOLD — design-system verification page.
+ * Exercises every reusable component so the system can be reviewed as a whole.
+ * NOT site content. Replaced by the real Home page in Stage 3.
  */
 import ContentPage from '../layouts/ContentPage.astro';
+import Quote from '../components/Quote.astro';
+import Button from '../components/Button.astro';
+import Card from '../components/Card.astro';
+import DocumentLink from '../components/DocumentLink.astro';
+import Figure from '../components/Figure.astro';
+import UpdateList from '../components/UpdateList.astro';
+
+// Demo-only data (clearly labelled) to verify layout — never published.
+const demoUpdates = [
+  {
+    href: '#',
+    title: 'Sample update title (demo)',
+    date: new Date('2026-01-15'),
+    summary: 'One-line summary showing how an update row reads in the list (demo).',
+  },
+];
 ---
 
 <ContentPage
-  title="Home"
-  heading="Fula Devi Memorial Sewa Sansthan"
-  description="Fula Devi Memorial Sewa Sansthan is a small registered charitable institution in Bihar, India."
-  standfirst="Design-system verification page. Page routing and real content follow in a later stage."
+  title="Design system"
+  heading="Design system verification"
+  description="Internal verification of the reusable design system. Not site content."
+  standfirst="Every reusable component rendered together to check consistency. Replaced by the real Home page in Stage 3."
 >
+  <h2>Typography &amp; prose</h2>
   <p>
-    This placeholder exercises the content-page template: the layout container,
-    the single page heading, and the prose vertical rhythm below.
-  </p>
-  <p>
-    A second paragraph confirms that spacing between blocks is restored after the
-    reset, and that the reading measure keeps lines comfortable to read.
-  </p>
-  <h2>A section heading</h2>
-  <p>
-    Text beneath a heading sits closer to it than to the paragraph above, so the
-    heading reads as belonging to what follows.
+    Body text uses a readable sans-serif at a comfortable measure. Headings use
+    a single serif family. Spacing between blocks follows one rhythm, and text
+    beneath a heading sits closer to it than to the paragraph above.
   </p>
   <ul>
-    <li>List spacing is set.</li>
+    <li>Lists have consistent spacing.</li>
     <li>Links within prose are underlined.</li>
   </ul>
+
+  <h2>Quote</h2>
+  <Quote attribution="Guiding line, used sparingly">
+    Remembrance gives love a home. Service gives it a future.
+  </Quote>
+
+  <h2>Buttons (always links)</h2>
+  <p>
+    <Button href="#" variant="primary">Primary action</Button>
+    <Button href="#" variant="secondary">Secondary action</Button>
+  </p>
+
+  <h2>Card (used sparingly)</h2>
+  <Card title="A quiet card">
+    <p>A restrained container with a hairline border and no shadow.</p>
+  </Card>
+
+  <h2>Document links</h2>
+  <DocumentLink title="Available document" file="/documents/example.pdf" sizeLabel="PDF, 320 KB" />
+  <DocumentLink title="Pending document" file="/documents/pending.pdf" pending={true} />
+
+  <h2>Figure</h2>
+  <Figure
+    src="/og-default.svg"
+    alt="Placeholder graphic used only to verify the figure component layout."
+    caption="Captions read as secondary text beneath the image."
+    width={1200}
+    height={630}
+  />
+
+  <h2>Update list</h2>
+  <UpdateList items={demoUpdates} />
+
+  <h2>Empty state</h2>
+  <UpdateList items={[]} />
 </ContentPage>

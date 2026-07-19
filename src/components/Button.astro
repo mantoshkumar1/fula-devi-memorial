@@ -1,0 +1,66 @@
+---
+/**
+ * An understated action, styled as a subtle button.
+ *
+ * The site has no JavaScript actions, so this ALWAYS renders an anchor —
+ * navigation, a mailto, or a document download — never a form submit.
+ * Two quiet variants: `secondary` (bordered, default) and `primary` (filled
+ * in earthy brown). Meets the 44px touch-target minimum.
+ */
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  download?: boolean;
+  rel?: string;
+}
+
+const { href, variant = 'secondary', download = false, rel } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['button', variant]}
+  download={download || undefined}
+  rel={rel}
+>
+  <slot />
+</a>
+
+<style>
+  .button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-base);
+    line-height: 1.2;
+    text-decoration: none;
+    transition:
+      background-color var(--motion-fast),
+      border-color var(--motion-fast),
+      color var(--motion-fast);
+  }
+
+  .button.secondary {
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-ink);
+  }
+
+  .button.secondary:hover {
+    border-color: var(--color-brown);
+    color: var(--color-brown-strong);
+  }
+
+  .button.primary {
+    border: 1px solid var(--color-brown);
+    background: var(--color-brown);
+    color: var(--color-bg);
+  }
+
+  .button.primary:hover {
+    background: var(--color-brown-strong);
+    border-color: var(--color-brown-strong);
+  }
+</style>
