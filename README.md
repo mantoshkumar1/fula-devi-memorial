@@ -65,11 +65,16 @@ The site is a fully static build with no adapter, so hosting is just serving
 4. Save and deploy. Every push to `main` redeploys production; pull requests get
    preview URLs automatically. HTTPS is provisioned by Cloudflare.
 
-**Custom domain (optional, later)**
+**Production domain**
 
-- Update `site` in [`astro.config.mjs`](astro.config.mjs) and the `Sitemap:` line
-  in [`public/robots.txt`](public/robots.txt) to the final domain, commit, then
-  add the domain under the Pages project's **Custom domains** tab.
+The site is live at **https://fuladevi.org** (`www.fuladevi.org` permanently
+redirects to the apex domain).
+
+If the domain ever changes, update `site` in
+[`astro.config.mjs`](astro.config.mjs) and the `Sitemap:` line in
+[`public/robots.txt`](public/robots.txt) — canonical URLs, Open Graph, and the
+sitemap all derive from those two values — then add the domain under the Pages
+project's **Custom domains** tab.
 
 No paid Cloudflare features are used.
 

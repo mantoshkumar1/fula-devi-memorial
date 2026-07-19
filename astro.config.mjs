@@ -2,10 +2,10 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// NOTE: `site` is a PLACEHOLDER until the final domain is confirmed.
-// It drives canonical URLs, the sitemap, and Open Graph absolute paths.
-// Update this one value when the domain is attached (see docs/architecture.md).
-const SITE_URL = 'https://fula-devi-memorial.pages.dev';
+// The production domain. It drives canonical URLs, the sitemap, and Open Graph
+// absolute paths — change it here and everything else follows.
+// www.fuladevi.org permanently redirects to the apex domain.
+const SITE_URL = 'https://fuladevi.org';
 
 // https://astro.build/config
 export default defineConfig({
