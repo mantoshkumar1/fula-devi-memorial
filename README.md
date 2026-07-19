@@ -42,6 +42,37 @@ In short:
 Adding an update or a document does **not** require touching code. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+## Deployment (Cloudflare Pages)
+
+The site is a fully static build with no adapter, so hosting is just serving
+`dist/`.
+
+**One-time setup**
+
+1. Create a GitHub repository and push this project's `main` branch to it.
+2. In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect to
+   Git**, and select the repository.
+3. Set the build configuration:
+
+   | Setting            | Value           |
+   | ------------------ | --------------- |
+   | Production branch  | `main`          |
+   | Framework preset   | Astro           |
+   | Build command      | `npm run build` |
+   | Build output dir   | `dist`          |
+   | Environment var    | `NODE_VERSION` = `22` |
+
+4. Save and deploy. Every push to `main` redeploys production; pull requests get
+   preview URLs automatically. HTTPS is provisioned by Cloudflare.
+
+**Custom domain (optional, later)**
+
+- Update `site` in [`astro.config.mjs`](astro.config.mjs) and the `Sitemap:` line
+  in [`public/robots.txt`](public/robots.txt) to the final domain, commit, then
+  add the domain under the Pages project's **Custom domains** tab.
+
+No paid Cloudflare features are used.
+
 ## Portability
 
 Output is plain static HTML in `dist/`. It can be deployed to any static host
