@@ -1,0 +1,78 @@
+---
+/**
+ * Site header: institution name + primary navigation.
+ * No hamburger, no JS — 7 static links that wrap on narrow screens.
+ * The current page is marked with aria-current="page".
+ */
+import { site } from '../data/site.ts';
+import { nav } from '../data/nav.ts';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<header class="site-header">
+  <a class="site-name" href="/">{site.name}</a>
+  <nav aria-label="Primary">
+    <ul>
+      {
+        nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    max-width: var(--width-wide);
+    margin-inline: auto;
+    padding: var(--space-6) var(--space-4) var(--space-4);
+    border-bottom: var(--border-hair);
+  }
+
+  .site-name {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-ink);
+    text-decoration: none;
+    overflow-wrap: break-word;
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+  }
+
+  nav a {
+    display: inline-block;
+    padding: var(--space-1) 0;
+    min-height: 44px; /* touch target */
+    line-height: 2.5;
+    text-decoration: none;
+    color: var(--color-ink-soft);
+  }
+
+  nav a:hover {
+    color: var(--color-brown-strong);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--color-ink);
+    text-decoration: underline;
+  }
+</style>

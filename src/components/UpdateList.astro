@@ -1,0 +1,44 @@
+---
+/**
+ * Renders the updates index. Shows an honest empty state when there are none.
+ * Sorting/filtering is done by the caller (the /updates route) and passed in.
+ */
+import UpdateItem from './UpdateItem.astro';
+import EmptyState from './EmptyState.astro';
+
+export interface UpdateEntry {
+  href: string;
+  title: string;
+  date: Date;
+  summary: string;
+}
+
+interface Props {
+  items: UpdateEntry[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.length > 0 ? (
+    <div class="update-list">
+      {items.map((item) => (
+        <UpdateItem
+          href={item.href}
+          title={item.title}
+          date={item.date}
+          summary={item.summary}
+        />
+      ))}
+    </div>
+  ) : (
+    <EmptyState message="There are no updates yet. This page will grow as the institution's work continues." />
+  )
+}
+
+<style>
+  .update-list {
+    border-top: var(--border-hair);
+  }
+</style>

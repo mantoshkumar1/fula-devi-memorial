@@ -1,0 +1,31 @@
+---
+/**
+ * Page top: the single <h1> plus an optional standfirst.
+ * Every page uses this to guarantee exactly one h1 and consistent rhythm.
+ */
+interface Props {
+  /** The page heading — the one and only h1. */
+  title: string;
+  /** Optional one-line introduction beneath the heading. */
+  standfirst?: string;
+}
+
+const { title, standfirst } = Astro.props;
+---
+
+<div class="page-intro">
+  <h1>{title}</h1>
+  {standfirst && <p class="standfirst">{standfirst}</p>}
+</div>
+
+<style>
+  .page-intro {
+    margin-bottom: var(--space-8);
+  }
+
+  .standfirst {
+    margin-top: var(--space-3);
+    font-size: var(--text-lg);
+    color: var(--color-ink-soft);
+  }
+</style>

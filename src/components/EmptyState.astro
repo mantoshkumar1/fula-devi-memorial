@@ -1,0 +1,21 @@
+---
+/**
+ * An honest empty state. Used where a section has no real content yet.
+ * Prevents fabricated filler — an empty section says so plainly.
+ */
+interface Props {
+  message: string;
+}
+
+const { message } = Astro.props;
+---
+
+<p class="empty-state">{message}</p>
+
+<style>
+  .empty-state {
+    padding: var(--space-6) 0;
+    color: var(--color-ink-soft);
+    font-style: italic;
+  }
+</style>

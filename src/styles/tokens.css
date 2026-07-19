@@ -1,0 +1,64 @@
+/*
+ * Design tokens — the ONLY place raw values live.
+ * Names are stable; values may be tuned during the visual-polish stage.
+ * Visual direction: warm off-white, charcoal, earthy brown, muted green (sparingly),
+ * subtle borders, restrained whitespace. No gradients, glass, or decorative shadows.
+ */
+
+:root {
+  /* ---- Color ---- */
+  --color-bg: #f7f4ee; /* warm off-white — page background */
+  --color-surface: #f1ece3; /* subtle raised surface, used rarely */
+  --color-ink: #262320; /* charcoal — body text */
+  --color-ink-soft: #57514a; /* secondary / muted text */
+  --color-brown: #6b4f3a; /* earthy brown — headings accent, links */
+  --color-brown-strong: #543c2b; /* link hover / active */
+  --color-green: #4f6a52; /* muted natural green — sparse accent only */
+  --color-border: #ddd6ca; /* subtle hairlines */
+  --color-focus: #543c2b; /* focus ring — high contrast on --color-bg */
+
+  /* ---- Typography ---- */
+  --font-serif: Georgia, 'Times New Roman', 'Noto Serif', serif; /* headings */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif; /* body */
+
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+
+  --leading-body: 1.6;
+  --leading-tight: 1.2;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ---- Width ---- */
+  --width-prose: 62ch; /* reading measure */
+  --width-page: 44rem; /* default content column */
+  --width-wide: 60rem; /* rare wide layout */
+
+  /* ---- Borders / radii ---- */
+  --border-hair: 1px solid var(--color-border);
+  --radius-sm: 3px; /* small radii only */
+
+  /* ---- Motion ---- */
+  --motion-fast: 120ms ease;
+  --motion-none: 0ms;
+}
+
+/* Honor reduced-motion by collapsing the motion token. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: var(--motion-none);
+  }
+}

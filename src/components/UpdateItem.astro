@@ -1,0 +1,59 @@
+---
+/**
+ * One row in the updates list: date, title (link), one-line summary.
+ * Presentational only — receives already-resolved values.
+ */
+interface Props {
+  href: string;
+  title: string;
+  /** ISO date string. */
+  date: Date;
+  summary: string;
+}
+
+const { href, title, date, summary } = Astro.props;
+
+const iso = date.toISOString().slice(0, 10);
+const label = date.toLocaleDateString('en-IN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="update-item">
+  <time datetime={iso}>{label}</time>
+  <h3><a href={href}>{title}</a></h3>
+  <p>{summary}</p>
+</article>
+
+<style>
+  .update-item {
+    padding: var(--space-4) 0;
+    border-bottom: var(--border-hair);
+  }
+
+  time {
+    display: block;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  h3 {
+    margin-top: var(--space-1);
+    font-size: var(--text-lg);
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  h3 a:hover {
+    text-decoration: underline;
+  }
+
+  p {
+    margin-top: var(--space-2);
+    color: var(--color-ink-soft);
+  }
+</style>

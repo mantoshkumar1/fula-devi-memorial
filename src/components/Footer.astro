@@ -1,0 +1,57 @@
+---
+/**
+ * Site footer: institution line + minimal links. Wraps cleanly, no orphan
+ * separators. Deliberately quiet.
+ */
+import { site } from '../data/site.ts';
+---
+
+<footer class="site-footer">
+  <p class="footer-name">{site.name}</p>
+  <p class="footer-meta">
+    Registered in {site.jurisdiction}, {site.registeredYear}.
+  </p>
+  <nav aria-label="Footer">
+    <ul>
+      <li><a href="/institution/">The Institution</a></li>
+      <li><a href="/governance/">Governance</a></li>
+      <li><a href="/contact/">Contact</a></li>
+    </ul>
+  </nav>
+</footer>
+
+<style>
+  .site-footer {
+    max-width: var(--width-wide);
+    margin: var(--space-16) auto 0;
+    padding: var(--space-6) var(--space-4) var(--space-12);
+    border-top: var(--border-hair);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .footer-name {
+    font-family: var(--font-serif);
+    color: var(--color-ink);
+  }
+
+  .footer-meta {
+    margin-top: var(--space-1);
+  }
+
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  nav a {
+    color: var(--color-ink-soft);
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+</style>

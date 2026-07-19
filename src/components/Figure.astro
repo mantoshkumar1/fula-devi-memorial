@@ -1,0 +1,39 @@
+---
+/**
+ * An image with an optional caption, in a semantic <figure>.
+ * `alt` is a required prop — the type system will not let an image render
+ * without alt text. Use alt="" only for genuinely decorative images.
+ */
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  /** Optional explicit dimensions to reserve space and avoid layout shift. */
+  width?: number;
+  height?: number;
+}
+
+const { src, alt, caption, width, height } = Astro.props;
+---
+
+<figure class="figure">
+  <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .figure {
+    margin: var(--space-6) 0;
+  }
+
+  img {
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+  }
+
+  figcaption {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

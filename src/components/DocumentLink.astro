@@ -1,0 +1,64 @@
+---
+/**
+ * A link to a PDF document (governance register, update attachment).
+ * Renders an accessible, descriptive label with format and size.
+ * Pending documents (not yet supplied) render as plain, non-linked text.
+ */
+interface Props {
+  title: string;
+  /** Path under /public, e.g. /documents/bylaws.pdf */
+  file: string;
+  /** Human size label, e.g. "PDF, 320 KB". Optional. */
+  sizeLabel?: string | null;
+  /** When true, the document is not yet available; render as text. */
+  pending?: boolean;
+}
+
+const { title, file, sizeLabel, pending = false } = Astro.props;
+const meta = sizeLabel ?? 'PDF';
+---
+
+{
+  pending ? (
+    <p class="doc doc--pending">
+      <span class="doc-title">{title}</span>
+      <span class="doc-meta">Not yet published</span>
+    </p>
+  ) : (
+    <a class="doc" href={file} rel="noopener">
+      <span class="doc-title">{title}</span>
+      <span class="doc-meta">({meta})</span>
+    </a>
+  )
+}
+
+<style>
+  .doc {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    padding: var(--space-3) 0;
+    min-height: 44px;
+    border-bottom: var(--border-hair);
+    text-decoration: none;
+  }
+
+  .doc-title {
+    color: var(--color-brown);
+  }
+
+  a.doc:hover .doc-title {
+    color: var(--color-brown-strong);
+    text-decoration: underline;
+  }
+
+  .doc-meta {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  .doc--pending .doc-title {
+    color: var(--color-ink-soft);
+  }
+</style>
