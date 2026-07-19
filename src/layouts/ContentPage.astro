@@ -1,0 +1,41 @@
+---
+/**
+ * Standard content-page template. Wraps BaseLayout with the layout container,
+ * the page's single <h1> (via PageIntro), and a prose body for the slot.
+ *
+ * Nearly every public page uses this. It guarantees consistent width, heading
+ * structure, and vertical rhythm so page files only carry content.
+ *
+ * `title` drives the <title>/meta. `heading` overrides the visible <h1> when it
+ * should differ from the meta title (e.g. Home shows the institution name).
+ */
+import BaseLayout from './BaseLayout.astro';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  heading?: string;
+  standfirst?: string;
+}
+
+const { title, description, heading, standfirst } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <Container>
+    <article class="content-page">
+      <PageIntro title={heading ?? title} standfirst={standfirst} />
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+  </Container>
+</BaseLayout>
+
+<style>
+  .content-page {
+    padding-block: var(--space-12) var(--space-8);
+  }
+</style>
