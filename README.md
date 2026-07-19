@@ -42,6 +42,45 @@ In short:
 Adding an update or a document does **not** require touching code. See
 [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+## Image privacy
+
+**Metadata is stripped automatically.** Every image added to the site has its
+EXIF, GPS, IPTC and XMP metadata removed — camera and device details,
+timestamps, author, comments, software, embedded thumbnails, and above all
+location data. Orientation and the colour profile are kept, and pixels are
+never re-encoded, so image quality is unchanged.
+
+Enforcement is automated in three places, so it cannot be forgotten:
+
+- a **pre-commit hook** sanitizes and re-stages staged images, and blocks the
+  commit if anything remains;
+- **GitHub Actions** re-checks every push and pull request;
+- the **production build** runs the check first, so a deploy fails rather than
+  publishing an image with metadata.
+
+```bash
+npm run images:sanitize   # strip metadata from images in public/ (needs ExifTool)
+npm run images:check      # verify only; no tools required, never modifies files
+```
+
+The hook is enabled automatically by `npm install`. Sanitizing needs ExifTool
+(`brew install exiftool`, or `sudo apt-get install -y libimage-exiftool-perl`);
+verification needs nothing beyond Node.
+
+### Automation is not enough — still review every photograph
+
+Stripping metadata does not make a photograph safe to publish. Before adding
+any image, look at what it actually shows:
+
+- names, addresses, phone numbers, ID cards or documents visible in frame;
+- children — including the child whose education we support;
+- homes, schools, or anything that identifies where someone lives or studies;
+- anything a person in the photograph would not want published.
+
+Publication is irreversible: images get crawled, cached and archived. When in
+doubt, leave the photograph out.
+
+
 ## Deployment (Cloudflare Pages)
 
 The site is a fully static build with no adapter, so hosting is just serving

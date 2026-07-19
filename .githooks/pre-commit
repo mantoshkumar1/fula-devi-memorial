@@ -1,0 +1,23 @@
+#!/bin/sh
+# Image privacy enforcement.
+#
+# Sanitizes staged images, re-stages them, then verifies. Blocks the commit if
+# any metadata remains. Native Git hook (core.hooksPath) — no extra dependency.
+# Enabled automatically by `npm install` via the "prepare" script.
+
+set -e
+
+# Staged images (added, copied, modified or renamed).
+files=$(git diff --cached --name-only --diff-filter=ACMR \
+  | grep -Ei '\.(jpg|jpeg|png|webp|heic|heif|tif|tiff)$' || true)
+
+[ -z "$files" ] && exit 0
+
+echo "pre-commit: checking staged images for private metadata..."
+
+# Sanitize, then re-stage whatever changed.
+echo "$files" | xargs node scripts/sanitize-images.mjs
+echo "$files" | xargs git add
+
+# Final gate: verify the staged images are clean.
+echo "$files" | xargs node scripts/check-image-metadata.mjs
