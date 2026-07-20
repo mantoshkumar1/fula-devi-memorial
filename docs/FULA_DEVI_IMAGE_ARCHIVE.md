@@ -79,11 +79,11 @@ a parenthetical note beside the unknown date, never as the date itself.
 - **Source category:** family photograph.
 - **Date:** Kanwar Yatra, date unknown. (The supplied filename indicated 2000; not verified.)
 - **Occasion:** known — Kanwar Yatra.
-- **Caption verified:** yes, as written. The caption reads "Fula Devi with other
-  pilgrims during the Kanwar Yatra" and the alt text describes the other women
-  without naming or relating them, because their identities cannot be
-  established from the image. The supplied filename described them as her
-  daughters; that is not stated publicly since it cannot be verified visually.
+- **Caption verified:** yes. Relationship confirmed by the family: Fula Devi
+  with her daughters during the Kanwar Yatra. The caption and alt text state
+  that relationship and name no one. It rests on family knowledge rather than
+  on anything visible in the photograph, which is why it was withheld until the
+  family confirmed it.
 - **AI facial reconstruction used:** no.
 - **Privacy Pipeline:** passed. No metadata present; file left untouched.
 
