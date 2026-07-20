@@ -13,9 +13,11 @@ recolouring has been applied to any photograph listed here. Sanitizing removes
 metadata only — pixels, dimensions and orientation are unchanged, verified by
 comparing raw pixel hashes before and after.
 
-Dates below are recorded only where known. Several supplied filenames contained
-years, but those are family labels rather than verified records, so they are
-recorded as approximate and marked accordingly rather than presented as fact.
+A date is recorded as "Date unknown" unless it has been independently verified.
+Where the occasion is known but the year is not, that is recorded as
+"Kanwar Yatra, date unknown". Several supplied filenames contained years, but
+those are family labels rather than verified records, so they are kept only as
+a parenthetical note beside the unknown date, never as the date itself.
 
 ## Published photographs
 
@@ -27,7 +29,7 @@ recorded as approximate and marked accordingly rather than presented as fact.
 - **Role on the page:** primary portrait, immediately after the introduction. No
   caption, by instruction.
 - **Source category:** family photograph.
-- **Date:** approximate only — the supplied filename indicated 2003; not verified.
+- **Date:** Date unknown. (The supplied filename indicated 2003; not verified.)
 - **Occasion:** unknown.
 - **Caption verified:** not applicable (no caption).
 - **Alt text:** "Portrait of Fula Devi wearing a blue sari and looking toward the camera." — verified against the image.
@@ -43,7 +45,7 @@ recorded as approximate and marked accordingly rather than presented as fact.
   greenery behind her.
 - **Role on the page:** everyday-life photograph, after "She Helped Without Judgement".
 - **Source category:** family photograph.
-- **Date:** approximate only — the supplied filename indicated 2003; not verified.
+- **Date:** Date unknown. (The supplied filename indicated 2003; not verified.)
 - **Occasion:** unknown.
 - **Caption verified:** yes — "Fula Devi holding a decorated clay pot." matches
   what is visible.
@@ -55,13 +57,15 @@ recorded as approximate and marked accordingly rather than presented as fact.
 - **Public path:** `public/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-with-husband.jpg`
 - **Visual description:** Fula Devi in an orange sari beside a man in saffron,
   both walking in a river carrying kanwars; other pilgrims behind them.
-- **Role on the page:** after "She Respected Every Faith".
+- **Role on the page:** first of the two pilgrimage photographs shown together
+  after "She Respected Every Faith". No gallery heading is used.
 - **Source category:** family photograph.
 - **Date:** Kanwar Yatra, date unknown. (The supplied filename indicated 2000; not verified.)
 - **Occasion:** known — Kanwar Yatra.
-- **Caption verified:** partly. Two adults carrying kanwars are clearly visible;
-  the identification of the second person as her husband rests on family
-  knowledge, not on anything visible in the photograph.
+- **Caption verified:** partly. Caption: "Fula Devi and her husband during the
+  Kanwar Yatra." Two adults carrying kanwars are clearly visible; the
+  identification of the second person as her husband rests on family knowledge,
+  not on anything visible in the photograph.
 - **AI facial reconstruction used:** no.
 - **Privacy Pipeline:** passed. No metadata present; file left untouched.
 
@@ -70,24 +74,26 @@ recorded as approximate and marked accordingly rather than presented as fact.
 - **Public path:** `public/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-group-01.jpg`
 - **Visual description:** four women standing side by side holding kanwars, in a
   wooded, rocky setting.
-- **Role on the page:** first image in the "Photographs" gallery.
+- **Role on the page:** second of the two pilgrimage photographs shown together
+  after "She Respected Every Faith". No gallery heading is used.
 - **Source category:** family photograph.
 - **Date:** Kanwar Yatra, date unknown. (The supplied filename indicated 2000; not verified.)
 - **Occasion:** known — Kanwar Yatra.
-- **Caption verified:** yes, as written. The caption reads "Fula Devi during the
-  Kanwar Yatra" and the alt text describes three other women without naming or
-  relating them, because their identities cannot be established from the image.
-  The supplied filename described them as her daughters; that is not stated
-  publicly since it cannot be verified visually.
+- **Caption verified:** yes, as written. The caption reads "Fula Devi with other
+  pilgrims during the Kanwar Yatra" and the alt text describes the other women
+  without naming or relating them, because their identities cannot be
+  established from the image. The supplied filename described them as her
+  daughters; that is not stated publicly since it cannot be verified visually.
 - **AI facial reconstruction used:** no.
 - **Privacy Pipeline:** passed. No metadata present; file left untouched.
 
-### Gallery second slot — unfilled
+### Presentation of the two pilgrimage photographs
 
-The "Photographs" gallery was specified as two images. Only one Kanwar Yatra
-photograph remained after the with-husband photograph was placed in its own
-section. The slot is left empty rather than filled with a near-duplicate or an
-unrelated photograph. The markup already accommodates a second image.
+The two Kanwar Yatra photographs are published together, in a two-column layout
+on wider screens and a single column on narrow ones. No visible "Photographs"
+gallery heading is used: they belong to the section about her faith rather than
+to a separate collection. Both keep their natural aspect ratios — no
+fixed-height cropping, no carousel, no lightbox, no JavaScript.
 
 ## Retained privately, not published
 
