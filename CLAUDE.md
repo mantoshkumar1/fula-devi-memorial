@@ -24,6 +24,23 @@ These rules outrank convenience, and outrank the execution policy below.
   (names, addresses, ID numbers, signatures, EXIF/GPS). Publication is
   irreversible.
 
+## Editing Content
+
+Content Integrity governs what may be said. This governs how it is written.
+
+- Prefer explanation over persuasion.
+- Prefer evidence over claims.
+- Prefer simple words over impressive words.
+- If a sentence can lose one adjective without losing meaning, remove it.
+- If a paragraph can lose one sentence without losing meaning, remove it.
+- Do not rewrite merely because another wording is possible.
+
+The goal is clarity, not cleverness.
+
+Before changing any existing sentence, ask: *am I improving clarity, or am I
+only rewriting?* If it is only rewriting, leave it alone. Restraint is the
+default; an unchanged sentence needs no justification, a changed one does.
+
 ## Privacy Pipeline
 
 A permanent repository feature, not an optional add-on. It protects images,
