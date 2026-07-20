@@ -30,6 +30,7 @@
   --text-3xl: 2.25rem;
 
   --leading-body: 1.6;
+  --leading-snug: 1.35; /* multi-line display text: quotes, large headings */
   --leading-tight: 1.2;
 
   /* ---- Spacing (4px base) ---- */
