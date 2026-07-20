@@ -43,12 +43,18 @@ a parenthetical note beside the unknown date, never as the date itself.
 - **Visual description:** Fula Devi holding a white clay pot hand-painted with
   fruit and leaf motifs, standing under a thatched shelter; bamboo fencing and
   greenery behind her.
-- **Role on the page:** everyday-life photograph, after "She Helped Without Judgement".
+- **Role on the page:** everyday-life photograph, after "She Helped Without
+  Judgement". Displayed with its height capped rather than its width, so the
+  whole frame is visible without dominating a desktop screen; not cropped.
 - **Source category:** family photograph.
 - **Date:** Date unknown. (The supplied filename indicated 2003; not verified.)
-- **Occasion:** unknown.
-- **Caption verified:** yes — "Fula Devi holding a decorated clay pot." matches
-  what is visible.
+- **Occasion:** confirmed by the family — the wedding ceremony of Fula Devi's
+  youngest daughter. Which ritual within the ceremony the photograph shows is
+  not recorded and is not inferred.
+- **Caption verified:** yes. Caption: "Fula Devi during her youngest daughter's
+  wedding ceremony." The decorated clay pot she is holding is visibly present
+  in the photograph; the occasion rests on family knowledge rather than on
+  anything visible in it.
 - **AI facial reconstruction used:** no.
 - **Privacy Pipeline:** passed. No metadata present; file left untouched.
 
@@ -61,7 +67,8 @@ a parenthetical note beside the unknown date, never as the date itself.
   after "She Respected Every Faith". No gallery heading is used.
 - **Source category:** family photograph.
 - **Date:** Kanwar Yatra, date unknown. (The supplied filename indicated 2000; not verified.)
-- **Occasion:** known — Kanwar Yatra.
+- **Occasion:** Kanwar Yatra. Route and participation confirmed by the family —
+  see "The Kanwar Yatra" below.
 - **Caption verified:** partly. Caption: "Fula Devi and her husband during the
   Kanwar Yatra." Two adults carrying kanwars are clearly visible; the
   identification of the second person as her husband rests on family knowledge,
@@ -78,7 +85,8 @@ a parenthetical note beside the unknown date, never as the date itself.
   after "She Respected Every Faith". No gallery heading is used.
 - **Source category:** family photograph.
 - **Date:** Kanwar Yatra, date unknown. (The supplied filename indicated 2000; not verified.)
-- **Occasion:** known — Kanwar Yatra.
+- **Occasion:** Kanwar Yatra. Route and participation confirmed by the family —
+  see "The Kanwar Yatra" below.
 - **Caption verified:** yes. Relationship confirmed by the family: Fula Devi
   with her daughters during the Kanwar Yatra. The caption and alt text state
   that relationship and name no one. It rests on family knowledge rather than
@@ -87,6 +95,23 @@ a parenthetical note beside the unknown date, never as the date itself.
 - **AI facial reconstruction used:** no.
 - **Privacy Pipeline:** passed. No metadata present; file left untouched.
 
+### The Kanwar Yatra
+
+Confirmed by the family, and recorded here because it applies to both
+pilgrimage photographs rather than to either one alone:
+
+- **Occasion:** Kanwar Yatra.
+- **Route:** Sultanganj, Bihar, to Deoghar, Jharkhand.
+- **Distance:** approximately 105 km, on foot.
+- **What was carried:** holy water from the Ganges.
+- **Confirmed by the family:** the route and the family's participation.
+- **Date:** unknown, unless independently confirmed.
+
+The two photographs are from this pilgrimage. It is not established that they
+were taken at the same moment, and the page does not claim they were: the note
+below the pair says the photographs were taken during a Kanwar Yatra, and each
+caption describes only its own photograph.
+
 ### Presentation of the two pilgrimage photographs
 
 The two Kanwar Yatra photographs are published together, in a two-column layout
@@ -94,6 +119,12 @@ on wider screens and a single column on narrow ones. No visible "Photographs"
 gallery heading is used: they belong to the section about her faith rather than
 to a separate collection. Both keep their natural aspect ratios — no
 fixed-height cropping, no carousel, no lightbox, no JavaScript.
+
+The two have different aspect ratios, so on wider screens they are aligned at
+the top and their lower edges and captions fall where they fall. Equal heights
+are not forced, and neither photograph is cropped or stretched to make them
+match. The shared pilgrimage note spans both columns beneath them, so the route
+is stated once rather than repeated in each caption.
 
 ## Retained privately, not published
 

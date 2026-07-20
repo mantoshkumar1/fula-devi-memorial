@@ -50,18 +50,22 @@ import Quote from '../components/Quote.astro';
 
   <h2>She Helped Without Judgement</h2>
   <p>
-    One of her friends, who was often judged by others, later told Fula Devi's
-    son that Fula Devi would quietly give her whatever money she could afford
-    and always treated her with respect.
+    A woman who was often judged by others later told Fula Devi's son that
+    Fula Devi would quietly give her whatever money she could afford and
+    always treated her with respect.
   </p>
 
-  <Figure
-    src="/images/fula-devi/life/fula-devi-holding-painted-pot.jpg"
-    alt="Fula Devi holding a decorated clay pot in a village setting."
-    caption="Fula Devi holding a decorated clay pot."
-    width={848}
-    height={1272}
-  />
+  {/* Tall photograph: capped by height rather than width so the whole frame
+      stays visible without taking over the desktop viewport. */}
+  <div class="tall-figure">
+    <Figure
+      src="/images/fula-devi/life/fula-devi-holding-painted-pot.jpg"
+      alt="Fula Devi holding a decorated clay pot during her youngest daughter's wedding ceremony."
+      caption="Fula Devi during her youngest daughter's wedding ceremony."
+      width={848}
+      height={1272}
+    />
+  </div>
 
   <h2>She Encouraged Independence</h2>
   <p>
@@ -89,7 +93,7 @@ import Quote from '../components/Quote.astro';
   <div class="gallery">
     <Figure
       src="/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-with-husband.jpg"
-      alt="Fula Devi and her husband participating in the Kanwar Yatra pilgrimage."
+      alt="Fula Devi and her husband during the Kanwar Yatra pilgrimage."
       caption="Fula Devi and her husband during the Kanwar Yatra."
       width={1200}
       height={1600}
@@ -101,6 +105,11 @@ import Quote from '../components/Quote.astro';
       width={1600}
       height={1200}
     />
+    <p class="pilgrimage-note">
+      These photographs were taken during a Kanwar Yatra in which Fula Devi and
+      her family walked approximately 105 km from Sultanganj to Deoghar,
+      carrying holy water from the Ganges.
+    </p>
   </div>
 
   <h2>A Teaching Remembered</h2>
@@ -124,6 +133,27 @@ import Quote from '../components/Quote.astro';
     margin-inline: auto;
   }
 
+  /* The clay-pot photograph is much taller than it is wide. Capping its width
+     would leave it running most of a desktop screen, so it is capped by height
+     instead: the whole frame stays visible, uncropped and at its own aspect
+     ratio, and the figure shrink-wraps to whatever width that leaves.
+     max-height is inert on narrow screens, where max-width takes over. */
+  .tall-figure :global(figure) {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .tall-figure :global(img) {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(70vh, 640px);
+    object-fit: contain;
+    margin-inline: auto;
+  }
+
   /* Two columns on wider screens, one on mobile. No JS, no fixed-height
      crop: each photograph keeps its natural aspect ratio. */
   .gallery {
@@ -142,5 +172,19 @@ import Quote from '../components/Quote.astro';
   /* Figures inside the grid are already spaced by the grid gap. */
   .gallery :global(figure) {
     margin: 0;
+  }
+
+  /* One note for both photographs, so the route is not repeated in each
+     caption. It spans the grid and sits below both columns; quieter than a
+     caption, and deliberately not a heading, quote or card. */
+  .pilgrimage-note {
+    grid-column: 1 / -1;
+    /* The prose measure would otherwise hold it to 62ch, leaving it short of
+       the second column. It spans the grid, so it is released from that cap
+       here and nowhere else. */
+    max-width: none;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
   }
 </style>
