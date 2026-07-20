@@ -107,6 +107,51 @@ After code changes:
 4. Push.
 5. Verify Cloudflare deployment.
 6. Verify the live website.
+7. If a public asset was replaced at an existing URL, apply the Cloudflare
+   Cache Policy below.
+
+## Cloudflare Cache Policy
+
+Whenever an existing public asset is replaced at the same URL — photographs,
+PDFs, downloadable documents, logos, images, or any other static asset —
+**assume Cloudflare may keep serving the previous version from edge cache for a
+short period after deployment.**
+
+This is not theoretical. It has been observed on this site: immediately after a
+deploy, a superseded image kept returning HTTP 200 with the old bytes
+(`cf-cache-status: REVALIDATED`) while the new file was already live, and a
+deleted path kept serving its old content before eventually returning 404.
+
+Because of that, a stale edge copy can outlive the deployment that was supposed
+to remove it. **This matters most for privacy-related replacements** — a
+redacted photograph or a re-issued document is worthless if the unredacted
+version is still being served from cache.
+
+**If Cloudflare credentials are available** (e.g. `CLOUDFLARE_API_TOKEN` plus
+the zone id, or an authenticated `wrangler`):
+
+- purge **only the affected asset path(s)** from the cache after deployment.
+
+**If Cloudflare credentials are not available** (the current situation — no
+token, no `wrangler`):
+
+- state the **exact asset path(s)** that need purging manually, as full URLs,
+  so they can be pasted straight into the Cloudflare dashboard
+  (Caching → Configuration → Purge Custom URLs).
+
+Never purge the entire cache unless there is genuinely no narrower option.
+
+Always verify after deployment that:
+
+- the live asset matches the repository version — compare checksums, not just
+  HTTP status;
+- the old asset is no longer reachable at its previous URL, if it was removed
+  or renamed;
+- no stale cached copy is being served — repeat the check with cache-busting
+  query strings, and more than once, since different edge nodes can disagree
+  during a rollout.
+
+Report the result plainly. A single passing request is not proof.
 
 ## Communication
 

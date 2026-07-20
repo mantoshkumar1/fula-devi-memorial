@@ -146,6 +146,38 @@ project's **Custom domains** tab.
 
 No paid Cloudflare features are used.
 
+**Replacing an existing asset — clear the cache**
+
+HTML updates appear quickly, but when you replace a file that keeps the same URL
+— a photograph, a PDF, a logo — Cloudflare can keep serving the **old** version
+from edge cache for a short period after the deploy. A deleted file can likewise
+stay reachable at its old URL for a little while before it starts returning 404.
+
+This matters most for privacy: replacing a photograph with a redacted version
+achieves nothing while the unredacted one is still being served.
+
+After deploying such a change:
+
+1. Cloudflare dashboard → **Caching → Configuration → Purge Custom URLs**.
+2. Paste the **exact full URL(s)** of the replaced asset, for example:
+   `https://fuladevi.org/images/home/community-service.jpg`
+3. Purge only those URLs. Avoid "Purge Everything" unless there is no narrower
+   option.
+
+Then confirm the fix rather than assuming it:
+
+```bash
+# served bytes should match the repository file
+curl -s "https://fuladevi.org/images/home/community-service.jpg?cb=$RANDOM" -o /tmp/live.jpg
+shasum -a 256 /tmp/live.jpg public/images/home/community-service.jpg
+
+# a removed or renamed path should return 404
+curl -s -o /dev/null -w "%{http_code}\n" "https://fuladevi.org/old-path.jpg?cb=$RANDOM"
+```
+
+Repeat each check a couple of times with a fresh `cb=` value — different edge
+nodes can briefly disagree during a rollout, so one passing request is not proof.
+
 ## Portability
 
 Output is plain static HTML in `dist/`. It can be deployed to any static host
