@@ -35,5 +35,8 @@ const { src, alt, caption, width, height } = Astro.props;
     margin-top: var(--space-2);
     font-size: var(--text-sm);
     color: var(--color-ink-soft);
+    /* Centred under the image. The figure is as wide as the image it holds,
+       so this centres the caption on the photograph rather than the page. */
+    text-align: center;
   }
 </style>
