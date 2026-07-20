@@ -1,8 +1,8 @@
 ---
 /**
- * Fula Devi. Who she was, shown through what she actually did.
- * The person, not the institution — the institution appears only because it
- * continues her example. Philosophy belongs on The Institution page.
+ * Fula Devi. Who she was, introduced through facts and remembered events.
+ * The person, not the institution. No moral is drawn after each story —
+ * readers reach their own conclusions.
  */
 import ContentPage from '../layouts/ContentPage.astro';
 import Quote from '../components/Quote.astro';
@@ -12,31 +12,40 @@ import Quote from '../components/Quote.astro';
   title="Fula Devi"
   description="Who Fula Devi was, the quiet ways she helped others, the dignity she preserved, and the teaching remembered by her family."
 >
-  <p>Fula Devi never founded an institution.</p>
+  <p>Fula Devi (1958–2006) lived in Bihar, India.</p>
   <p>
-    She lived an ordinary life and quietly helped people whenever she could.
+    She was the mother of the institution's co-founder and the wife of its
+    first Secretary.
   </p>
-  <p>She never sought recognition for those acts.</p>
+  <p>She never founded an institution or sought public recognition.</p>
   <p>
-    The institution that bears her name exists because those quiet acts of
-    kindness deserved continuity.
+    People who knew her remember the quiet kindness she showed through everyday
+    acts of generosity and care.
   </p>
 
-  <h2>She Helped Quietly</h2>
-  <p>Helping others was part of her everyday life.</p>
-  <p>
-    She did what she could, whenever she could, without expecting recognition.
-  </p>
+  {/*
+    PORTRAIT OF FULA DEVI GOES HERE — immediately below the introduction,
+    immediately above "She Preserved Dignity".
+
+    Awaiting the final photograph. Nothing is rendered until it is supplied:
+    an <img> pointing at a missing file would show as a broken image, and an
+    empty reserved box would show as a blank rectangle to visitors.
+
+    When the photograph arrives, place it in public/images/fula-devi/ (the
+    Privacy Pipeline will strip its metadata on commit) and render it in the
+    same style as the homepage photograph — a plain <img> at content width
+    with intrinsic width/height and alt text. No border, overlay, filter or
+    caption unless requested.
+  */}
 
   <h2>She Preserved Dignity</h2>
   <p>Anyone who came to work at her home was first offered food.</p>
-  <p>Helping someone should never make that person feel smaller.</p>
-  <p>Dignity mattered as much as the help itself.</p>
 
   <h2>She Helped Without Judgement</h2>
   <p>She quietly helped people whom others often ignored.</p>
   <p>
-    A person's circumstances never determined whether they deserved kindness.
+    A person's circumstances never determined whether they received her
+    kindness.
   </p>
 
   <h2>She Encouraged Independence</h2>
@@ -47,17 +56,17 @@ import Quote from '../components/Quote.astro';
 
   <h2>She Respected Every Faith</h2>
   <p>
-    Although deeply devoted to her own faith, she respected every sincere
-    search for the Divine.
+    Although deeply devoted to her own faith, she once sent her son to a
+    mosque.
   </p>
   <p>
-    She once sent her son to a mosque because she believed respect should never
-    stop at religious boundaries.
+    This memory remains part of how her family remembers her respect for people
+    of different faiths.
   </p>
 
   <h2>A Teaching Remembered</h2>
-  <p>One teaching remained with her family.</p>
-  <Quote>
+  <p>Her family remembers one teaching in particular.</p>
+  <Quote attribution="An English translation of the words as her family remembers them.">
     Don't chant.<br />
     Don't perform rituals.<br />
     Search for the Divine within yourself.<br />
