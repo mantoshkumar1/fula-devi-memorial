@@ -1,23 +1,22 @@
 #!/bin/sh
-# Image privacy enforcement.
+# Privacy Pipeline — pre-commit enforcement.
 #
-# Sanitizes staged images, re-stages them, then verifies. Blocks the commit if
-# any metadata remains. Native Git hook (core.hooksPath) — no extra dependency.
+# Sanitizes staged images and PDFs, re-stages them, then runs the full privacy
+# check (images, PDFs and published text). Blocks the commit if anything
+# remains. Native Git hook (core.hooksPath) — no extra dependency.
 # Enabled automatically by `npm install` via the "prepare" script.
 
 set -e
 
-# Staged images (added, copied, modified or renamed).
+# Staged images and PDFs (added, copied, modified or renamed).
 files=$(git diff --cached --name-only --diff-filter=ACMR \
-  | grep -Ei '\.(jpg|jpeg|png|webp|heic|heif|tif|tiff)$' || true)
+  | grep -Ei '\.(jpg|jpeg|png|webp|heic|heif|tif|tiff|pdf)$' || true)
 
-[ -z "$files" ] && exit 0
+if [ -n "$files" ]; then
+  echo "pre-commit: sanitizing staged images and PDFs..."
+  echo "$files" | xargs node scripts/privacy-sanitize.mjs
+  echo "$files" | xargs git add
+fi
 
-echo "pre-commit: checking staged images for private metadata..."
-
-# Sanitize, then re-stage whatever changed.
-echo "$files" | xargs node scripts/sanitize-images.mjs
-echo "$files" | xargs git add
-
-# Final gate: verify the staged images are clean.
-echo "$files" | xargs node scripts/check-image-metadata.mjs
+# Full gate: images, PDFs and published text.
+node scripts/privacy-check.mjs

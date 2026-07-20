@@ -17,8 +17,7 @@
  */
 
 import { readFile } from 'node:fs/promises';
-import { readdir } from 'node:fs/promises';
-import path from 'node:path';
+import { collectFiles } from './files.mjs';
 
 export const IMAGE_EXTENSIONS = [
   '.jpg',
@@ -335,26 +334,7 @@ export function inspectImage(buf) {
 }
 
 /** Recursively collect image files under the given roots. */
-export async function collectImages(roots) {
-  const found = [];
-  async function walk(dir) {
-    let entries;
-    try {
-      entries = await readdir(dir, { withFileTypes: true });
-    } catch {
-      return; // missing directory is not an error
-    }
-    for (const entry of entries) {
-      const full = path.join(dir, entry.name);
-      if (entry.isDirectory()) await walk(full);
-      else if (IMAGE_EXTENSIONS.includes(path.extname(entry.name).toLowerCase())) {
-        found.push(full);
-      }
-    }
-  }
-  for (const root of roots) await walk(root);
-  return found.sort();
-}
+export const collectImages = (roots) => collectFiles(roots, IMAGE_EXTENSIONS);
 
 /** Inspect a file on disk. */
 export async function inspectFile(file) {

@@ -24,6 +24,35 @@ These rules outrank convenience, and outrank the execution policy below.
   (names, addresses, ID numbers, signatures, EXIF/GPS). Publication is
   irreversible.
 
+## Privacy Pipeline
+
+A permanent repository feature, not an optional add-on. It protects images,
+PDFs and public text content through one shared set of scripts
+(`scripts/privacy-check.mjs`, `scripts/privacy-sanitize.mjs`, `scripts/lib/`).
+
+- `npm run privacy:check` — read-only verification. Zero dependencies by
+  design, so the identical check runs in the pre-commit hook, in GitHub
+  Actions and in the Cloudflare build.
+- `npm run privacy:sanitize` — strips metadata from images and PDFs. Local and
+  pre-commit only; the production build must never modify files.
+
+Rules for anyone extending it:
+
+- Extend this pipeline. Do not build a second privacy system alongside it.
+- Verification must stay dependency-free. Sanitizing may use native tools
+  (ExifTool, qpdf); verification may not.
+- Fail closed: unknown tags, unrecognised formats and unverifiable files are
+  reported as failures, never silently passed.
+- Never trust a tool's own report. Verify the resulting bytes — ExifTool will
+  report a PDF as clean while the original metadata is still recoverable,
+  which is why PDFs are rewritten with qpdf.
+- Sanitizing must be idempotent and must not degrade quality: metadata-only
+  edits, no re-encoding, orientation and colour profile preserved.
+- Text is reported, never auto-edited. Editing published copy is an editorial
+  decision for a human.
+- `prebuild` runs `privacy:check`, so a deploy fails rather than publishing
+  private data. Keep it that way.
+
 ## Execution Policy
 
 Work autonomously.

@@ -1,0 +1,24 @@
+name: Privacy Pipeline
+
+# Verifies that no committed image or PDF carries private metadata, and that no
+# personal identifiers appear in published text. Runs on every push and pull
+# request so nothing can bypass the local pre-commit hook. The checker has zero
+# dependencies, so no install step is needed and the job stays fast.
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    name: Privacy check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run Privacy Pipeline checks
+        run: node scripts/privacy-check.mjs

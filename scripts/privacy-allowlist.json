@@ -1,0 +1,10 @@
+{
+  "_comment": [
+    "Strings that are intentionally published, exempted from the text scan.",
+    "Add an entry only after a human privacy review: once deployed, published",
+    "text is crawled, cached and archived permanently.",
+    "A single line can also be exempted by putting 'privacy-allow' in a comment",
+    "on that line."
+  ],
+  "allow": []
+}
