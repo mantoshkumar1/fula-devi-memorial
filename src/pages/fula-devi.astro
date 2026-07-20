@@ -1,79 +1,157 @@
 ---
 /**
- * Fula Devi. Who she was, introduced through facts and remembered events.
- * The person, not the institution. No moral is drawn after each story —
- * readers reach their own conclusions.
+ * Fula Devi. Who she was, introduced through confirmed facts, remembered
+ * events and authentic family photographs. The person, not the institution.
+ * No moral is drawn after a memory — readers reach their own conclusions.
+ *
+ * All photographs are unaltered family originals: metadata sanitized, pixels
+ * untouched. No generative restoration or facial reconstruction (see
+ * docs/FULA_DEVI_IMAGE_ARCHIVE.md).
  */
 import ContentPage from '../layouts/ContentPage.astro';
+import Figure from '../components/Figure.astro';
 import Quote from '../components/Quote.astro';
 ---
 
 <ContentPage
   title="Fula Devi"
-  description="Who Fula Devi was, the quiet ways she helped others, the dignity she preserved, and the teaching remembered by her family."
+  description="Stories and photographs of Fula Devi, remembered for her everyday kindness, support for independence, and respect for people of different faiths."
 >
-  <p>Fula Devi (1958–2006) lived in Bihar, India.</p>
   <p>
-    She was the mother of the institution's co-founder and the wife of its
-    first Secretary.
+    Fula Devi (1958–2006) lived in Bihar, India. She was the mother of the
+    institution's co-founder and the wife of its first secretary.
   </p>
-  <p>She never founded an institution or sought public recognition.</p>
   <p>
-    People who knew her remember the quiet kindness she showed through everyday
-    acts of generosity and care.
+    Those who knew her remember the quiet kindness with which she treated
+    people in everyday life.
   </p>
 
-  {/*
-    PORTRAIT OF FULA DEVI GOES HERE — immediately below the introduction,
-    immediately above "She Preserved Dignity".
-
-    Awaiting the final photograph. Nothing is rendered until it is supplied:
-    an <img> pointing at a missing file would show as a broken image, and an
-    empty reserved box would show as a blank rectangle to visitors.
-
-    When the photograph arrives, place it in public/images/fula-devi/ (the
-    Privacy Pipeline will strip its metadata on commit) and render it in the
-    same style as the homepage photograph — a plain <img> at content width
-    with intrinsic width/height and alt text. No border, overlay, filter or
-    caption unless requested.
-  */}
+  <img
+    class="portrait"
+    src="/images/fula-devi/portrait/fula-devi-blue-sari-portrait.jpg"
+    alt="Portrait of Fula Devi wearing a blue sari and looking toward the camera."
+    width="735"
+    height="1012"
+    loading="eager"
+    decoding="async"
+  />
 
   <h2>She Preserved Dignity</h2>
-  <p>Anyone who came to work at her home was first offered food.</p>
+  <p>
+    During a blanket distribution organised by the institution in 2025, a
+    former daily labourer who had worked for the family shared a memory from
+    many years earlier.
+  </p>
+  <p>
+    He recalled that when he came to the house at the end of each working day,
+    Fula Devi fed him properly and offered more than once so that he would not
+    feel shy about accepting enough.
+  </p>
 
   <h2>She Helped Without Judgement</h2>
-  <p>She quietly helped people whom others often ignored.</p>
   <p>
-    A person's circumstances never determined whether they received her
-    kindness.
+    One of her friends later recalled that Fula Devi would quietly give her
+    whatever money she could afford and always treat her with respect, even
+    when others judged her.
   </p>
+
+  <Figure
+    src="/images/fula-devi/life/fula-devi-holding-painted-pot.jpg"
+    alt="Fula Devi holding a decorated clay pot in a village setting."
+    caption="Fula Devi holding a decorated clay pot."
+    width={848}
+    height={1272}
+  />
 
   <h2>She Encouraged Independence</h2>
   <p>
-    She encouraged her daughters to become educated and financially
-    independent, even when doing so challenged social expectations.
+    She encouraged her three daughters to become educated and financially
+    independent.
+  </p>
+  <p>
+    She supported them in applying for railway and police jobs at a time when
+    such roles were often considered unsuitable for women.
   </p>
 
   <h2>She Respected Every Faith</h2>
   <p>
-    Although deeply devoted to her own faith, she once sent her son to a
-    mosque.
+    Although she was a deeply religious Hindu, she encouraged her children to
+    learn from any religion they wished to explore.
   </p>
   <p>
-    This memory remains part of how her family remembers her respect for people
-    of different faiths.
+    She used to say that all gods are one and that religions teach the same
+    lessons—like the same syllabus taught by different education boards.
   </p>
+  <p>One family memory is of her sending her son to a mosque.</p>
+
+  <Figure
+    src="/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-with-husband.jpg"
+    alt="Fula Devi and her husband participating in the Kanwar Yatra pilgrimage."
+    caption="Fula Devi and her husband during the Kanwar Yatra."
+    width={1200}
+    height={1600}
+  />
+
+  <h2>Photographs</h2>
+  <div class="gallery">
+    <Figure
+      src="/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-group-01.jpg"
+      alt="Fula Devi standing with three other women during the Kanwar Yatra pilgrimage."
+      caption="Fula Devi during the Kanwar Yatra."
+      width={1600}
+      height={1200}
+    />
+    {/*
+      A second, visually distinct Kanwar Yatra photograph goes here.
+
+      Only one qualifying photograph was supplied beyond the one used above.
+      The remaining archived photograph (seated, yellow shawl) is a different
+      occasion and is excluded from the public page by instruction, so the
+      second slot is left unfilled rather than padded with a near-duplicate
+      or an unrelated image. The grid already handles two items.
+    */}
+  </div>
 
   <h2>A Teaching Remembered</h2>
-  <p>Her family remembers one teaching in particular.</p>
-  <Quote attribution="An English translation of the words as her family remembers them.">
-    Don't chant.<br />
-    Don't perform rituals.<br />
-    Search for the Divine within yourself.<br />
+  <p>Her family remembers her saying, translated here into English:</p>
+  <Quote attribution="An English translation of words remembered by her family.">
+    Don't chant. Don't perform.<br />
+    Search for the Owner in your body.<br />
     Serve the living.<br />
-    Feed others.<br />
-    Give water to a cow.<br />
-    That is worship.<br />
-    That is truth.
+    Feed others. Give water to a cow.<br />
+    That's worship. That's truth.
   </Quote>
 </ContentPage>
+
+<style>
+  /* Page-local only — no global CSS, no new components. */
+
+  /* The portrait sits below the title and stays subordinate to it.
+     min() keeps the cap from overriding the global max-width:100%, which this
+     more specific selector would otherwise beat — without it the portrait
+     overflows its container on viewports narrower than about 470px. */
+  .portrait {
+    max-width: min(440px, 100%);
+    margin-inline: auto;
+  }
+
+  /* Two columns on wider screens, one on mobile. No JS, no fixed-height
+     crop: each photograph keeps its natural aspect ratio. */
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 34rem) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+      align-items: start;
+    }
+  }
+
+  /* Figures inside the grid are already spaced by the grid gap. */
+  .gallery :global(figure) {
+    margin: 0;
+  }
+</style>

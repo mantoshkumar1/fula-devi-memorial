@@ -21,3 +21,6 @@ npm-debug.log*
 .env
 .env.*
 !.env.example
+
+# private originals — never published, never committed
+private-media/
