@@ -1,8 +1,12 @@
 ---
 /**
  * A designed link to a public guide (a PDF), not a raw attachment. Shows the
- * guide's title, a short description, and — for a draft — an honest "Draft
- * resource" label. The whole card is the link; the file path is never shown.
+ * guide's title, a short description, an optional scope note, and — for a
+ * draft — an honest "Draft resource" label. The whole card is the link; the
+ * file path is never shown.
+ *
+ * A guide opens in a new tab so the visitor keeps Our Work open; the new-tab
+ * behaviour is announced to assistive technology.
  */
 interface Props {
   title: string;
@@ -10,19 +14,37 @@ interface Props {
   state: 'draft' | 'final';
   href: string;
   action: string;
+  /** Open in a new browser tab (used for PDF guides). */
+  newTab?: boolean;
+  /** Optional one-line scope clarification, shown under the description. */
+  note?: string | null;
 }
 
-const { title, description, state, href, action } = Astro.props;
+const { title, description, state, href, action, newTab = false, note = null } =
+  Astro.props;
 const isDraft = state === 'draft';
+const rel =
+  [isDraft ? 'nofollow' : '', newTab ? 'noopener noreferrer' : '']
+    .filter(Boolean)
+    .join(' ') || undefined;
 ---
 
-<a class="resource" href={href} rel={isDraft ? 'nofollow' : undefined}>
+<a
+  class="resource"
+  href={href}
+  target={newTab ? '_blank' : undefined}
+  rel={rel}
+>
   <span class="resource__head">
     <span class="resource__title">{title}</span>
     {isDraft && <span class="resource__state">Draft resource</span>}
   </span>
   <span class="resource__desc">{description}</span>
-  <span class="resource__action">{action}</span>
+  {note && <span class="resource__note">{note}</span>}
+  <span class="resource__action">
+    {action}
+    {newTab && <span class="visually-hidden"> (opens in a new tab)</span>}
+  </span>
 </a>
 
 <style>
@@ -66,6 +88,11 @@ const isDraft = state === 'draft';
   }
 
   .resource__desc {
+    color: var(--color-ink-soft);
+  }
+
+  .resource__note {
+    font-size: var(--text-sm);
     color: var(--color-ink-soft);
   }
 

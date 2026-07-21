@@ -5,13 +5,15 @@
  * Generated from the single work-records data source, so every published
  * clothing year gets a page and nothing is hand-duplicated. The visitor sees a
  * lead overview photograph, any independent press coverage, and the remaining
- * photographs as a plain grid — no filenames, no slideshow, no JavaScript.
+ * photographs as a grid. Any photograph opens in the shared in-site viewer;
+ * with scripting off, each one is still a plain link to its full-size file.
  */
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Container from '../../../components/Container.astro';
 import PageIntro from '../../../components/PageIntro.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import RecordGallery from '../../../components/RecordGallery.astro';
+import MediaViewer from '../../../components/MediaViewer.astro';
 import { clothingRecords, type ClothingRecord } from '../../../data/work-records.ts';
 
 export function getStaticPaths() {
@@ -27,6 +29,11 @@ interface Props {
 
 const { record } = Astro.props;
 const { page } = record;
+
+// One viewer collection per year for the photographs; the clipping, when
+// present, is a separate single-item collection so the two never mix.
+const photoGroup = `clothing-${record.slug}`;
+const clippingGroup = `clipping-${record.slug}`;
 
 // BreadcrumbList structured data, matching the visible trail exactly.
 const abs = (path: string) => new URL(path, Astro.site).href;
@@ -62,45 +69,69 @@ const breadcrumbLd = {
 
       <p class="lede">{page.opening}</p>
 
+      <p class="record-back record-back--top">
+        <a href="/our-work/">← Back to Our Work</a>
+      </p>
+
       <figure class="lead">
-        <img
-          src={page.lead.src}
-          alt={page.lead.alt}
-          width={page.lead.width}
-          height={page.lead.height}
-          loading="eager"
-          fetchpriority="high"
-          decoding="async"
-        />
+        <a
+          class="lead-link"
+          href={page.lead.src}
+          data-mv
+          data-mv-group={photoGroup}
+          data-mv-caption={page.lead.alt}
+        >
+          <img
+            src={page.lead.src}
+            alt={page.lead.alt}
+            width={page.lead.width}
+            height={page.lead.height}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </a>
       </figure>
 
       {
         page.coverage && (
           <section class="section">
             <h2>Independent Coverage</h2>
-            <figure class="clipping">
-              <img
-                src={page.coverage.src}
-                alt={page.coverage.alt}
-                width={page.coverage.width}
-                height={page.coverage.height}
-                loading="lazy"
-                decoding="async"
-              />
-            </figure>
-            <p class="clipping-link">
-              <a href={page.coverage.src}>Open full clipping →</a>
-            </p>
+            <a
+              class="clipping-link"
+              href={page.coverage.src}
+              data-mv
+              data-mv-group={clippingGroup}
+              data-mv-caption={page.coverage.alt}
+            >
+              <span class="clipping">
+                <img
+                  src={page.coverage.src}
+                  alt={page.coverage.alt}
+                  width={page.coverage.width}
+                  height={page.coverage.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+              <span class="clipping-action">View full clipping →</span>
+            </a>
           </section>
         )
       }
 
       <section class="section">
         <h2>Photographs</h2>
-        <RecordGallery images={page.gallery} />
+        <RecordGallery images={page.gallery} group={photoGroup} />
       </section>
+
+      <p class="record-back record-back--bottom">
+        <a href="/our-work/">← Back to Our Work</a>
+      </p>
     </article>
   </Container>
+
+  <MediaViewer />
 
   <script
     type="application/ld+json"
@@ -119,15 +150,45 @@ const breadcrumbLd = {
     color: var(--color-ink-soft);
   }
 
+  /* Quiet, explicit return links — one near the top, one after the images. */
+  .record-back {
+    font-size: var(--text-sm);
+  }
+
+  .record-back--top {
+    margin-block-start: var(--space-6);
+  }
+
+  .record-back--bottom {
+    margin-block-start: var(--space-12);
+  }
+
+  .record-back a {
+    text-decoration: none;
+  }
+
+  .record-back a:hover {
+    text-decoration: underline;
+  }
+
   .lead {
     margin-block-start: var(--space-8);
   }
 
-  .lead img {
+  .lead-link {
+    display: block;
+  }
+
+  .lead-link img {
     width: 100%;
     height: auto;
     border: var(--border-hair);
     border-radius: var(--radius-sm);
+    transition: border-color var(--motion-fast);
+  }
+
+  .lead-link:hover img {
+    border-color: var(--color-brown);
   }
 
   .section {
@@ -138,8 +199,14 @@ const breadcrumbLd = {
     margin-block-end: var(--space-6);
   }
 
-  /* The clipping is shown in full, scaled to fit — never cropped — and capped
-     in height so a tall column does not overwhelm the page. */
+  /* The whole coverage block is one link: a framed, uncropped preview plus a
+     clear action. The clipping is capped in height so a tall column does not
+     overwhelm the page. */
+  .clipping-link {
+    display: block;
+    text-decoration: none;
+  }
+
   .clipping {
     display: flex;
     justify-content: center;
@@ -147,6 +214,7 @@ const breadcrumbLd = {
     border: var(--border-hair);
     border-radius: var(--radius-sm);
     background: var(--color-surface);
+    transition: border-color var(--motion-fast);
   }
 
   .clipping img {
@@ -157,12 +225,19 @@ const breadcrumbLd = {
     object-fit: contain;
   }
 
-  .clipping-link {
-    margin-block-start: var(--space-3);
-    font-size: var(--text-sm);
+  .clipping-link:hover .clipping {
+    border-color: var(--color-brown);
   }
 
-  .clipping-link a {
+  .clipping-action {
+    display: inline-block;
+    margin-block-start: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-brown);
+  }
+
+  .clipping-link:hover .clipping-action {
+    color: var(--color-brown-strong);
     text-decoration: underline;
   }
 </style>

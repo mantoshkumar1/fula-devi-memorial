@@ -119,6 +119,15 @@ export interface ResourceGuide {
   state: 'draft' | 'final';
   /** Absolute public path to the PDF. */
   href: string;
+  /**
+   * Geographic scope suffix appended to the title, e.g. 'Bihar-focused' or
+   * 'India-wide'. Set ONLY once the PDF's own content confirms it — never label
+   * a scope the document does not actually contain. Unset for the current
+   * placeholder drafts, which contain no scheme guidance yet.
+   */
+  scope?: string;
+  /** One-line scope clarification shown under the description. Same rule. */
+  scopeNote?: string;
 }
 
 /**
@@ -339,6 +348,15 @@ export const resourceGuides: ResourceGuide[] = [
 /** All clothing records, in presentation order. */
 export const clothingRecords = workRecords.filter(
   (r): r is ClothingRecord => r.type === 'clothing',
+);
+
+/**
+ * All education records. Empty until a privacy-cleared academic record exists;
+ * the `/records/education/<year>/` route then generates automatically. The
+ * shared media viewer and the record page are already wired for it.
+ */
+export const educationRecords = workRecords.filter(
+  (r): r is EducationRecord => r.type === 'education',
 );
 
 /** A resource guide by slug, for the Our Work resource cards. */

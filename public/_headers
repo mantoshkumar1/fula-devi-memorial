@@ -1,14 +1,17 @@
 # Cloudflare Pages security headers.
 # Served for every path. No build step or dependency involved.
 #
-# The strict CSP is possible because this site executes NO JavaScript and loads
-# NO external resources — every asset is self-hosted. Keep it that way: adding
-# analytics, embeds, or CDN fonts would force this policy to be weakened.
+# The CSP stays strict: every asset is self-hosted and no external origin is
+# ever contacted. The site runs ONE small, same-origin, progressive-enhancement
+# script — the in-site media viewer — bundled by Astro under /_astro/. Pages
+# still work with scripting disabled (thumbnails remain plain links to the
+# full-size files). Keep it this way: adding analytics, embeds, or CDN fonts
+# would force this policy to be weakened.
 #
 # Notes:
-# - default-src 'none' blocks scripts entirely (we run none). The JSON-LD blocks
-#   are <script type="application/ld+json">, which are data blocks, not executed
-#   script — they are unaffected and remain readable to crawlers.
+# - script-src 'self' allows only the bundled same-origin viewer module. No
+#   'unsafe-inline', no external script origins. The JSON-LD blocks are
+#   <script type="application/ld+json"> data blocks, not executed script.
 # - style-src needs 'unsafe-inline' because Astro inlines one scoped <style> per
 #   page. With no JavaScript and no user-supplied content there is no realistic
 #   injection vector, so CSP hashes are not worth the build complexity.
@@ -16,7 +19,7 @@
 # - HSTS intentionally omits `preload` — that is a hard-to-reverse commitment.
 
 /*
-  Content-Security-Policy: default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
   Referrer-Policy: same-origin

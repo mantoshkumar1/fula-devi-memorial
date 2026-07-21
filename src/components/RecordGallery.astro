@@ -4,23 +4,29 @@
  *
  * Two columns on wider screens, one on a phone. Natural aspect ratios are
  * preserved — no fixed-height cropping — so portrait and landscape frames sit
- * as they were taken. Each photograph links to its own full-size file. No
- * JavaScript, no lightbox: exploring a photo is a plain navigation.
+ * as they were taken.
+ *
+ * Each photograph is a link to its own full-size file (the no-JavaScript
+ * fallback) that also opts into the shared MediaViewer via `data-mv`. The
+ * `group` ties every image to one year-specific collection so the viewer never
+ * mixes years.
  */
 import type { GalleryImage } from '../data/work-records.ts';
 
 interface Props {
   images: GalleryImage[];
+  /** Viewer collection key, e.g. "clothing-2021". */
+  group: string;
 }
 
-const { images } = Astro.props;
+const { images, group } = Astro.props;
 ---
 
 <ul class="gallery">
   {
     images.map((image) => (
       <li>
-        <a href={image.src}>
+        <a href={image.src} data-mv data-mv-group={group} data-mv-caption={image.alt}>
           <img
             src={image.src}
             alt={image.alt}
@@ -60,6 +66,11 @@ const { images } = Astro.props;
     height: auto;
     border: var(--border-hair);
     border-radius: var(--radius-sm);
+    transition: border-color var(--motion-fast);
+  }
+
+  a:hover img {
+    border-color: var(--color-brown);
   }
 
   @media (min-width: 34rem) {

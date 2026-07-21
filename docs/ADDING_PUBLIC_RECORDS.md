@@ -170,6 +170,68 @@ nothing. A guide that is not finished is published as a clearly labelled
 
 ---
 
+## Presenting records — the visitor experience
+
+How records are shown is as permanent as where they are stored. Keep it uniform;
+do not invent a new presentation per record.
+
+### Photographs
+
+- One wide overview photograph is the lead image, and it is image 1 in the
+  viewer sequence.
+- All of a year's selected photographs belong to one year-specific collection
+  (`data-mv-group="clothing-<year>"`). Collections never mix years.
+- Order the photographs to tell the documentary story where possible: overview →
+  gathering or coordination → distribution in progress → handover moments.
+- Clicking any photograph — lead or grid — opens the shared in-site viewer
+  (`src/components/MediaViewer.astro`): previous, next, close, an image counter,
+  keyboard arrows, Escape, swipe, focus return to the thumbnail.
+- Every thumbnail is also a plain link to its full-size file, so the page still
+  works with scripting disabled. Never publish a raw attachment list or a
+  filename as the visitor interface.
+- Privacy rules 6–10 above still govern what may be shown. Children and close-up
+  adult beneficiaries must remain non-identifiable without documented consent;
+  organisers and volunteers acting publicly may remain visible.
+
+### Newspaper coverage
+
+- Store under the programme year; present under an `Independent Coverage`
+  heading, always separate from the photograph sequence.
+- Show a readable inline preview with the action `View full clipping →`.
+- Opening a clipping uses the same viewer, as its own single-item collection
+  (`data-mv-group="clipping-<year>"`). If a year ever has several clippings, the
+  viewer navigates only among that year's clippings.
+- Preserve the clipping exactly as published; never blur or alter it.
+
+### Education documents
+
+- Present a multi-page report card as one academic record, one route per
+  academic year (`/records/education/<academic-year>/`).
+- The pages browse inside the same viewer (`1 of 2`, `2 of 2`).
+- Never expose a child identifier — name, parents' names, date of birth, roll
+  number, phone number, any signature — in the image, alt text, caption,
+  metadata, filename, structured data or URL.
+
+### PDFs and guides
+
+- Present as a designed resource card, never a raw filename.
+- Open the PDF in a new tab (`target="_blank"`, `rel="noopener noreferrer"`,
+  plus a visually-hidden "(opens in a new tab)"), so Our Work stays open.
+- Label geographic scope only when the PDF's own content confirms it. Do not
+  call a guide national if it contains state-specific instructions presented as
+  universal, and do not attach a scope the document does not actually contain.
+- A placeholder draft stays labelled a draft and keeps its `noindex` header
+  until real content replaces it.
+
+### Navigation
+
+- Every record page carries breadcrumbs (Home / Our Work / record title) and a
+  visible `Back to Our Work` link near the top and again near the bottom.
+- A visitor never has to depend on the browser Back button, and the viewer
+  always closes back into the same record page at the same scroll position.
+
+---
+
 ## Draft guides
 
 A guide may be published before it is finished, but only as an honest draft:
@@ -191,14 +253,16 @@ When the finished guide replaces the draft **at the same URL**:
 
 ## The withheld education record
 
-As of this writing there is no published education record. The available
-report-card copies still expose a signatory's handwriting in the annual
-signature area, which is prohibited. The record is therefore withheld: the
-Education section on Our Work carries its text only, with no visual preview and
-no record page.
+There is no published education record. A request to publish the 2025–2026
+report card was made, but the final visual check still found a signatory's
+handwritten signature and date exposed below the redaction box in the annual
+signature area of page 2 — a prohibited identifier, and irreversible once
+published. The record is therefore withheld: the Education section on Our Work
+carries its text only, with no visual preview and no record page. The report-card
+files remain untracked in `public/records/education/` and are not deployed.
 
-To publish it later: redact the remaining signature on the public copy, confirm
-none of the prohibited identifiers in step 10 remain, name the files
-`report-card-2025-2026-page-1.jpg` / `-page-2.jpg`, add an `EducationRecord`
-entry to the data source, create `src/pages/records/education/[slug].astro`, and
-run the full verification above.
+The record page (`src/pages/records/education/[slug].astro`) and the shared
+viewer are ready for it. To publish it later: fully cover the signature on the
+public copy, confirm none of the prohibited identifiers above remain, name the
+files `report-card-2025-2026-page-1.jpg` / `-page-2.jpg`, add an
+`EducationRecord` entry to the data source, and run the full verification.

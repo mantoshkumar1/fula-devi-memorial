@@ -36,22 +36,14 @@ const pmjjby = resourceBySlug('pmjjby-guide');
   <h2>Seasonal Clothing Distribution</h2>
   <p class="meta-line">Recurring · Since 2020</p>
   <p>
-    Seasonal clothing distributions began before formal registration and
-    continue as recurring work in the village.
-  </p>
-  <p>
-    Distribution is prioritised for older adults, widows, persons with
-    disabilities, and people with limited financial means, especially women.
+    Seasonal clothing is distributed in the village, with priority given to
+    older adults, widows, persons with disabilities, and people with limited
+    financial means, especially women.
   </p>
   <p>
     Warm blankets are distributed before winter. Summer clothing includes saris,
     blouses, petticoats, shirts, and dhotis. Smaller distributions also take
     place during village visits.
-  </p>
-  <p>
-    The work began in 2020, before the institution was formally registered in
-    February 2022. Public records currently available document the December
-    2021, 2024 and 2025 programmes.
   </p>
 
   <h3>Programme Records</h3>
@@ -72,6 +64,11 @@ const pmjjby = resourceBySlug('pmjjby-guide');
       ))
     }
   </div>
+  <p class="historical-note">
+    Seasonal clothing distributions began in 2020, before the institution was
+    formally registered in February 2022. The December 2021 programme shown here
+    was early community work immediately preceding registration.
+  </p>
 
   <h2>Access to Public Healthcare</h2>
   <p class="meta-line">Completed · 2024</p>
@@ -91,7 +88,8 @@ const pmjjby = resourceBySlug('pmjjby-guide');
         description={ayushman.description}
         state={ayushman.state}
         href={ayushman.href}
-        action="Open draft guide →"
+        action="Open guide →"
+        newTab
       />
     )
   }
@@ -114,7 +112,8 @@ const pmjjby = resourceBySlug('pmjjby-guide');
         description={pmjjby.description}
         state={pmjjby.state}
         href={pmjjby.href}
-        action="Open draft guide →"
+        action="Open guide →"
+        newTab
       />
     )
   }
@@ -146,6 +145,13 @@ const pmjjby = resourceBySlug('pmjjby-guide');
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
+  }
+
+  /* The registration history sits after the records, quieter than the copy
+     above it: context, not the headline. */
+  .historical-note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
   }
 
   /* The previews and resource cards are whole-card links; the prose
