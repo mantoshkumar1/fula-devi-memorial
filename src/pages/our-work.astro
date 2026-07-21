@@ -7,7 +7,33 @@
  * absent from this page, not promised in a broken link.
  */
 import ContentPage from '../layouts/ContentPage.astro';
-import EmptyState from '../components/EmptyState.astro';
+
+/**
+ * Published clothing distribution records, by year. Every entry here must
+ * correspond to a real file under public/records/clothing/ — a link on this
+ * page is a promise that it resolves.
+ */
+const clothingRecords = [
+  { year: 2021, photographs: 7, newspaper: false },
+  { year: 2024, photographs: 4, newspaper: true },
+  { year: 2025, photographs: 4, newspaper: true },
+].map(({ year, photographs, newspaper }) => ({
+  year,
+  items: [
+    ...Array.from({ length: photographs }, (_, i) => ({
+      href: `/records/clothing/${year}/distribution-${String(i + 1).padStart(2, '0')}.jpg`,
+      label: `Photograph ${i + 1}`,
+    })),
+    ...(newspaper
+      ? [
+          {
+            href: `/records/clothing/${year}/newspaper-01.jpg`,
+            label: 'Newspaper coverage',
+          },
+        ]
+      : []),
+  ],
+}));
 ---
 
 <ContentPage
@@ -38,8 +64,13 @@ import EmptyState from '../components/EmptyState.astro';
     families in need.
   </p>
   <p>
-    Larger programmes were held in 2022, 2024 and 2025. Smaller distributions
+    Larger programmes were held in 2021, 2024 and 2025. Smaller distributions
     take place between them.
+  </p>
+  <p>
+    The institution was formally registered in February 2022. The December 2021
+    distribution was community work that immediately preceded its formation and
+    reflected the same mission it was established to continue.
   </p>
 
   <h2>Access to Public Healthcare</h2>
@@ -63,11 +94,27 @@ import EmptyState from '../components/EmptyState.astro';
 
   <h2>Public Records</h2>
   <p>
-    The work above is documented by public records: an annual report card,
-    photographs from the clothing distributions, and newspaper coverage. Each is
-    published here once it has been reviewed and approved for release.
+    The work above is documented by public records. The photographs and
+    newspaper coverage from each clothing distribution are listed below. The
+    annual report card will be published here once it has been reviewed and
+    approved for release.
   </p>
-  <EmptyState message="No public records have been published yet." />
+
+  <h3>Clothing Distribution</h3>
+  {
+    clothingRecords.map((record) => (
+      <div class="record-group">
+        <h4>{record.year}</h4>
+        <ul>
+          {record.items.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
 
   <h2>Looking Ahead</h2>
   <p>
@@ -85,5 +132,14 @@ import EmptyState from '../components/EmptyState.astro';
   .status {
     font-size: var(--text-sm);
     color: var(--color-ink-soft);
+  }
+
+  /* A year of records, kept compact so the list reads as an index. */
+  .record-group h4 {
+    margin-bottom: var(--space-2);
+  }
+
+  .record-group ul {
+    margin-top: 0;
   }
 </style>
