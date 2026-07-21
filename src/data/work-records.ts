@@ -202,7 +202,7 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: '2024',
       programmeLabel: 'Seasonal clothing distribution',
-      recordSummary: '4 photographs · Independent coverage',
+      recordSummary: '5 photographs · Independent coverage',
       cover: '/records/clothing/2024/cover.jpg',
       coverAlt:
         'Villagers seated beneath a pink canopy at the 2024 seasonal clothing distribution.',
@@ -246,6 +246,12 @@ export const workRecords: WorkRecord[] = [
           width: 1200,
           height: 1600,
         },
+        {
+          src: '/records/clothing/2024/distribution-05.jpg',
+          alt: 'Organisers recording names at a registration table as villagers wait to collect clothing under a decorated canopy.',
+          width: 1600,
+          height: 1200,
+        },
       ],
     },
   },
@@ -257,7 +263,7 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: '2025',
       programmeLabel: 'Winter blanket distribution',
-      recordSummary: '4 photographs · Independent coverage',
+      recordSummary: '5 photographs · Independent coverage',
       cover: '/records/clothing/2025/cover.jpg',
       coverAlt:
         'Villagers in a courtyard at the 2025 winter blanket distribution beneath the institution’s banner.',
@@ -298,6 +304,12 @@ export const workRecords: WorkRecord[] = [
         {
           src: '/records/clothing/2025/distribution-04.jpg',
           alt: 'Villagers seated in the courtyard receiving blankets from organisers beneath the institution’s banner.',
+          width: 1600,
+          height: 1200,
+        },
+        {
+          src: '/records/clothing/2025/distribution-05.jpg',
+          alt: 'An organiser handing a folded blanket to an elderly villager beside the institution’s banner.',
           width: 1600,
           height: 1200,
         },
