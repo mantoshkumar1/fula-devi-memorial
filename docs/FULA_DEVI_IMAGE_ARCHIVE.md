@@ -47,8 +47,8 @@ a parenthetical note beside the unknown date, never as the date itself.
 - **Visual description:** Fula Devi holding a white clay pot hand-painted with
   fruit and leaf motifs, standing under a thatched shelter; bamboo fencing and
   greenery behind her.
-- **Role on the page:** everyday-life photograph, after "She Helped Without
-  Judgement". Displayed with its height capped rather than its width, so the
+- **Role on the page:** everyday-life photograph, after "She Helped Quietly".
+  Displayed with its height capped rather than its width, so the
   whole frame is visible without dominating a desktop screen; not cropped.
 - **Source category:** family photograph.
 - **Date:** Date unknown. (The supplied filename indicated 2003; not verified.)

@@ -74,6 +74,24 @@ improvements in wording.
 The institution's credibility grows through sustained work, not through
 continuous rewriting.
 
+### Editorial Recommendation vs. User Decision
+
+That recommendation is editorial advice, not a refusal to edit.
+
+If the user chooses a different reasonable editorial direction after receiving
+it, implement the user's decision, preserving:
+
+- factual accuracy;
+- historical integrity;
+- consistency with the institution's editorial standards.
+
+The responsibility is therefore twofold:
+
+1. Recommend what best serves the institution.
+2. Faithfully implement the user's final editorial decision once it is made.
+
+Recommendation and implementation are separate decisions.
+
 ## Privacy Pipeline
 
 A permanent repository feature, not an optional add-on. It protects images,
