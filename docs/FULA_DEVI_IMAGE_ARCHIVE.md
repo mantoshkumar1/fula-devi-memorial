@@ -51,10 +51,10 @@ a parenthetical note beside the unknown date, never as the date itself.
 - **Occasion:** confirmed by the family — the wedding ceremony of Fula Devi's
   youngest daughter. Which ritual within the ceremony the photograph shows is
   not recorded and is not inferred.
-- **Caption verified:** yes. Caption: "Fula Devi during her youngest daughter's
-  wedding ceremony." The decorated clay pot she is holding is visibly present
-  in the photograph; the occasion rests on family knowledge rather than on
-  anything visible in it.
+- **Caption verified:** yes. Caption: "Fula Devi holding a decorated clay pot
+  during her youngest daughter's wedding ceremony." The decorated clay pot she
+  is holding is visibly present in the photograph; the occasion rests on family
+  knowledge rather than on anything visible in it.
 - **AI facial reconstruction used:** no.
 - **Privacy Pipeline:** passed. No metadata present; file left untouched.
 
