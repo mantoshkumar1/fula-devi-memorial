@@ -41,6 +41,39 @@ Before changing any existing sentence, ask: *am I improving clarity, or am I
 only rewriting?* If it is only rewriting, leave it alone. Restraint is the
 default; an unchanged sentence needs no justification, a changed one does.
 
+## Editorial Stability
+
+Editing Content governs the sentence. This governs the page.
+
+A page should not be reopened simply because the writing could be improved.
+
+Editorial refinement has diminishing returns. Once a page meets the
+institution's editorial standard and accurately reflects verified facts, treat
+it as stable.
+
+Reopen a published page only when one of the following occurs:
+
+- a factual error is discovered;
+- historical evidence requires correction;
+- governance or legal information changes;
+- new institutional work genuinely belongs on that page;
+- accessibility, security or technical issues require modification.
+
+Do not reopen pages for stylistic preference alone.
+
+Before recommending an edit to an existing page, first decide whether the
+proposed change introduces new factual value. If it does not, recommend leaving
+the page unchanged.
+
+After a page is declared **Frozen**, assume no further editorial change is
+required unless one of the conditions above applies.
+
+When reviewing future edits, prefer preserving stability over pursuing marginal
+improvements in wording.
+
+The institution's credibility grows through sustained work, not through
+continuous rewriting.
+
 ## Privacy Pipeline
 
 A permanent repository feature, not an optional add-on. It protects images,
