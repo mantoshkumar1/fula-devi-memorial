@@ -92,6 +92,41 @@ The responsibility is therefore twofold:
 
 Recommendation and implementation are separate decisions.
 
+## Public Records
+
+`public/records/` is the permanent home for published artefacts: photographs,
+report cards, newspaper coverage, public guides and informational material. It
+is a public record, not a private archive. Private originals stay outside
+`public/` — see `docs/FULA_DEVI_IMAGE_ARCHIVE.md`.
+
+- Public pages should reference files from this structure when appropriate.
+- Photographs should not be scattered through unrelated directories.
+- Every published artefact should have one permanent location, and should keep
+  it. A published URL is a promise.
+- Records stay organised by programme, and by year where a programme runs on an
+  annual cycle.
+- Each programme directory carries a README explaining what belongs in it. Add a
+  directory only when there is a record to put in it.
+
+The institution's public pages should make factual claims. Whenever practical,
+those claims should be supported by public records stored under
+`public/records`.
+
+Everything under `public/` is served, including README files. Write them as
+public documents: no internal repository detail, nothing that would embarrass
+the institution if read by a stranger.
+
+Everything placed here is subject to the Privacy Pipeline: images and PDFs under
+`public/`, and supported text files under `public/records/` — Markdown, HTML,
+plain text, JSON, CSV and YAML — are scanned for personal identifiers before
+commit and before every build.
+
+Automated scanning complements editorial review; it does not replace it. A scan
+catches identifiers it has patterns for. It cannot tell whether a photograph
+should have been published at all, whether a name in prose belongs to a child,
+or whether consent was given. Every public record still needs human editorial
+review before publication.
+
 ## Privacy Pipeline
 
 A permanent repository feature, not an optional add-on. It protects images,

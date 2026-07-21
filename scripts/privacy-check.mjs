@@ -7,9 +7,10 @@
  * production build (which cannot install native tools).
  *
  * Covers:
- *   images  public/**   EXIF, GPS, IPTC, XMP, comments, thumbnails
- *   PDFs    public/**   Info dictionary, XMP, recoverable incremental updates
- *   text    src/**      personal identifiers in published copy
+ *   images  public/**           EXIF, GPS, IPTC, XMP, comments, thumbnails
+ *   PDFs    public/**           Info dictionary, XMP, recoverable incremental updates
+ *   text    src/**              personal identifiers in published copy
+ *           public/records/**   the same, in published records and guides
  *
  * Exits non-zero if anything is found, or if any file could not be verified —
  * unsupported formats are reported, never silently passed.

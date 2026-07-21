@@ -1,34 +1,89 @@
 ---
 /**
- * Our Work. The real work, in three clearly distinguished states:
- * Ongoing, Completed, Focus ahead. No invented projects or numbers.
+ * Our Work. The institution's operational record: each programme, the state it
+ * is in, and where the public records supporting it can be found.
+ *
+ * No invented projects, numbers or links. A record that does not exist yet is
+ * absent from this page, not promised in a broken link.
  */
 import ContentPage from '../layouts/ContentPage.astro';
+import EmptyState from '../components/EmptyState.astro';
 ---
 
 <ContentPage
   title="Our Work"
-  description="Small, specific work meant to continue: the education of one child, a yearly contribution, and past help accessing Ayushman Bharat."
+  description="What the institution does, what it has completed, and where the public records supporting that work can be found."
 >
-  <p>Our work is small and specific. It is meant to continue.</p>
-
-  <h2>Ongoing</h2>
-  <ul>
-    <li>The education of one child.</li>
-    <li>A charitable contribution each year.</li>
-  </ul>
-
-  <h2>Completed</h2>
-  <ul>
-    <li>
-      Helped eligible families below the poverty line access the Ayushman
-      Bharat health insurance scheme.
-    </li>
-  </ul>
-
-  <h2>Focus ahead</h2>
   <p>
-    To sustain these commitments, and to take on new work only when it can be
-    done properly.
+    This page records what the institution does, what it has already completed,
+    and where the supporting public records can be found.
+  </p>
+  <p>
+    The work is small and specific. It is meant to continue. Alongside the
+    programmes below, the institution makes a charitable contribution each year.
+  </p>
+
+  <h2>Education</h2>
+  <p class="status">Status: Ongoing</p>
+  <p>
+    The institution supports one child through to graduation. It meets that
+    child's educational costs and the essential living needs that keep school
+    possible.
+  </p>
+
+  <h2>Seasonal Clothing Distribution</h2>
+  <p class="status">Status: Recurring</p>
+  <p>
+    Warm blankets before winter and essential clothing during summer, given to
+    families in need.
+  </p>
+  <p>
+    Larger programmes were held in 2022, 2024 and 2025. Smaller distributions
+    take place between them.
+  </p>
+
+  <h2>Access to Public Healthcare</h2>
+  <p class="status">Status: Completed</p>
+  <p>
+    The institution helped eligible families below the poverty line access the
+    Ayushman Bharat health insurance scheme.
+  </p>
+
+  <h2>Financial Awareness</h2>
+  <p class="status">Status: Completed</p>
+  <p>
+    The institution explained the Pradhan Mantri Jeevan Jyoti Bima Yojana
+    (PMJJBY), a government life insurance scheme, to families who were eligible
+    for it.
+  </p>
+
+  <h2>Educational Materials</h2>
+  <p class="status">Status: Completed</p>
+  <p>The institution donated books and study materials.</p>
+
+  <h2>Public Records</h2>
+  <p>
+    The work above is documented by public records: an annual report card,
+    photographs from the clothing distributions, and newspaper coverage. Each is
+    published here once it has been reviewed and approved for release.
+  </p>
+  <EmptyState message="No public records have been published yet." />
+
+  <h2>Looking Ahead</h2>
+  <p>
+    New work begins only when the existing commitments can continue
+    responsibly. A commitment that cannot be sustained is not taken on.
+  </p>
+  <p>
+    The current priorities are scholarships, and practical educational resources
+    that are useful to the public.
   </p>
 </ContentPage>
+
+<style>
+  /* The state of each programme, kept quieter than the text it labels. */
+  .status {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

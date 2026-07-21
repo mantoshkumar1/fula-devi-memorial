@@ -1,10 +1,10 @@
 /**
  * Public text content scanning — zero dependencies.
  *
- * Catches personal identifiers accidentally pasted into published copy: Indian
- * government IDs, bank details, phone numbers, email addresses and raw GPS
- * coordinates. These are the things that, once deployed, are crawled and
- * archived permanently.
+ * Catches personal identifiers accidentally pasted into published copy or into
+ * a public record: Indian government IDs, bank details, phone numbers, email
+ * addresses and raw GPS coordinates. These are the things that, once deployed,
+ * are crawled and archived permanently.
  *
  * This is a safety net, not a censor. Anything genuinely meant to be public —
  * the institution's own contact email, for instance — goes in
@@ -13,9 +13,34 @@
 
 import { readFile } from 'node:fs/promises';
 
-/** Where published words live. */
-export const TEXT_ROOTS = ['src/content', 'src/data', 'src/pages'];
-export const TEXT_EXTENSIONS = ['.md', '.mdx', '.ts', '.astro'];
+/**
+ * Where published words live: the site's own copy, and the public records
+ * served verbatim from `public/records/` — guides and similar text artefacts
+ * are published the moment they are committed, so they are scanned like copy.
+ */
+export const TEXT_ROOTS = [
+  'src/content',
+  'src/data',
+  'src/pages',
+  'public/records',
+];
+
+/**
+ * Text formats only. Never add a binary format here — these files are read as
+ * UTF-8. Images and PDFs have their own scanners.
+ */
+export const TEXT_EXTENSIONS = [
+  '.md',
+  '.mdx',
+  '.ts',
+  '.astro',
+  '.html',
+  '.txt',
+  '.json',
+  '.csv',
+  '.yml',
+  '.yaml',
+];
 
 const PATTERNS = [
   {
