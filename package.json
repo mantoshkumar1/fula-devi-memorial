@@ -6,12 +6,13 @@
   "description": "Public website of Fula Devi Memorial Sewa Sansthan — a small registered charitable institution in Bihar, India.",
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "npm run privacy:check",
+    "prebuild": "npm run privacy:check && npm run records:check",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
     "privacy:sanitize": "node scripts/privacy-sanitize.mjs",
     "privacy:check": "node scripts/privacy-check.mjs",
+    "records:check": "node scripts/public-records-check.mjs",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {

@@ -21,3 +21,17 @@
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
   Referrer-Policy: same-origin
   X-Content-Type-Options: nosniff
+
+# Draft public guides — placeholders, not finished resources. Keep them out of
+# search indexes and archives so a draft is never surfaced as the real guide.
+# Cloudflare applies these rules on top of the /* block above, so these paths
+# still receive every security header.
+#
+# REMOVE both blocks below when the finished guide replaces the draft at the
+# same URL. A published, indexable guide must not carry noindex — and follow the
+# Cloudflare Cache Policy in CLAUDE.md when swapping the file at an existing URL.
+/records/healthcare/ayushman-bharat-guide.pdf
+  X-Robots-Tag: noindex, noarchive
+
+/records/financial-awareness/pmjjby-guide.pdf
+  X-Robots-Tag: noindex, noarchive

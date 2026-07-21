@@ -20,3 +20,7 @@ fi
 
 # Full gate: images, PDFs and published text.
 node scripts/privacy-check.mjs
+
+# Structural gate: the work-records data source and the files it references
+# must agree (existence, stable naming, generated routes, draft noindex).
+node scripts/public-records-check.mjs

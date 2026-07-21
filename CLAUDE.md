@@ -127,6 +127,15 @@ should have been published at all, whether a name in prose belongs to a child,
 or whether consent was given. Every public record still needs human editorial
 review before publication.
 
+Records are declared in one typed data source, `src/data/work-records.ts`, from
+which both the Our Work previews and the dedicated record pages derive. The
+`records:check` script (run in the pre-commit hook, in `prebuild`, and in GitHub
+Actions) verifies that data source against the files it references: existence,
+stable naming, generated routes, and that draft guides carry `noindex`.
+
+When new public records are added, follow `docs/ADDING_PUBLIC_RECORDS.md`. Do
+not improvise a new publication structure.
+
 ## Privacy Pipeline
 
 A permanent repository feature, not an optional add-on. It protects images,

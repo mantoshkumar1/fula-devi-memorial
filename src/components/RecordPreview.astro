@@ -1,0 +1,130 @@
+---
+/**
+ * A wide editorial preview of a programme record, for the Our Work page.
+ *
+ * One cover photograph beside a short label block; the whole row is a single
+ * link to the dedicated record page. Deliberately not a dashboard card: a
+ * hairline border, generous whitespace, no shadow, image above text on mobile.
+ */
+interface Props {
+  href: string;
+  cover: string;
+  coverAlt: string;
+  coverWidth: number;
+  coverHeight: number;
+  yearLabel: string;
+  programmeLabel: string;
+  recordSummary: string;
+  action: string;
+}
+
+const {
+  href,
+  cover,
+  coverAlt,
+  coverWidth,
+  coverHeight,
+  yearLabel,
+  programmeLabel,
+  recordSummary,
+  action,
+} = Astro.props;
+---
+
+<a class="record-row" href={href}>
+  <span class="record-row__media">
+    <img
+      src={cover}
+      alt={coverAlt}
+      width={coverWidth}
+      height={coverHeight}
+      loading="lazy"
+      decoding="async"
+    />
+  </span>
+  <span class="record-row__body">
+    <span class="record-row__year">{yearLabel}</span>
+    <span class="record-row__label">{programmeLabel}</span>
+    <span class="record-row__summary">{recordSummary}</span>
+    <span class="record-row__action">{action}</span>
+  </span>
+</a>
+
+<style>
+  .record-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    transition: border-color var(--motion-fast);
+  }
+
+  .record-row:hover {
+    border-color: var(--color-brown);
+  }
+
+  .record-row__media {
+    display: block;
+    background: var(--color-surface);
+  }
+
+  .record-row__media img {
+    width: 100%;
+    height: 100%;
+    /* On the row the cover fills its panel; the full, uncropped photograph
+       lives on the record page. Aspect ratios are close enough that a gentle
+       cover crop here never loses the subject. */
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+  }
+
+  .record-row__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+  }
+
+  .record-row__year {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    color: var(--color-ink);
+  }
+
+  .record-row__label {
+    color: var(--color-ink);
+  }
+
+  .record-row__summary {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  .record-row__action {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--color-brown);
+  }
+
+  .record-row:hover .record-row__action {
+    color: var(--color-brown-strong);
+    text-decoration: underline;
+  }
+
+  /* Side-by-side once there is room: image on the left, label block on the
+     right, vertically centred. */
+  @media (min-width: 34rem) {
+    .record-row {
+      grid-template-columns: 40% 1fr;
+      align-items: stretch;
+    }
+
+    .record-row__body {
+      justify-content: center;
+      padding: var(--space-8);
+    }
+  }
+</style>

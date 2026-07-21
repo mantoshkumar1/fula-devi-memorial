@@ -1,0 +1,81 @@
+---
+/**
+ * A designed link to a public guide (a PDF), not a raw attachment. Shows the
+ * guide's title, a short description, and — for a draft — an honest "Draft
+ * resource" label. The whole card is the link; the file path is never shown.
+ */
+interface Props {
+  title: string;
+  description: string;
+  state: 'draft' | 'final';
+  href: string;
+  action: string;
+}
+
+const { title, description, state, href, action } = Astro.props;
+const isDraft = state === 'draft';
+---
+
+<a class="resource" href={href} rel={isDraft ? 'nofollow' : undefined}>
+  <span class="resource__head">
+    <span class="resource__title">{title}</span>
+    {isDraft && <span class="resource__state">Draft resource</span>}
+  </span>
+  <span class="resource__desc">{description}</span>
+  <span class="resource__action">{action}</span>
+</a>
+
+<style>
+  .resource {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    max-width: var(--width-prose);
+    padding: var(--space-6);
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color var(--motion-fast);
+  }
+
+  .resource:hover {
+    border-color: var(--color-brown);
+  }
+
+  .resource__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .resource__title {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    color: var(--color-ink);
+  }
+
+  /* A quiet label, not a bright badge: muted text inside a hairline outline. */
+  .resource__state {
+    padding: 2px var(--space-2);
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  .resource__desc {
+    color: var(--color-ink-soft);
+  }
+
+  .resource__action {
+    font-size: var(--text-sm);
+    color: var(--color-brown);
+  }
+
+  .resource:hover .resource__action {
+    color: var(--color-brown-strong);
+    text-decoration: underline;
+  }
+</style>

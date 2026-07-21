@@ -1,0 +1,73 @@
+---
+/**
+ * A responsive grid of programme photographs for a record page.
+ *
+ * Two columns on wider screens, one on a phone. Natural aspect ratios are
+ * preserved — no fixed-height cropping — so portrait and landscape frames sit
+ * as they were taken. Each photograph links to its own full-size file. No
+ * JavaScript, no lightbox: exploring a photo is a plain navigation.
+ */
+import type { GalleryImage } from '../data/work-records.ts';
+
+interface Props {
+  images: GalleryImage[];
+}
+
+const { images } = Astro.props;
+---
+
+<ul class="gallery">
+  {
+    images.map((image) => (
+      <li>
+        <a href={image.src}>
+          <img
+            src={image.src}
+            alt={image.alt}
+            width={image.width}
+            height={image.height}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  li {
+    margin: 0;
+    max-width: none;
+  }
+
+  a {
+    display: block;
+    border-radius: var(--radius-sm);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+  }
+
+  @media (min-width: 34rem) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+      /* Rows size to their own content so mixed portrait/landscape frames keep
+         their true proportions instead of being stretched to match. */
+      align-items: start;
+    }
+  }
+</style>

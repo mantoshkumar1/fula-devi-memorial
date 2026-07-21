@@ -1,145 +1,157 @@
 ---
 /**
- * Our Work. The institution's operational record: each programme, the state it
- * is in, and where the public records supporting it can be found.
+ * Our Work. A calm editorial account of what the institution does: each
+ * programme, whether it is ongoing, recurring or completed, when it began, and
+ * — where one exists — a visual record or a useful resource.
  *
- * No invented projects, numbers or links. A record that does not exist yet is
- * absent from this page, not promised in a broken link.
+ * The programme previews and resource cards are derived from a single data
+ * source (src/data/work-records.ts); nothing about a record is written twice.
+ * A record appears only after its images have passed human privacy review.
  */
 import ContentPage from '../layouts/ContentPage.astro';
+import RecordPreview from '../components/RecordPreview.astro';
+import ResourceCard from '../components/ResourceCard.astro';
+import { clothingRecords, resourceBySlug } from '../data/work-records.ts';
 
-/**
- * Published clothing distribution records, by year. Every entry here must
- * correspond to a real file under public/records/clothing/ — a link on this
- * page is a promise that it resolves.
- */
-const clothingRecords = [
-  { year: 2021, photographs: 7, newspaper: false },
-  { year: 2024, photographs: 4, newspaper: true },
-  { year: 2025, photographs: 4, newspaper: true },
-].map(({ year, photographs, newspaper }) => ({
-  year,
-  items: [
-    ...Array.from({ length: photographs }, (_, i) => ({
-      href: `/records/clothing/${year}/distribution-${String(i + 1).padStart(2, '0')}.jpg`,
-      label: `Photograph ${i + 1}`,
-    })),
-    ...(newspaper
-      ? [
-          {
-            href: `/records/clothing/${year}/newspaper-01.jpg`,
-            label: 'Newspaper coverage',
-          },
-        ]
-      : []),
-  ],
-}));
+const ayushman = resourceBySlug('ayushman-bharat-guide');
+const pmjjby = resourceBySlug('pmjjby-guide');
 ---
 
 <ContentPage
   title="Our Work"
-  description="What the institution does, what it has completed, and where the public records supporting that work can be found."
+  description="Education support, seasonal clothing distribution, public-health assistance, financial awareness and selected programme records from Fula Devi Memorial Sewa Sansthan."
 >
   <p>
-    This page records what the institution does, what it has already completed,
-    and where the supporting public records can be found.
-  </p>
-  <p>
-    The work is small and specific. It is meant to continue. Alongside the
-    programmes below, the institution makes a charitable contribution each year.
+    We are a small charitable institution. Our work is focused and practical, and
+    every commitment is made with the intention that it can continue.
   </p>
 
   <h2>Education</h2>
-  <p class="status">Status: Ongoing</p>
+  <p class="meta-line">Ongoing · Since 2025</p>
   <p>
-    The institution supports one child through to graduation. It meets that
-    child's educational costs and the essential living needs that keep school
-    possible.
+    The institution has committed to supporting one child through graduation by
+    meeting educational and essential living needs.
   </p>
 
   <h2>Seasonal Clothing Distribution</h2>
-  <p class="status">Status: Recurring</p>
+  <p class="meta-line">Recurring · Since 2020</p>
   <p>
-    Warm blankets before winter and essential clothing during summer, given to
-    families in need.
+    Seasonal clothing distributions began before formal registration and
+    continue as recurring work in the village.
   </p>
   <p>
-    Larger programmes were held in 2021, 2024 and 2025. Smaller distributions
-    take place between them.
+    Distribution is prioritised for older adults, widows, persons with
+    disabilities, and people with limited financial means, especially women.
   </p>
   <p>
-    The institution was formally registered in February 2022. The December 2021
-    distribution was community work that immediately preceded its formation and
-    reflected the same mission it was established to continue.
+    Warm blankets are distributed before winter. Summer clothing includes saris,
+    blouses, petticoats, shirts, and dhotis. Smaller distributions also take
+    place during village visits.
   </p>
+  <p>
+    The work began in 2020, before the institution was formally registered in
+    February 2022. Public records currently available document the December
+    2021, 2024 and 2025 programmes.
+  </p>
+
+  <h3>Programme Records</h3>
+  <div class="record-list">
+    {
+      clothingRecords.map((record) => (
+        <RecordPreview
+          href={record.route}
+          cover={record.preview.cover}
+          coverAlt={record.preview.coverAlt}
+          coverWidth={record.preview.coverWidth}
+          coverHeight={record.preview.coverHeight}
+          yearLabel={record.preview.yearLabel}
+          programmeLabel={record.preview.programmeLabel}
+          recordSummary={record.preview.recordSummary}
+          action="View programme record →"
+        />
+      ))
+    }
+  </div>
 
   <h2>Access to Public Healthcare</h2>
-  <p class="status">Status: Completed</p>
+  <p class="meta-line">Completed · 2024</p>
   <p>
-    The institution helped eligible families below the poverty line access the
-    Ayushman Bharat health insurance scheme.
+    The institution helped eligible families throughout the village understand
+    the Ayushman Bharat health insurance scheme, gather the required documents,
+    complete application forms, and submit them.
   </p>
+  <p>
+    The work focused on helping people navigate procedures that many found
+    difficult to understand or complete without assistance.
+  </p>
+  {
+    ayushman && (
+      <ResourceCard
+        title={ayushman.title}
+        description={ayushman.description}
+        state={ayushman.state}
+        href={ayushman.href}
+        action="Open draft guide →"
+      />
+    )
+  }
 
   <h2>Financial Awareness</h2>
-  <p class="status">Status: Completed</p>
+  <p class="meta-line">Completed · 2024</p>
   <p>
-    The institution explained the Pradhan Mantri Jeevan Jyoti Bima Yojana
-    (PMJJBY), a government life insurance scheme, to families who were eligible
-    for it.
+    The institution helped villagers understand the Pradhan Mantri Jeevan Jyoti
+    Bima Yojana (PMJJBY), including the purpose of the scheme and the enrolment
+    process.
   </p>
+  <p>
+    Smaller awareness efforts concerning public schemes continue when practical
+    needs arise.
+  </p>
+  {
+    pmjjby && (
+      <ResourceCard
+        title={pmjjby.title}
+        description={pmjjby.description}
+        state={pmjjby.state}
+        href={pmjjby.href}
+        action="Open draft guide →"
+      />
+    )
+  }
 
   <h2>Educational Materials</h2>
-  <p class="status">Status: Completed</p>
-  <p>The institution donated books and study materials.</p>
-
-  <h2>Public Records</h2>
-  <p>
-    The work above is documented by public records. The photographs and
-    newspaper coverage from each clothing distribution are listed below. The
-    annual report card will be published here once it has been reviewed and
-    approved for release.
-  </p>
-
-  <h3>Clothing Distribution</h3>
-  {
-    clothingRecords.map((record) => (
-      <div class="record-group">
-        <h4>{record.year}</h4>
-        <ul>
-          {record.items.map((item) => (
-            <li>
-              <a href={item.href}>{item.label}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    ))
-  }
+  <p class="meta-line">Completed · 2024</p>
+  <p>Books and study materials were donated to the village school.</p>
 
   <h2>Looking Ahead</h2>
   <p>
-    New work begins only when the existing commitments can continue
-    responsibly. A commitment that cannot be sustained is not taken on.
+    The institution will undertake additional work only when existing
+    commitments can continue responsibly.
   </p>
   <p>
-    The current priorities are scholarships, and practical educational resources
-    that are useful to the public.
+    Scholarships are the next area of educational support under consideration.
+    Practical public guides will be expanded as they are completed and verified.
   </p>
 </ContentPage>
 
 <style>
-  /* The state of each programme, kept quieter than the text it labels. */
-  .status {
+  /* Status and year, kept quiet and set immediately beneath the heading. */
+  .meta-line {
     font-size: var(--text-sm);
     color: var(--color-ink-soft);
   }
 
-  /* A year of records, kept compact so the list reads as an index. */
-  .record-group h4 {
-    margin-bottom: var(--space-2);
+  /* Programme previews stack with even breathing room between them. */
+  .record-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
   }
 
-  .record-group ul {
-    margin-top: 0;
+  /* The previews and resource cards are whole-card links; the prose
+     underline for inline links must not run across them. */
+  :global(.prose a.record-row),
+  :global(.prose a.resource) {
+    text-decoration: none;
   }
 </style>

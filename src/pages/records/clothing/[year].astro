@@ -1,0 +1,168 @@
+---
+/**
+ * A dedicated clothing programme record page, one per documented year.
+ *
+ * Generated from the single work-records data source, so every published
+ * clothing year gets a page and nothing is hand-duplicated. The visitor sees a
+ * lead overview photograph, any independent press coverage, and the remaining
+ * photographs as a plain grid — no filenames, no slideshow, no JavaScript.
+ */
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Container from '../../../components/Container.astro';
+import PageIntro from '../../../components/PageIntro.astro';
+import Breadcrumbs from '../../../components/Breadcrumbs.astro';
+import RecordGallery from '../../../components/RecordGallery.astro';
+import { clothingRecords, type ClothingRecord } from '../../../data/work-records.ts';
+
+export function getStaticPaths() {
+  return clothingRecords.map((record) => ({
+    params: { year: record.slug },
+    props: { record },
+  }));
+}
+
+interface Props {
+  record: ClothingRecord;
+}
+
+const { record } = Astro.props;
+const { page } = record;
+
+// BreadcrumbList structured data, matching the visible trail exactly.
+const abs = (path: string) => new URL(path, Astro.site).href;
+const crumbs = [
+  { name: 'Home', url: abs('/') },
+  { name: 'Our Work', url: abs('/our-work/') },
+  { name: page.title, url: abs(Astro.url.pathname) },
+];
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    item: c.url,
+  })),
+};
+---
+
+<BaseLayout title={page.title} description={page.description}>
+  <Container>
+    <article class="record">
+      <Breadcrumbs
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Our Work', href: '/our-work/' },
+          { name: page.title },
+        ]}
+      />
+
+      <PageIntro title={page.title} />
+
+      <p class="lede">{page.opening}</p>
+
+      <figure class="lead">
+        <img
+          src={page.lead.src}
+          alt={page.lead.alt}
+          width={page.lead.width}
+          height={page.lead.height}
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+
+      {
+        page.coverage && (
+          <section class="section">
+            <h2>Independent Coverage</h2>
+            <figure class="clipping">
+              <img
+                src={page.coverage.src}
+                alt={page.coverage.alt}
+                width={page.coverage.width}
+                height={page.coverage.height}
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+            <p class="clipping-link">
+              <a href={page.coverage.src}>Open full clipping →</a>
+            </p>
+          </section>
+        )
+      }
+
+      <section class="section">
+        <h2>Photographs</h2>
+        <RecordGallery images={page.gallery} />
+      </section>
+    </article>
+  </Container>
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(breadcrumbLd)}
+    is:inline
+  />
+</BaseLayout>
+
+<style>
+  .record {
+    padding-block: var(--space-12) var(--space-8);
+  }
+
+  .lede {
+    font-size: var(--text-lg);
+    color: var(--color-ink-soft);
+  }
+
+  .lead {
+    margin-block-start: var(--space-8);
+  }
+
+  .lead img {
+    width: 100%;
+    height: auto;
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+  }
+
+  .section {
+    margin-block-start: var(--space-12);
+  }
+
+  .section h2 {
+    margin-block-end: var(--space-6);
+  }
+
+  /* The clipping is shown in full, scaled to fit — never cropped — and capped
+     in height so a tall column does not overwhelm the page. */
+  .clipping {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-4);
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+  }
+
+  .clipping img {
+    max-width: 100%;
+    max-height: 75vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .clipping-link {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .clipping-link a {
+    text-decoration: underline;
+  }
+</style>

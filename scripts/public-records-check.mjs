@@ -1,0 +1,162 @@
+#!/usr/bin/env node
+/**
+ * Public Records validation — zero dependencies, pure Node.
+ *
+ * Checks that the single work-records data source and the files it references
+ * agree: every published record points at a real file, follows the stable
+ * naming rules, generates a real route, and — for a draft guide — is honestly
+ * marked and kept out of search indexes.
+ *
+ * Like the Privacy Pipeline it is deliberately byte-level: it reads the data
+ * source as text rather than importing it, so it runs identically in the
+ * pre-commit hook, in GitHub Actions and in the Cloudflare build with no
+ * install step and no TypeScript toolchain.
+ *
+ * WHAT IT CANNOT DO: it cannot see a face. Whether a photograph or document is
+ * safe to publish is a human editorial judgement (see the Privacy Pipeline and
+ * docs/ADDING_PUBLIC_RECORDS.md). This script only guards structure.
+ *
+ * Exits non-zero if anything is wrong.
+ */
+
+import { readFile, access } from 'node:fs/promises';
+import path from 'node:path';
+
+const DATA = 'src/data/work-records.ts';
+const PUBLIC = 'public';
+const HEADERS = 'public/_headers';
+
+/** Page generators, one per record area (discriminator `type`). */
+const GENERATORS = {
+  clothing: 'src/pages/records/clothing/[year].astro',
+  education: 'src/pages/records/education/[slug].astro',
+};
+
+const errors = [];
+let assetsChecked = 0;
+let routesChecked = 0;
+
+const exists = (p) =>
+  access(p).then(
+    () => true,
+    () => false,
+  );
+
+const text = await readFile(DATA, 'utf8');
+const headers = (await exists(HEADERS)) ? await readFile(HEADERS, 'utf8') : '';
+
+// Every /records/... string literal in the data source: assets and routes.
+const refs = [...text.matchAll(/['"](\/records\/[^'"]+)['"]/g)].map((m) => m[1]);
+const unique = [...new Set(refs)];
+const assets = unique.filter((r) => /\.(jpg|jpeg|png|pdf)$/i.test(r));
+const routes = unique.filter((r) => r.endsWith('/'));
+
+// --- assets: existence and stable naming ---
+for (const ref of assets) {
+  assetsChecked += 1;
+  const base = ref.split('/').pop();
+  const seg = ref.split('/'); // ['', 'records', '<area>', '<slug>', '<file>']
+  const area = seg[2];
+
+  if (!(await exists(path.join(PUBLIC, ref)))) {
+    errors.push(`Referenced file does not exist: ${ref}`);
+  }
+  if (/\s/.test(ref)) {
+    errors.push(`Path contains a space: ${ref}`);
+  }
+  // Safe published names are lowercase words, digits and hyphens only. This
+  // rejects spaces, capitals and raw camera/WhatsApp exports — the usual way a
+  // personal name reaches a filename. It is a guard, not proof of safety.
+  if (!/^[a-z0-9][a-z0-9-]*\.(jpg|jpeg|png|pdf)$/.test(base)) {
+    errors.push(`Unsafe filename (possible personal name or export name): ${ref}`);
+  }
+
+  if (area === 'clothing') {
+    const year = seg[3];
+    if (!/^\d{4}$/.test(year)) {
+      errors.push(`Clothing year directory is not four digits: ${ref}`);
+    }
+    const ok =
+      base === 'cover.jpg' ||
+      /^distribution-\d{2}\.jpg$/.test(base) ||
+      /^newspaper-\d{2}\.jpg$/.test(base);
+    if (!ok) {
+      errors.push(
+        `Clothing file must be distribution-NN.jpg, newspaper-NN.jpg or cover.jpg: ${ref}`,
+      );
+    }
+  }
+
+  if (area === 'education' && ref.endsWith('.jpg')) {
+    if (!/^report-card-\d{4}-\d{4}-page-\d\.jpg$/.test(base)) {
+      errors.push(
+        `Education record file must be report-card-<year>-<year>-page-N.jpg: ${ref}`,
+      );
+    }
+  }
+}
+
+// --- routes: clean shape, real directory, real generator ---
+for (const route of routes) {
+  routesChecked += 1;
+  if (!/^\/records\/[a-z-]+\/[a-z0-9-]+\/$/.test(route)) {
+    errors.push(`Route is not a clean /records/<area>/<slug>/ path: ${route}`);
+    continue;
+  }
+  const area = route.split('/')[2];
+  const generator = GENERATORS[area];
+  if (!generator) {
+    errors.push(`No known page generator for record area "${area}": ${route}`);
+    continue;
+  }
+  if (!(await exists(generator))) {
+    errors.push(`Route ${route} has no generator page at ${generator}`);
+  }
+  // The record's own directory of files should exist under public/.
+  const dir = path.join(PUBLIC, route);
+  if (!(await exists(dir))) {
+    errors.push(`Route ${route} has no directory at ${dir}`);
+  }
+}
+
+// --- resource guides: explicit state, and drafts kept out of indexes ---
+const pdfs = assets.filter((a) => a.endsWith('.pdf'));
+for (const pdf of pdfs) {
+  // The guide's object literal is small; look at the text around its href.
+  const at = text.indexOf(`'${pdf}'`);
+  const window = at >= 0 ? text.slice(Math.max(0, at - 500), at + 200) : '';
+  const state = window.match(/state:\s*'(draft|final)'/);
+  if (!state) {
+    errors.push(`Resource guide ${pdf} has no explicit state: 'draft' | 'final'`);
+    continue;
+  }
+  if (state[1] === 'draft') {
+    if (!headers.includes(pdf)) {
+      errors.push(`Draft guide ${pdf} is not listed in ${HEADERS}`);
+    } else {
+      const hi = headers.indexOf(pdf);
+      if (!/X-Robots-Tag:\s*noindex/i.test(headers.slice(hi, hi + 200))) {
+        errors.push(`Draft guide ${pdf} lacks "X-Robots-Tag: noindex" in ${HEADERS}`);
+      }
+    }
+  }
+}
+
+// --- report ---
+console.log(
+  `Public Records: checked ${assetsChecked} asset(s) and ${routesChecked} route(s) ` +
+    `declared in ${DATA}.`,
+);
+
+if (errors.length) {
+  console.error('');
+  for (const e of errors) console.error(`  ✗ ${e}`);
+  console.error('\n✗ Public Records: FAILED');
+  process.exit(1);
+}
+
+console.log(
+  'Note: structure only. A face cannot be validated by a script — every record ' +
+    'still needs human privacy review before publication.',
+);
+console.log('\n✓ Public Records: all checks passed.');

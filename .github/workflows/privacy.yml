@@ -22,3 +22,6 @@ jobs:
 
       - name: Run Privacy Pipeline checks
         run: node scripts/privacy-check.mjs
+
+      - name: Validate public records
+        run: node scripts/public-records-check.mjs

@@ -1,0 +1,76 @@
+---
+/**
+ * A visible breadcrumb trail. Pairs with the BreadcrumbList structured data
+ * that ContentPage already emits, so machines and people see the same path.
+ * The last item is the current page and is not a link.
+ */
+interface Crumb {
+  name: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      items.map((crumb, i) => {
+        const isLast = i === items.length - 1;
+        return (
+          <li>
+            {crumb.href && !isLast ? (
+              <a href={crumb.href}>{crumb.name}</a>
+            ) : (
+              <span aria-current={isLast ? 'page' : undefined}>{crumb.name}</span>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .breadcrumbs {
+    margin-bottom: var(--space-8);
+  }
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  /* A quiet separator between crumbs, drawn rather than typed so it is never
+     read aloud as content. */
+  li + li::before {
+    content: '/';
+    margin-inline-end: var(--space-2);
+    color: var(--color-border);
+  }
+
+  a {
+    color: var(--color-ink-soft);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--color-brown-strong);
+    text-decoration: underline;
+  }
+
+  [aria-current='page'] {
+    color: var(--color-ink);
+  }
+</style>
