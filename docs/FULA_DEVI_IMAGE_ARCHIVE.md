@@ -1,7 +1,11 @@
 # Fula Devi — photographic archive
 
-Record of the family photographs of Fula Devi (1958–2006): which are published,
-which are retained privately, and what is and is not known about each.
+Record of the family photographs of Fula Devi (1956 – 22 July 2006): which are
+published, which are retained privately, and what is and is not known about each.
+
+Birth year confirmed by the family: 1956.
+Exact birth date has not been confirmed.
+Death date confirmed: 22 July 2006.
 
 ## Permanent archival rule
 
