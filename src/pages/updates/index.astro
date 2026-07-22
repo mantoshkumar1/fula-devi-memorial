@@ -1,31 +1,123 @@
 ---
 /**
- * Updates index. Reverse-chronological list of published updates.
- * Drafts are shown in dev only; excluded from the production build.
- * Shows an honest empty state when there are none.
+ * Updates. A restrained institutional record: only developments that become
+ * part of the institution's lasting history are listed here, newest first.
+ *
+ * The entries are fixed, approved copy held inline. This page intentionally
+ * does not read the `updates` content collection or link to per-entry pages:
+ * it is a short, curated record, not a generated feed. Single page, no
+ * categories, no teaser behaviour.
  */
 import ContentPage from '../../layouts/ContentPage.astro';
-import UpdateList from '../../components/UpdateList.astro';
-import { getCollection } from 'astro:content';
 
-const entries = await getCollection(
-  'updates',
-  ({ data }) => data.status === 'published' || import.meta.env.DEV,
-);
-entries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+interface RelatedLink {
+  label: string;
+  href: string;
+}
 
-const items = entries.map((e) => ({
-  href: `/updates/${e.slug}/`,
-  title: e.data.title,
-  date: e.data.date,
-  summary: e.data.summary,
-}));
+interface Entry {
+  /** Machine-readable date for the <time> element. */
+  iso: string;
+  /** Display date, exactly as approved. */
+  date: string;
+  title: string;
+  body: string;
+  related: RelatedLink[];
+}
+
+const institution: RelatedLink = { label: 'The Institution', href: '/institution/' };
+const governance: RelatedLink = { label: 'Governance', href: '/governance/' };
+const ourWork: RelatedLink = { label: 'Our Work', href: '/our-work/' };
+
+// Newest first. Both dates confirmed by the institution.
+const entries: Entry[] = [
+  {
+    iso: '2026-07-22',
+    date: '22 July 2026',
+    title: 'Website published',
+    body:
+      "The institution's website was published on the twentieth anniversary of Fula Devi's death, bringing together its purpose, governance, programme history, documentary evidence, and public guides into a single public record.",
+    related: [institution, governance, ourWork],
+  },
+  {
+    iso: '2022-02-27',
+    date: '27 February 2022',
+    title: 'Institution registered',
+    body:
+      'Fula Devi Memorial Sewa Sansthan was formally registered in Bihar. Community work associated with the institution had begun before its registration.',
+    related: [institution, governance],
+  },
+];
 ---
 
 <ContentPage
   title="Updates"
-  description="Short notes on the institution's work as it happens."
-  standfirst="Short notes as the work continues."
+  description="A record of significant developments in Fula Devi Memorial Sewa Sansthan."
 >
-  <UpdateList items={items} />
+  <p>
+    Significant developments in the institution are recorded here. Routine
+    activities are not.
+  </p>
+
+  {
+    entries.map((entry) => (
+      <article class="record">
+        <p class="record-date">
+          <time datetime={entry.iso}>{entry.date}</time>
+        </p>
+        <h2>{entry.title}</h2>
+        <p class="record-body">{entry.body}</p>
+        <p class="record-related">
+          <span class="record-related-label">Related:</span>{' '}
+          {entry.related.map((link, i) => (
+            <Fragment>
+              {i > 0 && (
+                <span class="record-related-sep" aria-hidden="true">
+                  {' · '}
+                </span>
+              )}
+              <a href={link.href}>{link.label}</a>
+            </Fragment>
+          ))}
+        </p>
+      </article>
+    ))
+  }
 </ContentPage>
+
+<style>
+  /* Each entry is separated by a subtle hairline, matching the site's border
+     token. No cards, no icons, no decoration. */
+  .record {
+    border-top: var(--border-hair);
+    padding-top: var(--space-6);
+  }
+
+  /* The first entry follows the page introduction and needs no divider. */
+  .record:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .record-date {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  /* Pair the title tightly with its date. Size and colour come from the global
+     heading styles; only the rhythm is set here. */
+  .record h2 {
+    margin-top: var(--space-2);
+  }
+
+  .record-body {
+    margin-top: var(--space-3);
+  }
+
+  /* A quiet related line: muted label and separators, ordinary prose links. */
+  .record-related {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>
