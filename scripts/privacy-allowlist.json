@@ -6,5 +6,7 @@
     "A single line can also be exempted by putting 'privacy-allow' in a comment",
     "on that line."
   ],
-  "allow": []
+  "allow": [
+    "Fula.Devi.NGO@outlook.com"
+  ]
 }

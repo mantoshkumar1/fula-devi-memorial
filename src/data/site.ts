@@ -53,8 +53,9 @@ export const site: SiteData = {
   // public banner and may be shown on the site.
   registrationNumber: 'S000380',
 
-  // PENDING: confirm the official, publishable contact email.
-  contactEmail: null,
+  // Confirmed: the official institutional email, published as the primary
+  // public contact channel.
+  contactEmail: 'Fula.Devi.NGO@outlook.com',
 
   // PENDING: replace with a real 1200x630 raster social image before launch.
   ogImage: '/og-default.svg',
