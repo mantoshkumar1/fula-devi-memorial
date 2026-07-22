@@ -18,6 +18,18 @@
  * navigate; a polite live region announces "5 of 6 · Independent coverage" and
  * the caption when the image changes.
  */
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+
+// Version the script URL by its own content. The module lives at a stable path
+// (public/scripts/media-viewer.js) with a long browser cache, so a returning
+// visitor could otherwise run an old cached module against new page markup and
+// break the viewer. Hashing the content into the query means every change ships
+// a fresh URL that no browser has cached, while unchanged deploys reuse it.
+const viewerVersion = createHash('sha256')
+  .update(readFileSync('public/scripts/media-viewer.js'))
+  .digest('hex')
+  .slice(0, 10);
 ---
 
 <dialog class="mv" aria-label="Media viewer" aria-modal="true">
@@ -173,4 +185,5 @@
   }
 </style>
 
-<script type="module" src="/scripts/media-viewer.js" is:inline></script>
+<script type="module" src={`/scripts/media-viewer.js?v=${viewerVersion}`} is:inline
+></script>
