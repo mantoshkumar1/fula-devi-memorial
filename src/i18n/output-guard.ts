@@ -9,6 +9,7 @@ import {
 } from './routes.ts';
 import { PUBLISHED_LOCALES, localeIsPublished } from './types.ts';
 import { validateHeaderIdentityOutput } from '../../scripts/lib/header-identity-output.mjs';
+import { validateLocalizedContentOutput } from '../../scripts/lib/localized-content-output.mjs';
 
 interface RoutePair {
   label: string;
@@ -433,6 +434,7 @@ function validateBilingualOutput(
   return [
     ...validateRouteFiles(root, files, pairs),
     ...validateHeaderIdentityOutput(root),
+    ...validateLocalizedContentOutput(root),
     ...pairs.flatMap((pair) => validatePagePair(root, origin, pair)),
     ...validateSitemap(root, origin, pairs),
     ...validateInternalLinks(root, origin, pairs),

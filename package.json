@@ -8,13 +8,14 @@
     "dev": "astro dev",
     "prebuild": "npm run privacy:check && npm run records:check",
     "build": "astro build",
-    "postbuild": "npm run header-identity:check",
+    "postbuild": "npm run publication-output:check",
     "preview": "astro preview",
     "check": "astro check",
     "privacy:sanitize": "node scripts/privacy-sanitize.mjs",
     "privacy:check": "node scripts/privacy-check.mjs",
     "records:check": "node scripts/public-records-check.mjs",
     "header-identity:check": "node scripts/header-identity-check.mjs",
+    "publication-output:check": "node scripts/publication-output-check.mjs",
     "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {

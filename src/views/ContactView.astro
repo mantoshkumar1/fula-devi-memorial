@@ -59,7 +59,7 @@ const copyVersion = createHash('sha256')
 
   <h2>{content.officeHeading}</h2>
   <address class="office">
-    {site.name}
+    {content.officeName}
     {content.officeAddressLines.map((line) => (
       <Fragment><br />{line}</Fragment>
     ))}

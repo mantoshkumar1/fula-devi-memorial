@@ -132,6 +132,7 @@ export interface GovernanceContent extends PageMeta {
   introduction: string;
   registrationHeading: string;
   registeredName: string;
+  registeredAddress: string;
   labels: {
     registeredName: string;
     registrationNumber: string;
@@ -153,6 +154,7 @@ export interface ContactContent extends PageMeta {
   copySuccess: string;
   emailFallback: string;
   officeHeading: string;
+  officeName: string;
   officeAddressLines: readonly string[];
   mapAction: string;
   visitNote: string;

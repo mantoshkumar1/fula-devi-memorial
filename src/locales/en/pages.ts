@@ -246,6 +246,7 @@ export const englishPages = {
     introduction: `Fula Devi Memorial Sewa Sansthan was formally registered in ${site.jurisdiction}, on ${registrationDate}. Community work associated with the institution had begun before its registration.`,
     registrationHeading: 'Registration',
     registeredName: site.name,
+    registeredAddress: site.registeredAddress,
     labels: {
       registeredName: 'Registered name',
       registrationNumber: 'Registration number',
@@ -273,6 +274,7 @@ export const englishPages = {
     copySuccess: 'Copied.',
     emailFallback: 'An official contact email will be published here.',
     officeHeading: 'Registered office',
+    officeName: site.name,
     officeAddressLines: [
       'Saraswati Vihar Colony, Saichak',
       'P.O. & P.S. Beur',
