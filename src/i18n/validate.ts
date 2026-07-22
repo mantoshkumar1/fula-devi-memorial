@@ -8,8 +8,12 @@ import {
   DYNAMIC_ROUTE_KEYS,
   ROUTES,
   STATIC_ROUTE_KEYS,
+  routeFor,
   type RouteKey,
+  type StaticRouteKey,
 } from './routes.ts';
+import { PRIMARY_NAV_ROUTE_KEYS } from '../data/nav.ts';
+import { SHARED_UI_BY_LOCALE } from './ui.ts';
 
 const PLACEHOLDER = /:([a-z][a-z0-9]*)/g;
 
@@ -29,8 +33,84 @@ function assertRouteShape(routeKey: RouteKey, locale: Locale, path: string): voi
   }
 }
 
+function assertNonEmpty(label: string, value: string): void {
+  if (!value.trim()) throw new Error(`${label} must not be empty`);
+}
+
+function validateNavigation(
+  label: string,
+  routeKeys: readonly StaticRouteKey[],
+  locale: (typeof PUBLISHED_LOCALES)[number],
+): void {
+  const seen = new Set<StaticRouteKey>();
+  const ui = SHARED_UI_BY_LOCALE[locale];
+
+  for (const routeKey of routeKeys) {
+    if (seen.has(routeKey)) {
+      throw new Error(`${label} contains duplicate route ${routeKey}`);
+    }
+    seen.add(routeKey);
+    assertNonEmpty(
+      `${locale}.navigation.labels.${routeKey}`,
+      ui.navigation.labels[routeKey],
+    );
+    routeFor(routeKey, locale);
+  }
+}
+
+function validateSharedUi(): void {
+  if (PUBLISHED_LOCALES.length !== 1 || PUBLISHED_LOCALES[0] !== 'en') {
+    throw new Error('Phase 2 must publish only the English locale');
+  }
+
+  for (const locale of PUBLISHED_LOCALES) {
+    const ui = SHARED_UI_BY_LOCALE[locale];
+    if (ui.locale !== locale) {
+      throw new Error(`${locale} shared UI declares locale ${ui.locale}`);
+    }
+
+    const requiredStrings = [
+      ['institution.displayName', ui.institution.displayName],
+      ['metadata.htmlLanguage', ui.metadata.htmlLanguage],
+      ['metadata.openGraphLocale', ui.metadata.openGraphLocale],
+      ['metadata.titleSeparator', ui.metadata.titleSeparator],
+      ['skipToContent', ui.skipToContent],
+      ['navigation.primaryAriaLabel', ui.navigation.primaryAriaLabel],
+      ['navigation.footerAriaLabel', ui.navigation.footerAriaLabel],
+      ['footer.registrationNumberLabel', ui.footer.registrationNumberLabel],
+      ['breadcrumbs.ariaLabel', ui.breadcrumbs.ariaLabel],
+      ['breadcrumbs.homeLabel', ui.breadcrumbs.homeLabel],
+    ] as const;
+
+    for (const [key, value] of requiredStrings) {
+      assertNonEmpty(`${locale}.${key}`, value);
+    }
+    if (locale === 'en') {
+      if (!ui.institution.mastheadSubtitle) {
+        throw new Error(`${locale}.institution.mastheadSubtitle is required`);
+      }
+      assertNonEmpty(
+        `${locale}.institution.mastheadSubtitle.text`,
+        ui.institution.mastheadSubtitle.text,
+      );
+      assertNonEmpty(
+        `${locale}.institution.mastheadSubtitle.language`,
+        ui.institution.mastheadSubtitle.language,
+      );
+    }
+    for (const routeKey of STATIC_ROUTE_KEYS) {
+      assertNonEmpty(
+        `${locale}.navigation.labels.${routeKey}`,
+        ui.navigation.labels[routeKey],
+      );
+    }
+
+    validateNavigation('Primary navigation', PRIMARY_NAV_ROUTE_KEYS, locale);
+  }
+}
+
 /**
- * Build-time validation for the Phase 1 foundation.
+ * Build-time validation for the Version 1.1 localization foundation.
  *
  * This validates declarations only. It does not register Astro i18n routing,
  * create Hindi pages, or alter any rendered output.
@@ -92,4 +172,6 @@ export function validateI18nFoundation(): void {
   if (ROUTES.home.paths.en !== '/' || ROUTES.home.paths.hi !== '/hi/') {
     throw new Error('Home routes must remain / and /hi/');
   }
+
+  validateSharedUi();
 }

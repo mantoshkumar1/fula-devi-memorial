@@ -7,6 +7,7 @@ import ContentPage from '../../layouts/ContentPage.astro';
 import DocumentLink from '../../components/DocumentLink.astro';
 import Figure from '../../components/Figure.astro';
 import { getCollection } from 'astro:content';
+import { routeFor, sharedUiFor } from '../../i18n/index.ts';
 
 export async function getStaticPaths() {
   const entries = await getCollection(
@@ -17,6 +18,8 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+const locale = 'en' as const;
+const ui = sharedUiFor(locale);
 const { Content } = await entry.render();
 const { title, date, summary, document, image } = entry.data;
 
@@ -29,9 +32,13 @@ const label = date.toLocaleDateString('en-IN', {
 ---
 
 <ContentPage
+  locale={locale}
   title={title}
   description={summary}
-  parent={{ name: 'Updates', href: '/updates/' }}
+  parent={{
+    name: ui.navigation.labels.updates,
+    href: routeFor('updates', locale),
+  }}
 >
   <p class="update-date"><time datetime={iso}>{label}</time></p>
   {image && <Figure src={image.src} alt={image.alt} caption={image.caption} />}

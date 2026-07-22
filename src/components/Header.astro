@@ -4,23 +4,24 @@
  * No hamburger, no JS — 7 static links that wrap on narrow screens.
  * The current page is marked with aria-current="page".
  *
- * The institution's name in Devanagari appears beneath the English name on the
- * home masthead only. `showHindiName` carries that intent explicitly from the
- * home page; it defaults to false, so every internal page stays English-only.
+ * The English home masthead keeps its existing Devanagari subtitle. Its
+ * presence and language come from the locale module rather than this component.
  */
-import { site } from '../data/site.ts';
-import { nav } from '../data/nav.ts';
+import { PRIMARY_NAV_ROUTE_KEYS } from '../data/nav.ts';
+import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
 
 interface Props {
-  /** Show the Hindi name beneath the English masthead title (home only). */
-  showHindiName?: boolean;
+  locale: PublishedLocale;
+  /** Show the locale's optional subtitle beneath the masthead title. */
+  showMastheadSubtitle?: boolean;
 }
 
-const { showHindiName = false } = Astro.props;
-
-// The institution's name in its native Devanagari script — the one canonical
-// copy, rendered as a masthead subtitle only when showHindiName is set.
-const nameHindi = 'फुला देवी मेमोरियल सेवा संस्थान';
+const { locale, showMastheadSubtitle = false } = Astro.props;
+const ui = sharedUiFor(locale);
+const nav = PRIMARY_NAV_ROUTE_KEYS.map((routeKey) => ({
+  label: ui.navigation.labels[routeKey],
+  href: routeFor(routeKey, locale),
+}));
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) =>
@@ -28,9 +29,13 @@ const isCurrent = (href: string) =>
 ---
 
 <header class="site-header">
-  <a class="site-name" href="/">{site.name}</a>
-  {showHindiName && <p class="site-name-hi" lang="hi">{nameHindi}</p>}
-  <nav aria-label="Primary">
+  <a class="site-name" href={routeFor('home', locale)}>{ui.institution.displayName}</a>
+  {
+    showMastheadSubtitle && ui.institution.mastheadSubtitle && (
+      <p class="site-name-hi" lang={ui.institution.mastheadSubtitle.language}>{ui.institution.mastheadSubtitle.text}</p>
+    )
+  }
+  <nav aria-label={ui.navigation.primaryAriaLabel}>
     <ul>
       {
         nav.map((item) => (

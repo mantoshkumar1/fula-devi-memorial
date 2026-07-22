@@ -12,8 +12,11 @@
 import BaseLayout from './BaseLayout.astro';
 import Container from '../components/Container.astro';
 import PageIntro from '../components/PageIntro.astro';
+import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
 
 interface Props {
+  /** Explicit published locale; shared UI never falls back to English. */
+  locale: PublishedLocale;
   title: string;
   description: string;
   heading?: string;
@@ -22,28 +25,31 @@ interface Props {
   parent?: { name: string; href: string };
   /** Keep this page out of search indexes. */
   noindex?: boolean;
-  /** Show the Hindi name in the masthead (home page only). */
-  showHindiName?: boolean;
+  /** Show this locale's optional masthead subtitle (home page only). */
+  showMastheadSubtitle?: boolean;
   /** Render the h1 for assistive tech only, without a visible heading (home). */
   headingHidden?: boolean;
 }
 
 const {
+  locale,
   title,
   description,
   heading,
   standfirst,
   parent,
   noindex,
-  showHindiName,
+  showMastheadSubtitle,
   headingHidden,
 } = Astro.props;
+const ui = sharedUiFor(locale);
 
 // BreadcrumbList structured data for inner pages (skip the home root).
-const isHome = Astro.url.pathname === '/';
+const homePath = routeFor('home', locale);
+const isHome = Astro.url.pathname === homePath;
 const abs = (path: string) => new URL(path, Astro.site).href;
 const crumbs = [
-  { name: 'Home', url: abs('/') },
+  { name: ui.breadcrumbs.homeLabel, url: abs(homePath) },
   ...(parent ? [{ name: parent.name, url: abs(parent.href) }] : []),
   { name: heading ?? title, url: abs(Astro.url.pathname) },
 ];
@@ -60,10 +66,11 @@ const breadcrumbLd = {
 ---
 
 <BaseLayout
+  locale={locale}
   title={title}
   description={description}
   noindex={noindex}
-  showHindiName={showHindiName}
+  showMastheadSubtitle={showMastheadSubtitle}
 >
   <Container>
     <article class="content-page">

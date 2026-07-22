@@ -4,19 +4,23 @@
  * that ContentPage already emits, so machines and people see the same path.
  * The last item is the current page and is not a link.
  */
+import { sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
+
 interface Crumb {
   name: string;
   href?: string;
 }
 
 interface Props {
+  locale: PublishedLocale;
   items: Crumb[];
 }
 
-const { items } = Astro.props;
+const { locale, items } = Astro.props;
+const ui = sharedUiFor(locale);
 ---
 
-<nav class="breadcrumbs" aria-label="Breadcrumb">
+<nav class="breadcrumbs" aria-label={ui.breadcrumbs.ariaLabel}>
   <ol>
     {
       items.map((crumb, i) => {

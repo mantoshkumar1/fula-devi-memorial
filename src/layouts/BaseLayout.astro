@@ -8,8 +8,11 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site.ts';
+import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
 
 interface Props {
+  /** Explicit published locale; shared UI never falls back to English. */
+  locale: PublishedLocale;
   /** Page title, without the institution suffix. */
   title: string;
   /** Factual meta description (<= 160 chars). */
@@ -18,26 +21,38 @@ interface Props {
   ogImage?: string;
   /** Keep the page out of search indexes (e.g. the 404 page). */
   noindex?: boolean;
-  /** Show the Hindi name in the masthead (home page only). */
-  showHindiName?: boolean;
+  /** Show this locale's optional masthead subtitle (home page only). */
+  showMastheadSubtitle?: boolean;
 }
 
-const { title, description, ogImage, noindex = false, showHindiName = false } =
-  Astro.props;
+const {
+  locale,
+  title,
+  description,
+  ogImage,
+  noindex = false,
+  showMastheadSubtitle = false,
+} = Astro.props;
+const ui = sharedUiFor(locale);
 const robots = noindex
   ? 'noindex, follow'
   : 'index, follow, max-image-preview:large';
 
 // Home uses the bare institution name; inner pages append it.
-const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
-const pageTitle = isHome ? site.name : `${title} — ${site.name}`;
+const homePath = routeFor('home', locale);
+const isHome =
+  Astro.url.pathname === homePath ||
+  (homePath === '/' && Astro.url.pathname === '');
+const pageTitle = isHome
+  ? ui.institution.displayName
+  : `${title}${ui.metadata.titleSeparator}${ui.institution.displayName}`;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
 ---
 
 <!doctype html>
-<html lang={site.locale}>
+<html lang={ui.metadata.htmlLanguage}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -52,13 +67,13 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={site.name} />
+    <meta property="og:site_name" content={ui.institution.displayName} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
-    <meta property="og:image:alt" content={site.name} />
-    <meta property="og:locale" content={site.locale} />
+    <meta property="og:image:alt" content={ui.institution.displayName} />
+    <meta property="og:locale" content={ui.metadata.openGraphLocale} />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -69,11 +84,11 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <Header showHindiName={showHindiName} />
+    <a class="skip-link" href="#main">{ui.skipToContent}</a>
+    <Header locale={locale} showMastheadSubtitle={showMastheadSubtitle} />
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer locale={locale} />
   </body>
 </html>

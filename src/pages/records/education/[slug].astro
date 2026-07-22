@@ -17,6 +17,7 @@ import Container from '../../../components/Container.astro';
 import PageIntro from '../../../components/PageIntro.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import MediaViewer from '../../../components/MediaViewer.astro';
+import { routeFor, sharedUiFor } from '../../../i18n/index.ts';
 import {
   educationRecords,
   recordBackHref,
@@ -34,8 +35,12 @@ interface Props {
   record: EducationRecord;
 }
 
-const { record } = Astro.props;
+const { record } = Astro.props as Props;
 const { page } = record;
+const locale = 'en' as const;
+const ui = sharedUiFor(locale);
+const homeHref = routeFor('home', locale);
+const ourWorkHref = routeFor('ourWork', locale);
 const docGroup = `education-${record.slug}`;
 
 // "Back to Our Work" returns to this record's own card on the listing, so the
@@ -44,8 +49,8 @@ const backHref = recordBackHref(record);
 
 const abs = (path: string) => new URL(path, Astro.site).href;
 const crumbs = [
-  { name: 'Home', url: abs('/') },
-  { name: 'Our Work', url: abs('/our-work/') },
+  { name: ui.breadcrumbs.homeLabel, url: abs(homeHref) },
+  { name: ui.navigation.labels.ourWork, url: abs(ourWorkHref) },
   { name: page.title, url: abs(Astro.url.pathname) },
 ];
 const breadcrumbLd = {
@@ -60,13 +65,14 @@ const breadcrumbLd = {
 };
 ---
 
-<BaseLayout title={page.title} description={page.description}>
+<BaseLayout locale={locale} title={page.title} description={page.description}>
   <Container>
     <article class="record">
       <Breadcrumbs
+        locale={locale}
         items={[
-          { name: 'Home', href: '/' },
-          { name: 'Our Work', href: '/our-work/' },
+          { name: ui.breadcrumbs.homeLabel, href: homeHref },
+          { name: ui.navigation.labels.ourWork, href: ourWorkHref },
           { name: page.title },
         ]}
       />

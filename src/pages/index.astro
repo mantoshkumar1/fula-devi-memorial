@@ -6,14 +6,17 @@
 import ContentPage from '../layouts/ContentPage.astro';
 import Quote from '../components/Quote.astro';
 import { site, formatLongDate } from '../data/site.ts';
+import { sharedUiFor } from '../i18n/index.ts';
 
+const locale = 'en' as const;
+const ui = sharedUiFor(locale);
 const siteUrl = Astro.site?.href;
 const registrationDate = formatLongDate(site.registrationDate);
 
 const org = {
   '@context': 'https://schema.org',
   '@type': 'NGO',
-  name: site.name,
+  name: ui.institution.displayName,
   foundingDate: String(site.registeredYear),
   address: {
     '@type': 'PostalAddress',
@@ -27,17 +30,18 @@ const org = {
 const website = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: site.name,
+  name: ui.institution.displayName,
   url: siteUrl,
-  inLanguage: site.locale,
+  inLanguage: ui.metadata.htmlLanguage,
 };
 ---
 
 <ContentPage
-  title="Home"
-  heading={site.name}
+  locale={locale}
+  title={ui.navigation.labels.home}
+  heading={ui.institution.displayName}
   description={`Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, on ${registrationDate}. Its work includes supporting the education of one child.`}
-  showHindiName={true}
+  showMastheadSubtitle={true}
   headingHidden={true}
 >
   <p>

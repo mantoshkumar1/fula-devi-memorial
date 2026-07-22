@@ -4,26 +4,37 @@
  * separators. Deliberately quiet.
  */
 import { site } from '../data/site.ts';
+import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const ui = sharedUiFor(locale);
+const homePath = routeFor('home', locale);
 
 // The name links home, mirroring the masthead. On the home page it points to
 // the current page, so mark it for assistive tech (no visible active styling).
-const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
+const isHome =
+  Astro.url.pathname === homePath ||
+  (homePath === '/' && Astro.url.pathname === '');
 ---
 
 <footer class="site-footer">
   <p class="footer-name">
-    <a href="/" aria-current={isHome ? 'page' : undefined}>{site.name}</a>
+    <a href={homePath} aria-current={isHome ? 'page' : undefined}>{ui.institution.displayName}</a>
   </p>
   <p class="footer-meta">
     <span class="footer-fact">{site.registeredCity}, {site.jurisdiction}</span>
     <span class="footer-sep" aria-hidden="true">·</span>
-    <span class="footer-fact">Registration No. {site.registrationNumber}</span>
+    <span class="footer-fact">{ui.footer.registrationNumberLabel} {site.registrationNumber}</span>
   </p>
-  <nav aria-label="Footer">
+  <nav aria-label={ui.navigation.footerAriaLabel}>
     <ul>
-      <li><a href="/institution/">The Institution</a></li>
-      <li><a href="/governance/">Governance</a></li>
-      <li><a href="/contact/">Contact</a></li>
+      <li><a href={routeFor('institution', locale)}>{ui.navigation.labels.institution}</a></li>
+      <li><a href={routeFor('governance', locale)}>{ui.navigation.labels.governance}</a></li>
+      <li><a href={routeFor('contact', locale)}>{ui.navigation.labels.contact}</a></li>
     </ul>
   </nav>
 </footer>

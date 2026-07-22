@@ -31,8 +31,6 @@ export interface SiteData {
   contactEmail: string | null;
   /** Default Open Graph image (path under /public). Placeholder for now. */
   ogImage: string;
-  /** Default social/meta locale. */
-  locale: string;
 }
 
 /**
@@ -59,8 +57,6 @@ export const site: SiteData = {
 
   // PENDING: replace with a real 1200x630 raster social image before launch.
   ogImage: '/og-default.svg',
-
-  locale: 'en',
 };
 
 const MONTHS = [
