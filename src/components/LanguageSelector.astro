@@ -1,8 +1,8 @@
 ---
 /**
- * Dormant until more than one locale is published and an equivalent route
- * exists. Future Header integration must place it after the identity and before
- * primary navigation so its mobile reading order remains natural.
+ * Renders only when more than one locale is published and an equivalent route
+ * exists. Header places it after the identity and before primary navigation so
+ * its mobile reading order remains natural.
  */
 import {
   alternateEquivalentRouteFor,
@@ -26,11 +26,7 @@ const {
   preserveQuery = true,
 } = Astro.props;
 const ui = sharedUiFor(locale);
-const alternateHref = alternateEquivalentRouteFor(route, locale, {
-  currentUrl: Astro.url,
-  preserveQuery,
-  approvedFragments,
-});
+const alternateHref = alternateEquivalentRouteFor(route, locale);
 const state = buildLanguageSelectorState({
   currentLocale: locale,
   alternateHref,
@@ -40,7 +36,13 @@ const state = buildLanguageSelectorState({
 
 {
   state && (
-    <nav class="language-selector" aria-label={state.ariaLabel} data-language-selector>
+    <nav
+      class="language-selector"
+      aria-label={state.ariaLabel}
+      data-language-selector
+      data-preserve-query={preserveQuery ? 'true' : 'false'}
+      data-approved-fragments={approvedFragments.join(' ')}
+    >
       {state.items.map((item, index) => (
         <Fragment>
           {index > 0 && <span aria-hidden="true"> | </span>}
@@ -71,11 +73,15 @@ const state = buildLanguageSelectorState({
     font-size: var(--text-sm);
   }
 
-  .language-selector a {
+  .language-selector a,
+  .language-selector > span[lang] {
     display: inline-flex;
     align-items: center;
     min-height: 44px;
     padding-inline: var(--space-2);
+  }
+
+  .language-selector a {
     color: var(--color-ink-soft);
   }
 

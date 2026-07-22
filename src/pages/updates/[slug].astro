@@ -33,6 +33,7 @@ const label = date.toLocaleDateString('en-IN', {
 
 <ContentPage
   locale={locale}
+  route={{ key: 'updateDetail', params: { slug: entry.slug } }}
   title={title}
   description={summary}
   parent={{
@@ -43,7 +44,7 @@ const label = date.toLocaleDateString('en-IN', {
   <p class="update-date"><time datetime={iso}>{label}</time></p>
   {image && <Figure src={image.src} alt={image.alt} caption={image.caption} />}
   <Content />
-  {document && <DocumentLink title="Attached document" file={document} />}
+  {document && <DocumentLink locale={locale} title="Attached document" file={document} />}
 </ContentPage>
 
 <style>

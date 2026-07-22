@@ -85,3 +85,28 @@ export function formatLongDate(iso: string): string {
   const [year, month, day] = iso.split('-').map(Number);
   return `${day} ${MONTHS[month - 1]} ${year}`;
 }
+
+const HINDI_MONTHS = [
+  'जनवरी',
+  'फ़रवरी',
+  'मार्च',
+  'अप्रैल',
+  'मई',
+  'जून',
+  'जुलाई',
+  'अगस्त',
+  'सितंबर',
+  'अक्टूबर',
+  'नवंबर',
+  'दिसंबर',
+];
+
+/** Locale-explicit long date; Latin digits are retained in both editions. */
+export function formatLongDateForLocale(
+  iso: string,
+  locale: import('../i18n/types.ts').PublishedLocale,
+): string {
+  if (locale === 'en') return formatLongDate(iso);
+  const [year, month, day] = iso.split('-').map(Number);
+  return `${day} ${HINDI_MONTHS[month - 1]} ${year}`;
+}

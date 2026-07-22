@@ -1,10 +1,14 @@
 ---
+import { sharedUiFor } from '../i18n/ui.ts';
+import type { PublishedLocale } from '../i18n/types.ts';
+
 /**
  * A link to a PDF document (governance register, update attachment).
  * Renders an accessible, descriptive label with format and size.
  * Pending documents (not yet supplied) render as plain, non-linked text.
  */
 interface Props {
+  locale: PublishedLocale;
   title: string;
   /** Path under /public, e.g. /documents/bylaws.pdf */
   file: string;
@@ -16,22 +20,25 @@ interface Props {
   pending?: boolean;
 }
 
-const { title, file, sizeLabel, dateLabel, pending = false } = Astro.props;
+const { locale, title, file, sizeLabel, dateLabel, pending = false } = Astro.props;
+const ui = sharedUiFor(locale);
 // One meta line: date first (when known), then format/size. Falls back to
 // "PDF" so the link never renders without at least its format.
-const meta = [dateLabel, sizeLabel].filter(Boolean).join(' · ') || 'PDF';
+const meta =
+  [dateLabel, sizeLabel].filter(Boolean).join(' · ') || ui.documents.pdfFallback;
 ---
 
 {
   pending ? (
     <p class="doc doc--pending">
       <span class="doc-title">{title}</span>
-      <span class="doc-meta">Not yet published</span>
+      <span class="doc-meta">{ui.documents.notYetPublished}</span>
     </p>
   ) : (
     <a class="doc" href={file} target="_blank" rel="noopener noreferrer">
       <span class="doc-title">{title}</span>
       <span class="doc-meta">({meta})</span>
+      {locale === 'hi' && <span class="visually-hidden"> ({ui.resources.opensNewTab})</span>}
     </a>
   )
 }

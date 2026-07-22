@@ -1,0 +1,196 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import RecordGallery from '../components/RecordGallery.astro';
+import MediaViewer from '../components/MediaViewer.astro';
+import {
+  clothingRecordsContentFor,
+  routeFor,
+  sharedUiFor,
+  type PublishedLocale,
+} from '../i18n/index.ts';
+import { recordAnchor, type ClothingRecord } from '../data/work-records.ts';
+
+interface Props {
+  locale: PublishedLocale;
+  record: ClothingRecord;
+}
+
+const { locale, record } = Astro.props;
+const family = clothingRecordsContentFor(locale);
+const page = family.records[record.slug];
+if (!page) throw new Error(`Missing ${locale} clothing record ${record.slug}`);
+if (page.galleryAlts.length !== record.page.gallery.length) {
+  throw new Error(`Gallery translation count mismatch for ${locale} clothing ${record.slug}`);
+}
+
+const ui = sharedUiFor(locale);
+const homeHref = routeFor('home', locale);
+const ourWorkHref = routeFor('ourWork', locale);
+const route = { key: 'clothingRecord' as const, params: { year: record.slug } };
+const backHref = `${ourWorkHref}#${recordAnchor(record)}`;
+const group = `clothing-${record.slug}`;
+const coverageIndex = 1;
+const galleryStart = record.page.coverage ? 2 : 1;
+const lead = { ...record.page.lead, alt: page.leadAlt };
+const gallery = record.page.gallery.map((image, index) => ({
+  ...image,
+  alt: page.galleryAlts[index],
+}));
+const coverage = record.page.coverage
+  ? {
+      ...record.page.coverage,
+      alt: page.coverageAlt ?? (() => {
+        throw new Error(`Missing ${locale} coverage copy for clothing ${record.slug}`);
+      })(),
+    }
+  : null;
+
+const abs = (target: string) => new URL(target, Astro.site).href;
+const crumbs = [
+  { name: ui.breadcrumbs.homeLabel, url: abs(homeHref) },
+  { name: ui.navigation.labels.ourWork, url: abs(ourWorkHref) },
+  { name: page.title, url: abs(Astro.url.pathname) },
+];
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.name,
+    item: crumb.url,
+  })),
+};
+---
+
+<BaseLayout
+  locale={locale}
+  route={route}
+  title={page.title}
+  description={page.description}
+>
+  <Container>
+    <article class="record">
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { name: ui.breadcrumbs.homeLabel, href: homeHref },
+          { name: ui.navigation.labels.ourWork, href: ourWorkHref },
+          { name: page.title },
+        ]}
+      />
+
+      <PageIntro title={page.title} />
+      <p class="lede">{page.opening}</p>
+
+      <p class="record-back record-back--top">
+        <a href={backHref}>{family.backToOurWork}</a>
+      </p>
+
+      <figure class="lead">
+        <a
+          class="lead-link"
+          href={lead.src}
+          data-mv
+          data-mv-group={group}
+          data-mv-index="0"
+          data-mv-kind="programme-photo"
+          data-mv-caption={lead.alt}
+        >
+          <img
+            src={lead.src}
+            alt={lead.alt}
+            width={lead.width}
+            height={lead.height}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </a>
+      </figure>
+
+      {
+        coverage && (
+          <section class="section">
+            <h2>{family.independentCoverageHeading}</h2>
+            <a
+              class="clipping-link"
+              href={coverage.src}
+              data-mv
+              data-mv-group={group}
+              data-mv-index={coverageIndex}
+              data-mv-kind="independent-coverage"
+              data-mv-caption={coverage.alt}
+            >
+              <span class="clipping">
+                <img
+                  src={coverage.src}
+                  alt={coverage.alt}
+                  width={coverage.width}
+                  height={coverage.height}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            </a>
+          </section>
+        )
+      }
+
+      <section class="section">
+        <h2>{family.photographsHeading}</h2>
+        <RecordGallery images={gallery} group={group} startIndex={galleryStart} />
+      </section>
+
+      <p class="record-back record-back--bottom">
+        <a href={backHref}>{family.backToOurWork}</a>
+      </p>
+    </article>
+  </Container>
+
+  <MediaViewer locale={locale} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} is:inline />
+</BaseLayout>
+
+<style>
+  .record { padding-block: var(--space-10) var(--space-8); }
+  .lede { font-size: var(--text-lg); color: var(--color-ink-soft); }
+  .record-back { font-size: var(--text-sm); }
+  .record-back--top { margin-block-start: var(--space-5); }
+  .record-back--bottom { margin-block-start: var(--space-10); }
+  .record-back a { text-decoration: none; }
+  .record-back a:hover { text-decoration: underline; }
+  .lead { margin-block-start: var(--space-6); }
+  .lead-link { display: block; }
+  .lead-link img {
+    width: 100%;
+    height: auto;
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--motion-fast);
+  }
+  .lead-link:hover img { border-color: var(--color-brown); }
+  .section { margin-block-start: var(--space-10); }
+  .section h2 { margin-block-end: var(--space-5); }
+  .clipping-link { display: block; text-decoration: none; }
+  .clipping {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-4);
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    transition: border-color var(--motion-fast);
+  }
+  .clipping img {
+    max-width: 100%;
+    max-height: 75vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .clipping-link:hover .clipping { border-color: var(--color-brown); }
+</style>

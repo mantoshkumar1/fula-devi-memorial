@@ -1,4 +1,5 @@
 import { englishUi } from '../locales/en/ui.ts';
+import { hindiUi } from '../locales/hi/ui.ts';
 import type { StaticRouteKey } from './routes.ts';
 import type { Locale, PublishedLocale } from './types.ts';
 
@@ -24,11 +25,34 @@ export interface SharedUi {
     labels: Record<StaticRouteKey, string>;
   };
   footer: {
+    locationLabel: string;
     registrationNumberLabel: string;
   };
   breadcrumbs: {
     ariaLabel: string;
     homeLabel: string;
+  };
+  documents: {
+    notYetPublished: string;
+    pdfFallback: string;
+  };
+  resources: {
+    draftLabel: string;
+    opensNewTab: string;
+  };
+  sectionPermalinkLabel: string;
+  updatesEmptyState: string;
+  mediaViewer: {
+    dialogLabel: string;
+    closeLabel: string;
+    previousLabel: string;
+    nextLabel: string;
+    statusTemplate: string;
+    statusWithKindTemplate: string;
+    kindLabels: Record<
+      'programme-photo' | 'independent-coverage' | 'academic-record-page',
+      string
+    >;
   };
 }
 
@@ -41,6 +65,7 @@ export interface SharedUi {
  */
 export const SHARED_UI_BY_LOCALE = {
   en: englishUi,
+  hi: hindiUi,
 } as const satisfies Record<PublishedLocale, SharedUi>;
 
 export function sharedUiFor(locale: PublishedLocale): SharedUi {

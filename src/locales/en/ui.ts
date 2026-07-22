@@ -13,7 +13,7 @@ export const englishUi = {
   },
   metadata: {
     htmlLanguage: 'en',
-    openGraphLocale: 'en',
+    openGraphLocale: 'en_IN',
     titleSeparator: ' — ',
   },
   skipToContent: 'Skip to content',
@@ -32,10 +32,35 @@ export const englishUi = {
     },
   },
   footer: {
+    locationLabel: `${site.registeredCity}, ${site.jurisdiction}`,
     registrationNumberLabel: 'Registration No.',
   },
   breadcrumbs: {
     ariaLabel: 'Breadcrumb',
     homeLabel: 'Home',
+  },
+  documents: {
+    notYetPublished: 'Not yet published',
+    pdfFallback: 'PDF',
+  },
+  resources: {
+    draftLabel: 'Draft resource',
+    opensNewTab: 'opens in a new tab',
+  },
+  sectionPermalinkLabel: 'Permanent link to the {section} section',
+  updatesEmptyState:
+    "There are no updates yet. This page will grow as the institution's work continues.",
+  mediaViewer: {
+    dialogLabel: 'Media viewer',
+    closeLabel: 'Close viewer',
+    previousLabel: 'Previous item',
+    nextLabel: 'Next item',
+    statusTemplate: '{current} of {total}',
+    statusWithKindTemplate: '{current} of {total} · {kind}',
+    kindLabels: {
+      'programme-photo': 'Programme photograph',
+      'independent-coverage': 'Independent coverage',
+      'academic-record-page': 'Academic record',
+    },
   },
 } as const satisfies SharedUi;

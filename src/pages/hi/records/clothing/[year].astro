@@ -1,0 +1,22 @@
+---
+import ClothingRecordView from '../../../../views/ClothingRecordView.astro';
+import {
+  clothingRecords,
+  type ClothingRecord,
+} from '../../../../data/work-records.ts';
+
+export function getStaticPaths() {
+  return clothingRecords.map((record) => ({
+    params: { year: record.slug },
+    props: { record },
+  }));
+}
+
+interface Props {
+  record: ClothingRecord;
+}
+
+const { record } = Astro.props;
+---
+
+<ClothingRecordView locale="hi" record={record} />

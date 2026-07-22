@@ -35,8 +35,8 @@ function choiceElement(target: EventTarget | null): ChoiceElementLike | null {
 }
 
 /**
- * Future external client entry point. It has no top-level side effects and is
- * not imported by any rendered page while Hindi remains unpublished.
+ * Testable preference model used by build-time validation. The production
+ * counterpart is the CSP-safe same-origin public script with identical rules.
  */
 export function activateLanguagePreference(
   environment: LanguagePreferenceEnvironment,

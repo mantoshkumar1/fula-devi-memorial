@@ -5,5 +5,6 @@ export * from './preference.ts';
 export * from './publication-readiness.ts';
 export * from './selector.ts';
 export * from './translations.ts';
+export * from './content.ts';
 export * from './ui.ts';
 export * from './validate.ts';

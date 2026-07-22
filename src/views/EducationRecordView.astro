@@ -1,0 +1,145 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Container from '../components/Container.astro';
+import PageIntro from '../components/PageIntro.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import MediaViewer from '../components/MediaViewer.astro';
+import {
+  educationRecordsContentFor,
+  routeFor,
+  sharedUiFor,
+  type PublishedLocale,
+} from '../i18n/index.ts';
+import { recordAnchor, type EducationRecord } from '../data/work-records.ts';
+
+interface Props {
+  locale: PublishedLocale;
+  record: EducationRecord;
+}
+
+const { locale, record } = Astro.props;
+const family = educationRecordsContentFor(locale);
+const page = family.records[record.slug];
+if (!page) throw new Error(`Missing ${locale} education record ${record.slug}`);
+if (page.pageAlts.length !== record.page.pages.length) {
+  throw new Error(`Page translation count mismatch for ${locale} education ${record.slug}`);
+}
+
+const ui = sharedUiFor(locale);
+const homeHref = routeFor('home', locale);
+const ourWorkHref = routeFor('ourWork', locale);
+const route = { key: 'educationRecord' as const, params: { slug: record.slug } };
+const backHref = `${ourWorkHref}#${recordAnchor(record)}`;
+const docGroup = `education-${record.slug}`;
+const pages = record.page.pages.map((documentPage, index) => ({
+  ...documentPage,
+  alt: page.pageAlts[index],
+}));
+
+const abs = (target: string) => new URL(target, Astro.site).href;
+const crumbs = [
+  { name: ui.breadcrumbs.homeLabel, url: abs(homeHref) },
+  { name: ui.navigation.labels.ourWork, url: abs(ourWorkHref) },
+  { name: page.title, url: abs(Astro.url.pathname) },
+];
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.name,
+    item: crumb.url,
+  })),
+};
+---
+
+<BaseLayout
+  locale={locale}
+  route={route}
+  title={page.title}
+  description={page.description}
+>
+  <Container>
+    <article class="record">
+      <Breadcrumbs
+        locale={locale}
+        items={[
+          { name: ui.breadcrumbs.homeLabel, href: homeHref },
+          { name: ui.navigation.labels.ourWork, href: ourWorkHref },
+          { name: page.title },
+        ]}
+      />
+
+      <PageIntro title={page.title} />
+      <p class="lede">{page.opening}</p>
+      <p class="privacy-note">{family.privacyNote}</p>
+
+      <p class="record-back record-back--top">
+        <a href={backHref}>{family.backToOurWork}</a>
+      </p>
+
+      <div class="document">
+        {
+          pages.map((documentPage, index) => (
+            <a
+              class="document__page"
+              href={documentPage.src}
+              data-mv
+              data-mv-group={docGroup}
+              data-mv-index={index}
+              data-mv-kind="academic-record-page"
+              data-mv-caption={documentPage.alt}
+            >
+              <img
+                src={documentPage.src}
+                alt={documentPage.alt}
+                width={documentPage.width}
+                height={documentPage.height}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            </a>
+          ))
+        }
+      </div>
+
+      <p class="record-back record-back--bottom">
+        <a href={backHref}>{family.backToOurWork}</a>
+      </p>
+    </article>
+  </Container>
+
+  <MediaViewer locale={locale} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbLd)} is:inline />
+</BaseLayout>
+
+<style>
+  .record { padding-block: var(--space-10) var(--space-8); }
+  .lede { font-size: var(--text-lg); color: var(--color-ink-soft); }
+  .privacy-note {
+    margin-block-start: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .record-back { font-size: var(--text-sm); }
+  .record-back--top { margin-block-start: var(--space-5); }
+  .record-back--bottom { margin-block-start: var(--space-10); }
+  .record-back a { text-decoration: none; }
+  .record-back a:hover { text-decoration: underline; }
+  .document {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    margin-block-start: var(--space-6);
+  }
+  .document__page { display: block; }
+  .document__page img {
+    width: 100%;
+    height: auto;
+    border: var(--border-hair);
+    border-radius: var(--radius-sm);
+    transition: border-color var(--motion-fast);
+  }
+  .document__page:hover img { border-color: var(--color-brown); }
+</style>

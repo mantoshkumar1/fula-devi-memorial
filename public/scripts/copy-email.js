@@ -17,6 +17,7 @@ const button = document.querySelector('[data-copy-email]');
 
 if (button) {
   const email = button.getAttribute('data-copy-email') || '';
+  const successMessage = button.getAttribute('data-copy-success') || '';
   const status = document.querySelector('[data-copy-status]');
 
   // Reveal the control only now that it can actually work.
@@ -50,7 +51,7 @@ if (button) {
         document.execCommand('copy');
         field.remove();
       }
-      announce('Copied.');
+      announce(successMessage);
     } catch {
       // Copying can be blocked by the browser; the address stays on screen to
       // select by hand, so no misleading confirmation is shown.

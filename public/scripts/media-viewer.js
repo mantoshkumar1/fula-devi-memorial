@@ -14,12 +14,6 @@
  * where it exists, then the remaining photographs. Clicking any thumbnail opens
  * the sequence at that item. Collections never mix.
  */
-const KIND_LABEL = {
-  'programme-photo': 'Programme photograph',
-  'independent-coverage': 'Independent coverage',
-  'academic-record-page': 'Academic record',
-};
-
 const dialog = document.querySelector('dialog.mv');
 const links = Array.from(document.querySelectorAll('a[data-mv]'));
 
@@ -54,14 +48,27 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
     if (item) new Image().src = item.src;
   };
 
+  const interpolate = (template, values) =>
+    Object.entries(values).reduce(
+      (result, [key, value]) => result.replace(`{${key}}`, value),
+      template,
+    );
+
   const render = () => {
     const item = items[index];
     if (!item) return;
     img.src = item.src;
     img.alt = item.caption;
-    const kindLabel = KIND_LABEL[item.kind] || '';
-    status.textContent =
-      `${index + 1} of ${items.length}` + (kindLabel ? ` · ${kindLabel}` : '');
+    const kindLabel =
+      dialog.getAttribute(`data-mv-kind-${item.kind}`) || '';
+    const template = kindLabel
+      ? dialog.getAttribute('data-mv-status-kind') || ''
+      : dialog.getAttribute('data-mv-status') || '';
+    status.textContent = interpolate(template, {
+      current: String(index + 1),
+      total: String(items.length),
+      kind: kindLabel,
+    });
     caption.textContent = item.caption;
     const many = items.length > 1;
     prevBtn.hidden = !many;

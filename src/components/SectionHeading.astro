@@ -1,4 +1,7 @@
 ---
+import { sharedUiFor } from '../i18n/ui.ts';
+import type { PublishedLocale } from '../i18n/types.ts';
+
 /**
  * A major section heading with a permanent deep link.
  *
@@ -16,13 +19,16 @@
  * which are namespaced `record-…`.
  */
 interface Props {
+  locale: PublishedLocale;
   /** Stable, permanent fragment id, e.g. "education". */
   id: string;
   /** The visible heading text, also used to build the permalink's aria-label. */
   text: string;
 }
 
-const { id, text } = Astro.props;
+const { locale, id, text } = Astro.props;
+const ui = sharedUiFor(locale);
+const permalinkLabel = ui.sectionPermalinkLabel.replace('{section}', text);
 ---
 
 <h2 id={id}>
@@ -30,7 +36,7 @@ const { id, text } = Astro.props;
   <a
     class="heading-permalink"
     href={`#${id}`}
-    aria-label={`Permanent link to the ${text} section`}
+    aria-label={permalinkLabel}
   >
     <span aria-hidden="true">#</span>
   </a>

@@ -1,0 +1,78 @@
+---
+import fs from 'node:fs';
+import path from 'node:path';
+import ContentPage from '../layouts/ContentPage.astro';
+import DocumentLink from '../components/DocumentLink.astro';
+import { governanceDocs } from '../data/governance.ts';
+import {
+  formatLongDateForLocale,
+  site,
+} from '../data/site.ts';
+import { pageContentFor, type PublishedLocale } from '../i18n/index.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const content = pageContentFor('governance', locale);
+
+function sizeLabel(publicFile: string): string {
+  const bytes = fs.statSync(path.join(process.cwd(), 'public', publicFile)).size;
+  const kb = bytes / 1024;
+  return kb < 1024
+    ? `PDF, ${Math.round(kb)} KB`
+    : `PDF, ${(kb / 1024).toFixed(1)} MB`;
+}
+
+const docs = governanceDocs.map((document) => {
+  const filename = path.basename(document.file);
+  const title = content.documentTitles[filename];
+  if (!title) throw new Error(`Missing ${locale} document title for ${filename}`);
+  return {
+    ...document,
+    title,
+    sizeLabel: document.pending ? null : sizeLabel(document.file),
+    dateLabel: document.date
+      ? formatLongDateForLocale(document.date, locale)
+      : null,
+  };
+});
+
+const registrationDate = formatLongDateForLocale(site.registrationDate, locale);
+---
+
+<ContentPage
+  locale={locale}
+  route={{ key: 'governance' }}
+  title={content.title}
+  description={content.description}
+>
+  <p>{content.introduction}</p>
+
+  <h2>{content.registrationHeading}</h2>
+  <ul>
+    <li>{content.labels.registeredName} — {site.name}</li>
+    <li>{content.labels.registrationNumber} — {site.registrationNumber}</li>
+    <li>{content.labels.registrationDate} — {registrationDate}</li>
+    <li>{content.labels.registeredAddress} — {site.registeredAddress}</li>
+    <li>{content.labels.jurisdiction} — {content.jurisdiction}</li>
+  </ul>
+
+  <h2>{content.documentsHeading}</h2>
+  <p>{content.documentsIntroduction}</p>
+  <div class="doc-list">
+    {
+      docs.map((document) => (
+        <DocumentLink
+          locale={locale}
+          title={document.title}
+          file={document.file}
+          sizeLabel={document.sizeLabel}
+          dateLabel={document.dateLabel}
+          pending={document.pending}
+        />
+      ))
+    }
+  </div>
+</ContentPage>

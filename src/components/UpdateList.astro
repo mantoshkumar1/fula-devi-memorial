@@ -5,6 +5,8 @@
  */
 import UpdateItem from './UpdateItem.astro';
 import EmptyState from './EmptyState.astro';
+import { sharedUiFor } from '../i18n/ui.ts';
+import type { PublishedLocale } from '../i18n/types.ts';
 
 export interface UpdateEntry {
   href: string;
@@ -14,10 +16,12 @@ export interface UpdateEntry {
 }
 
 interface Props {
+  locale: PublishedLocale;
   items: UpdateEntry[];
 }
 
-const { items } = Astro.props;
+const { locale, items } = Astro.props;
+const ui = sharedUiFor(locale);
 ---
 
 {
@@ -33,7 +37,7 @@ const { items } = Astro.props;
       ))}
     </div>
   ) : (
-    <EmptyState message="There are no updates yet. This page will grow as the institution's work continues." />
+    <EmptyState message={ui.updatesEmptyState} />
   )
 }
 

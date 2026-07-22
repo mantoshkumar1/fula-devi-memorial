@@ -54,15 +54,18 @@ export function bareRootRedirectTarget(
   storedPreference: string | null,
   publishedLocales: readonly Locale[] = PUBLISHED_LOCALES,
 ): string | null {
-  if (location.pathname !== '/' || location.hash !== '') return null;
+  // A query or fragment makes this an explicit URL, not a bare-root visit.
+  if (
+    location.pathname !== '/' ||
+    location.search !== '' ||
+    location.hash !== ''
+  ) {
+    return null;
+  }
   if (validStoredPreference(storedPreference) !== 'hi') return null;
   if (!localeIsPublished('hi', publishedLocales)) return null;
 
-  const search =
-    location.search && !location.search.startsWith('?')
-      ? `?${location.search}`
-      : location.search;
-  return `${routeFor('home', 'hi')}${search}`;
+  return routeFor('home', 'hi');
 }
 
 export function applyStoredRootRedirect(

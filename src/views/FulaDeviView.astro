@@ -1,0 +1,128 @@
+---
+import ContentPage from '../layouts/ContentPage.astro';
+import Figure from '../components/Figure.astro';
+import Quote from '../components/Quote.astro';
+import { pageContentFor, type PublishedLocale } from '../i18n/index.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const content = pageContentFor('fulaDevi', locale);
+---
+
+<ContentPage
+  locale={locale}
+  route={{ key: 'fulaDevi' }}
+  title={content.title}
+  description={content.description}
+>
+  {content.opening.map((paragraph) => <p>{paragraph}</p>)}
+
+  <img
+    class="portrait"
+    src="/images/fula-devi/portrait/fula-devi-blue-sari-portrait.jpg"
+    alt={content.portraitAlt}
+    width="735"
+    height="1012"
+    loading="eager"
+    decoding="async"
+  />
+
+  <h2>{content.dignityHeading}</h2>
+  {content.dignityParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+  <h2>{content.quietHelpHeading}</h2>
+  {content.quietHelpParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+  <div class="tall-figure">
+    <Figure
+      src="/images/fula-devi/life/fula-devi-holding-painted-pot.jpg"
+      alt={content.clayPotAlt}
+      caption={content.clayPotCaption}
+      width={848}
+      height={1272}
+    />
+  </div>
+
+  <h2>{content.independenceHeading}</h2>
+  {content.independenceParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+  <h2>{content.faithHeading}</h2>
+  {content.faithParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+  <div class="gallery">
+    <Figure
+      src="/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-with-husband.jpg"
+      alt={content.pilgrimageAltHusband}
+      caption={content.pilgrimageCaptionHusband}
+      width={1200}
+      height={1600}
+    />
+    <Figure
+      src="/images/fula-devi/pilgrimage/fula-devi-kanwar-yatra-group-01.jpg"
+      alt={content.pilgrimageAltDaughters}
+      caption={content.pilgrimageCaptionDaughters}
+      width={1600}
+      height={1200}
+    />
+    <p class="pilgrimage-note">{content.pilgrimageNote}</p>
+  </div>
+
+  <h2>{content.teachingHeading}</h2>
+  <p>{content.teachingIntroduction}</p>
+  <Quote attribution={content.teachingAttribution}>
+    {content.teachingLines.map((line, index) => (
+      <Fragment>{index > 0 && <br />}{line}</Fragment>
+    ))}
+  </Quote>
+</ContentPage>
+
+<style>
+  .portrait {
+    max-width: min(440px, 100%);
+    margin-inline: auto;
+  }
+
+  .tall-figure :global(figure) {
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .tall-figure :global(img) {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: min(70vh, 640px);
+    object-fit: contain;
+    margin-inline: auto;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 34rem) {
+    .gallery {
+      grid-template-columns: repeat(2, 1fr);
+      align-items: start;
+    }
+  }
+
+  .gallery :global(figure) {
+    margin: 0;
+  }
+
+  .pilgrimage-note {
+    grid-column: 1 / -1;
+    max-width: none;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+</style>

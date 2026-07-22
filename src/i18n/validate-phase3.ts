@@ -15,6 +15,11 @@ import { buildLanguageSelectorState } from './selector.ts';
 import { activateLanguagePreference } from '../scripts/language-preference.ts';
 import type { Locale } from './types.ts';
 import { SHARED_UI_BY_LOCALE } from './ui.ts';
+import {
+  defineVersionedTranslation,
+  valueForLocale,
+  type NoFallbackLocaleMap,
+} from './translations.ts';
 
 const BILINGUAL = ['en', 'hi'] as const satisfies readonly Locale[];
 
@@ -107,8 +112,8 @@ function validateEquivalentRoutes(): void {
     equivalentRouteFor({ key: 'notFound' }, 'hi', {
       publishedLocales: BILINGUAL,
     }),
-    null,
-    '404 must not fall back to an alternate homepage',
+    '/hi/404.html',
+    '404 route equivalence',
   );
 }
 
@@ -165,8 +170,8 @@ function validatePreferenceRules(): void {
       'hi',
       BILINGUAL,
     ),
-    '/hi/?source=home',
-    'bare-root query preservation',
+    null,
+    'query-bearing root precedence',
   );
   assertEqual(
     bareRootRedirectTarget(
@@ -321,5 +326,25 @@ export function validatePhase3Infrastructure(): void {
         },
       }),
     'not been editorially approved',
+  );
+  expectFailure(
+    () =>
+      defineVersionedTranslation('stale-test', {
+        en: { sourceVersion: '2', content: null },
+        hi: {
+          translatedFrom: '1',
+          status: 'approved',
+          content: null,
+        },
+      }),
+    'approved Hindi translation targets 1, but English is 2',
+  );
+  expectFailure(
+    () =>
+      valueForLocale(
+        { en: 'English only' } as NoFallbackLocaleMap<string>,
+        'hi',
+      ),
+    'Missing required hi translation',
   );
 }

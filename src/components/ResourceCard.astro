@@ -1,4 +1,7 @@
 ---
+import { sharedUiFor } from '../i18n/ui.ts';
+import type { PublishedLocale } from '../i18n/types.ts';
+
 /**
  * A designed link to a public guide (a PDF), not a raw attachment. Shows the
  * guide's title, a short description, an optional scope note, and — for a
@@ -9,6 +12,7 @@
  * behaviour is announced to assistive technology.
  */
 interface Props {
+  locale: PublishedLocale;
   title: string;
   description: string;
   state: 'draft' | 'final';
@@ -20,8 +24,9 @@ interface Props {
   note?: string | null;
 }
 
-const { title, description, state, href, action, newTab = false, note = null } =
+const { locale, title, description, state, href, action, newTab = false, note = null } =
   Astro.props;
+const ui = sharedUiFor(locale);
 const isDraft = state === 'draft';
 const rel =
   [isDraft ? 'nofollow' : '', newTab ? 'noopener noreferrer' : '']
@@ -37,13 +42,13 @@ const rel =
 >
   <span class="resource__head">
     <span class="resource__title">{title}</span>
-    {isDraft && <span class="resource__state">Draft resource</span>}
+    {isDraft && <span class="resource__state">{ui.resources.draftLabel}</span>}
   </span>
   <span class="resource__desc">{description}</span>
   {note && <span class="resource__note">{note}</span>}
   <span class="resource__action">
     {action}
-    {newTab && <span class="visually-hidden"> (opens in a new tab)</span>}
+    {newTab && <span class="visually-hidden"> ({ui.resources.opensNewTab})</span>}
   </span>
 </a>
 

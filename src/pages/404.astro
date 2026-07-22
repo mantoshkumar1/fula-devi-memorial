@@ -1,21 +1,5 @@
 ---
-/**
- * Not-found page. Kept out of search indexes; links back into the site so
- * crawlers and readers can recover. No invented content.
- */
-import ContentPage from '../layouts/ContentPage.astro';
+import NotFoundView from '../views/NotFoundView.astro';
 ---
 
-<ContentPage
-  locale="en"
-  title="Page not found"
-  description="This page could not be found."
-  noindex={true}
->
-  <p>This page could not be found.</p>
-  <p>
-    Return to the <a href="/">home page</a>, or read <a href="/updates/"
-      >recent updates</a
-    >.
-  </p>
-</ContentPage>
+<NotFoundView locale="en" />

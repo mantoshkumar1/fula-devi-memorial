@@ -26,7 +26,7 @@ const isHome =
     <a href={homePath} aria-current={isHome ? 'page' : undefined}>{ui.institution.displayName}</a>
   </p>
   <p class="footer-meta">
-    <span class="footer-fact">{site.registeredCity}, {site.jurisdiction}</span>
+    <span class="footer-fact">{ui.footer.locationLabel}</span>
     <span class="footer-sep" aria-hidden="true">·</span>
     <span class="footer-fact">{ui.footer.registrationNumberLabel} {site.registrationNumber}</span>
   </p>

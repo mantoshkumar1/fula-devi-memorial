@@ -91,8 +91,8 @@ export function defineVersionedTranslation<T>(
 }
 
 /**
- * Publication gate for a Hindi page. Later phases will call this for every
- * required route before Hindi is allowed into the production route set.
+ * Publication gate for a Hindi page. The configured build calls this for every
+ * required route before emitting the bilingual production route set.
  */
 export function assertHindiReady<T>(
   id: string,

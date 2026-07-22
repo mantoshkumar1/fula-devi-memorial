@@ -2,14 +2,13 @@
 # Served for every path. No build step or dependency involved.
 #
 # The CSP stays strict: every asset is self-hosted and no external origin is
-# ever contacted. The site runs ONE small, same-origin, progressive-enhancement
-# script — the in-site media viewer at /scripts/media-viewer.js. Pages still
-# work with scripting disabled (thumbnails remain plain links to the full-size
-# files). Keep it this way: adding analytics, embeds, or CDN fonts would force
-# this policy to be weakened.
+# ever contacted. The site runs only small, same-origin progressive-enhancement
+# scripts for the media viewer, email copying, and explicit language preference.
+# Pages still work with scripting disabled. Keep it this way: adding analytics,
+# embeds, or CDN fonts would force this policy to be weakened.
 #
 # Notes:
-# - script-src 'self' allows only the same-origin viewer module. No
+# - script-src 'self' allows only same-origin modules. No
 #   'unsafe-inline', no external script origins. The JSON-LD blocks are
 #   <script type="application/ld+json"> data blocks, not executed script.
 # - style-src needs 'unsafe-inline' because Astro inlines one scoped <style> per

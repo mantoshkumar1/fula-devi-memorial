@@ -1,5 +1,6 @@
 import {
   routeFor,
+  NOT_FOUND_PATHS,
   type DynamicRouteKey,
   type RouteParamsByKey,
   type StaticRouteKey,
@@ -39,8 +40,7 @@ function routeReferencePath(
   locale: Locale,
 ): string | null {
   if (reference.key === 'notFound') {
-    // There is no locale-specific 404 route yet. Never fall back to a homepage.
-    return null;
+    return NOT_FOUND_PATHS[locale];
   }
   if (!('params' in reference)) return routeFor(reference.key, locale);
 

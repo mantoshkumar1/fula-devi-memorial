@@ -77,24 +77,41 @@ function validateSharedUi(): void {
       ['navigation.footerAriaLabel', ui.navigation.footerAriaLabel],
       ['navigation.languageAriaLabel', ui.navigation.languageAriaLabel],
       ['footer.registrationNumberLabel', ui.footer.registrationNumberLabel],
+      ['footer.locationLabel', ui.footer.locationLabel],
       ['breadcrumbs.ariaLabel', ui.breadcrumbs.ariaLabel],
       ['breadcrumbs.homeLabel', ui.breadcrumbs.homeLabel],
+      ['documents.notYetPublished', ui.documents.notYetPublished],
+      ['documents.pdfFallback', ui.documents.pdfFallback],
+      ['resources.draftLabel', ui.resources.draftLabel],
+      ['resources.opensNewTab', ui.resources.opensNewTab],
+      ['sectionPermalinkLabel', ui.sectionPermalinkLabel],
+      ['updatesEmptyState', ui.updatesEmptyState],
+      ['mediaViewer.dialogLabel', ui.mediaViewer.dialogLabel],
+      ['mediaViewer.closeLabel', ui.mediaViewer.closeLabel],
+      ['mediaViewer.previousLabel', ui.mediaViewer.previousLabel],
+      ['mediaViewer.nextLabel', ui.mediaViewer.nextLabel],
+      ['mediaViewer.statusTemplate', ui.mediaViewer.statusTemplate],
+      ['mediaViewer.statusWithKindTemplate', ui.mediaViewer.statusWithKindTemplate],
+      ['mediaViewer.kindLabels.programme-photo', ui.mediaViewer.kindLabels['programme-photo']],
+      ['mediaViewer.kindLabels.independent-coverage', ui.mediaViewer.kindLabels['independent-coverage']],
+      ['mediaViewer.kindLabels.academic-record-page', ui.mediaViewer.kindLabels['academic-record-page']],
     ] as const;
 
     for (const [key, value] of requiredStrings) {
       assertNonEmpty(`${locale}.${key}`, value);
     }
     if (locale === 'en') {
-      if (!ui.institution.mastheadSubtitle) {
+      if (!('mastheadSubtitle' in ui.institution)) {
         throw new Error(`${locale}.institution.mastheadSubtitle is required`);
       }
+      const subtitle = ui.institution.mastheadSubtitle;
       assertNonEmpty(
         `${locale}.institution.mastheadSubtitle.text`,
-        ui.institution.mastheadSubtitle.text,
+        subtitle.text,
       );
       assertNonEmpty(
         `${locale}.institution.mastheadSubtitle.language`,
-        ui.institution.mastheadSubtitle.language,
+        subtitle.language,
       );
     }
     for (const routeKey of STATIC_ROUTE_KEYS) {
@@ -109,10 +126,9 @@ function validateSharedUi(): void {
 }
 
 /**
- * Build-time validation for the Version 1.1 localization foundation.
- *
- * This validates declarations only. It does not register Astro i18n routing,
- * create Hindi pages, or alter any rendered output.
+ * Build-time validation for the complete Version 1.1 localization registry.
+ * Route declarations, shared UI, approval state, freshness and preference
+ * rules must all validate before Astro renders either edition.
  */
 export function validateI18nFoundation(): void {
   if (!SUPPORTED_LOCALES.includes(DEFAULT_LOCALE)) {

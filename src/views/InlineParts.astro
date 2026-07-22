@@ -1,0 +1,21 @@
+---
+import { routeFor, type PublishedLocale } from '../i18n/index.ts';
+import type { InlinePart } from '../locales/content-types.ts';
+
+interface Props {
+  locale: PublishedLocale;
+  parts: readonly InlinePart[];
+}
+
+const { locale, parts } = Astro.props;
+---
+
+{
+  parts.map((part) =>
+    typeof part === 'string' ? (
+      part
+    ) : (
+      <a href={routeFor(part.route, locale)}>{part.text}</a>
+    ),
+  )
+}

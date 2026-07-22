@@ -9,14 +9,25 @@
  */
 import { PRIMARY_NAV_ROUTE_KEYS } from '../data/nav.ts';
 import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
+import LanguageSelector from './LanguageSelector.astro';
+import type { RouteReference } from '../i18n/equivalent-routes.ts';
 
 interface Props {
   locale: PublishedLocale;
+  route: RouteReference;
+  approvedFragments?: readonly string[];
+  preserveQuery?: boolean;
   /** Show the locale's optional subtitle beneath the masthead title. */
   showMastheadSubtitle?: boolean;
 }
 
-const { locale, showMastheadSubtitle = false } = Astro.props;
+const {
+  locale,
+  route,
+  approvedFragments = [],
+  preserveQuery = true,
+  showMastheadSubtitle = false,
+} = Astro.props;
 const ui = sharedUiFor(locale);
 const nav = PRIMARY_NAV_ROUTE_KEYS.map((routeKey) => ({
   label: ui.navigation.labels[routeKey],
@@ -35,6 +46,12 @@ const isCurrent = (href: string) =>
       <p class="site-name-hi" lang={ui.institution.mastheadSubtitle.language}>{ui.institution.mastheadSubtitle.text}</p>
     )
   }
+  <LanguageSelector
+    locale={locale}
+    route={route}
+    approvedFragments={approvedFragments}
+    preserveQuery={preserveQuery}
+  />
   <nav aria-label={ui.navigation.primaryAriaLabel}>
     <ul>
       {

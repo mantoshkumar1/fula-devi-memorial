@@ -1,0 +1,32 @@
+---
+import ContentPage from '../layouts/ContentPage.astro';
+import { pageContentFor, type PublishedLocale } from '../i18n/index.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const content = pageContentFor('institution', locale);
+---
+
+<ContentPage
+  locale={locale}
+  route={{ key: 'institution' }}
+  title={content.title}
+  description={content.description}
+>
+  {content.opening.map((paragraph) => <p>{paragraph}</p>)}
+  {
+    content.sections.map((section) => (
+      <Fragment>
+        <h2>{section.heading}</h2>
+        {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        {section.bullets && (
+          <ul>{section.bullets.map((bullet) => <li>{bullet}</li>)}</ul>
+        )}
+      </Fragment>
+    ))
+  }
+  {content.closing.map((paragraph) => <p>{paragraph}</p>)}
+</ContentPage>

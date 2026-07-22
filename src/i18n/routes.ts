@@ -3,9 +3,8 @@ import { alternateLocale, type Locale } from './types.ts';
 /**
  * Public page identities whose paths do not require parameters.
  *
- * These are route declarations only. A declaration does not create an Astro
- * page; Hindi remains unpublished until corresponding files are deliberately
- * added in a later phase.
+ * These identities drive both published editions. A declaration still does
+ * not create an Astro page; route files remain explicit thin wrappers.
  */
 export const STATIC_ROUTE_KEYS = [
   'home',
@@ -21,9 +20,9 @@ export type StaticRouteKey = (typeof STATIC_ROUTE_KEYS)[number];
 
 /**
  * Dynamic route families used for locale equivalence. The record families
- * already publish in English; update-detail paths are declared for future
- * equivalence only. No update detail currently builds, and a declaration never
- * publishes a route.
+ * publish in both editions; update-detail paths are declared for future
+ * equivalence only. No update detail currently builds in either edition, and a
+ * declaration never publishes a route.
  */
 export const DYNAMIC_ROUTE_KEYS = [
   'clothingRecord',
@@ -33,6 +32,11 @@ export const DYNAMIC_ROUTE_KEYS = [
 
 export type DynamicRouteKey = (typeof DYNAMIC_ROUTE_KEYS)[number];
 export type RouteKey = StaticRouteKey | DynamicRouteKey;
+
+export const NOT_FOUND_PATHS = {
+  en: '/404.html',
+  hi: '/hi/404.html',
+} as const satisfies Record<Locale, string>;
 
 export interface RouteParamsByKey {
   clothingRecord: { year: string };

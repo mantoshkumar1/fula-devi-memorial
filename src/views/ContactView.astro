@@ -1,0 +1,129 @@
+---
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import ContentPage from '../layouts/ContentPage.astro';
+import Button from '../components/Button.astro';
+import {
+  pageContentFor,
+  sharedUiFor,
+  type PublishedLocale,
+} from '../i18n/index.ts';
+import { site } from '../data/site.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const content = pageContentFor('contact', locale);
+const ui = sharedUiFor(locale);
+const email = site.contactEmail;
+const googleMapsUrl = 'https://maps.app.goo.gl/eHuy8k57CbbfmF756';
+const copyVersion = createHash('sha256')
+  .update(readFileSync('public/scripts/copy-email.js'))
+  .digest('hex')
+  .slice(0, 10);
+---
+
+<ContentPage
+  locale={locale}
+  route={{ key: 'contact' }}
+  title={content.title}
+  description={content.description}
+>
+  <p>{content.introduction}</p>
+
+  <h2>{content.emailHeading}</h2>
+  {
+    email ? (
+      <Fragment>
+        <p class="email-address">{email}</p>
+        <div class="contact-actions">
+          <Button href={`mailto:${email}`}>{content.emailAction}</Button>
+          <button
+            type="button"
+            class="copy-btn"
+            data-copy-email={email}
+            data-copy-success={content.copySuccess}
+            hidden
+          >
+            {content.copyEmailAction}
+          </button>
+          <span class="copy-status" data-copy-status role="status" />
+        </div>
+      </Fragment>
+    ) : (
+      <p>{content.emailFallback}</p>
+    )
+  }
+
+  <h2>{content.officeHeading}</h2>
+  <address class="office">
+    {site.name}
+    {content.officeAddressLines.map((line) => (
+      <Fragment><br />{line}</Fragment>
+    ))}
+  </address>
+  <p>
+    <a href={googleMapsUrl} target="_blank" rel="noopener noreferrer">
+      {content.mapAction}
+      {locale === 'hi' && <span class="visually-hidden"> ({ui.resources.opensNewTab})</span>}
+    </a>
+  </p>
+  <p>{content.visitNote}</p>
+
+  <script
+    type="module"
+    src={`/scripts/copy-email.js?v=${copyVersion}`}
+    is:inline
+  />
+</ContentPage>
+
+<style>
+  .email-address {
+    overflow-wrap: break-word;
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-ink);
+    font-size: var(--text-base);
+    line-height: 1.2;
+    cursor: pointer;
+    transition:
+      border-color var(--motion-fast),
+      color var(--motion-fast);
+  }
+
+  .copy-btn:hover {
+    border-color: var(--color-brown);
+    color: var(--color-brown-strong);
+  }
+
+  .copy-btn[hidden] {
+    display: none;
+  }
+
+  .copy-status {
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .office {
+    font-style: normal;
+    color: var(--color-ink);
+  }
+</style>

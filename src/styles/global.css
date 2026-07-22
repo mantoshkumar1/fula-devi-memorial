@@ -32,6 +32,20 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* System Devanagari faces only: no web-font request and no dependency. The
+ * slightly roomier heading line-height prevents matras from clipping. */
+html[lang='hi'] body,
+html[lang='hi'] h1,
+html[lang='hi'] h2,
+html[lang='hi'] h3,
+html[lang='hi'] h4 {
+  font-family: var(--font-devanagari);
+}
+
+html[lang='hi'] :is(h1, h2, h3, h4) {
+  line-height: var(--leading-snug);
+}
+
 /* ---- Headings ---- */
 h1,
 h2,

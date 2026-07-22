@@ -1,0 +1,195 @@
+---
+import ContentPage from '../layouts/ContentPage.astro';
+import RecordPreview from '../components/RecordPreview.astro';
+import ResourceCard from '../components/ResourceCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import {
+  clothingRecords,
+  educationRecords,
+  photoCount,
+  recordAnchor,
+  resourceBySlug,
+  type WorkRecord,
+} from '../data/work-records.ts';
+import {
+  pageContentFor,
+  routeFor,
+  type PublishedLocale,
+} from '../i18n/index.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const content = pageContentFor('ourWork', locale);
+const education = educationRecords[0];
+const ayushman = resourceBySlug('ayushman-bharat-guide');
+const pmjjby = resourceBySlug('pmjjby-guide');
+
+const approvedFragments = [
+  'education',
+  'seasonal-clothing',
+  'public-healthcare',
+  'financial-awareness',
+  'looking-ahead',
+  ...clothingRecords.map(recordAnchor),
+  ...educationRecords.map(recordAnchor),
+];
+
+function recordRoute(record: WorkRecord): string {
+  return record.type === 'clothing'
+    ? routeFor('clothingRecord', locale, { year: record.slug })
+    : routeFor('educationRecord', locale, { slug: record.slug });
+}
+
+function summaryFor(record: (typeof clothingRecords)[number]): string {
+  const count = photoCount(record);
+  const noun = count === 1
+    ? content.summary.photograph
+    : content.summary.photographs;
+  const photographs = `${count} ${noun}`;
+  return record.page.coverage
+    ? `${photographs} · ${content.summary.independentCoverage}`
+    : photographs;
+}
+
+const guideTitle = (title: string, scope: string) =>
+  scope ? `${title} — ${scope}` : title;
+---
+
+<ContentPage
+  locale={locale}
+  route={{ key: 'ourWork' }}
+  approvedFragments={approvedFragments}
+  title={content.title}
+  description={content.description}
+>
+  <p>{content.opening}</p>
+
+  <SectionHeading locale={locale} id="education" text={content.education.heading} />
+  <p class="meta-line">{content.education.status}</p>
+  {content.education.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  {
+    education && (
+      <div class="record-list">
+        <RecordPreview
+          href={recordRoute(education)}
+          id={recordAnchor(education)}
+          cover="/records/education/report-card-2025-2026-page-1.jpg"
+          coverAlt={content.education.coverAlt}
+          coverWidth={1182}
+          coverHeight={1578}
+          coverPosition="top"
+          yearLabel={content.education.yearLabel}
+          programmeLabel={content.education.programmeLabel}
+          action={content.actions.academicRecord}
+        />
+      </div>
+    )
+  }
+
+  <SectionHeading
+    locale={locale}
+    id="seasonal-clothing"
+    text={content.clothing.heading}
+  />
+  <p class="meta-line">{content.clothing.status}</p>
+  {content.clothing.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+
+  <h3>{content.clothing.recordsHeading}</h3>
+  <div class="record-list">
+    {
+      clothingRecords.map((record) => {
+        const preview = content.clothing.previews[record.slug];
+        if (!preview) {
+          throw new Error(`Missing ${locale} clothing preview for ${record.slug}`);
+        }
+        return (
+          <RecordPreview
+            href={recordRoute(record)}
+            id={recordAnchor(record)}
+            cover={record.preview.cover}
+            coverAlt={preview.coverAlt}
+            coverWidth={record.preview.coverWidth}
+            coverHeight={record.preview.coverHeight}
+            yearLabel={preview.yearLabel}
+            programmeLabel={preview.programmeLabel}
+            recordSummary={summaryFor(record)}
+            action={content.actions.programmeRecord}
+          />
+        );
+      })
+    }
+  </div>
+
+  <SectionHeading
+    locale={locale}
+    id="public-healthcare"
+    text={content.healthcare.heading}
+  />
+  <p class="meta-line">{content.healthcare.status}</p>
+  {content.healthcare.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  {
+    ayushman && (
+      <ResourceCard
+        locale={locale}
+        title={guideTitle(content.healthcare.resource.title, content.healthcare.resource.scope)}
+        description={content.healthcare.resource.description}
+        note={content.healthcare.resource.scopeNote}
+        state={ayushman.state}
+        href={ayushman.href}
+        action={content.actions.openGuide}
+        newTab
+      />
+    )
+  }
+
+  <SectionHeading
+    locale={locale}
+    id="financial-awareness"
+    text={content.financialAwareness.heading}
+  />
+  <p class="meta-line">{content.financialAwareness.status}</p>
+  {content.financialAwareness.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  {
+    pmjjby && (
+      <ResourceCard
+        locale={locale}
+        title={guideTitle(content.financialAwareness.resource.title, content.financialAwareness.resource.scope)}
+        description={content.financialAwareness.resource.description}
+        note={content.financialAwareness.resource.scopeNote}
+        state={pmjjby.state}
+        href={pmjjby.href}
+        action={content.actions.openGuide}
+        newTab
+      />
+    )
+  }
+
+  <SectionHeading
+    locale={locale}
+    id="looking-ahead"
+    text={content.lookingAhead.heading}
+  />
+  {content.lookingAhead.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+</ContentPage>
+
+<style>
+  .meta-line {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+
+  .record-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  :global(.prose a.record-row),
+  :global(.prose a.resource),
+  :global(.prose h2 a.heading-permalink) {
+    text-decoration: none;
+  }
+</style>

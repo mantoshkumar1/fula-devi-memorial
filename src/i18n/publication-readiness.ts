@@ -8,6 +8,7 @@ import {
   assertHindiReady,
   type VersionedTranslation,
 } from './translations.ts';
+import { TRANSLATIONS_BY_ROUTE } from './content.ts';
 import { SHARED_UI_BY_LOCALE, type SharedUi } from './ui.ts';
 
 export type HindiTranslationKey =
@@ -26,10 +27,11 @@ export const REQUIRED_HINDI_TRANSLATION_KEYS = [
   'notFound',
 ] as const satisfies readonly HindiTranslationKey[];
 
-/** Later phases register reviewed page content here; Phase 3 adds no copy. */
-export const HINDI_TRANSLATIONS_BY_ROUTE: Partial<
-  Record<HindiTranslationKey, VersionedTranslation<unknown>>
-> = {};
+/** The complete, editorially approved Version 1.1 route-content registry. */
+export const HINDI_TRANSLATIONS_BY_ROUTE = TRANSLATIONS_BY_ROUTE as Record<
+  HindiTranslationKey,
+  VersionedTranslation<unknown>
+>;
 
 interface HindiPublicationEvidence {
   sharedUiByLocale?: Partial<Record<Locale, SharedUi>>;

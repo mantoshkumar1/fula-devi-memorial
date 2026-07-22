@@ -1,0 +1,22 @@
+---
+import EducationRecordView from '../../../../views/EducationRecordView.astro';
+import {
+  educationRecords,
+  type EducationRecord,
+} from '../../../../data/work-records.ts';
+
+export function getStaticPaths() {
+  return educationRecords.map((record) => ({
+    params: { slug: record.slug },
+    props: { record },
+  }));
+}
+
+interface Props {
+  record: EducationRecord;
+}
+
+const { record } = Astro.props;
+---
+
+<EducationRecordView locale="hi" record={record} />

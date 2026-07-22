@@ -20,6 +20,14 @@
  */
 import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
+
+interface Props {
+  locale: PublishedLocale;
+}
+
+const { locale } = Astro.props;
+const ui = sharedUiFor(locale);
 
 // Version the script URL by its own content. The module lives at a stable path
 // (public/scripts/media-viewer.js) with a long browser cache, so a returning
@@ -32,17 +40,26 @@ const viewerVersion = createHash('sha256')
   .slice(0, 10);
 ---
 
-<dialog class="mv" aria-label="Media viewer" aria-modal="true">
-  <button type="button" class="mv__btn mv__close" aria-label="Close viewer">
+<dialog
+  class="mv"
+  aria-label={ui.mediaViewer.dialogLabel}
+  aria-modal="true"
+  data-mv-status={ui.mediaViewer.statusTemplate}
+  data-mv-status-kind={ui.mediaViewer.statusWithKindTemplate}
+  data-mv-kind-programme-photo={ui.mediaViewer.kindLabels['programme-photo']}
+  data-mv-kind-independent-coverage={ui.mediaViewer.kindLabels['independent-coverage']}
+  data-mv-kind-academic-record-page={ui.mediaViewer.kindLabels['academic-record-page']}
+>
+  <button type="button" class="mv__btn mv__close" aria-label={ui.mediaViewer.closeLabel}>
     <span aria-hidden="true">×</span>
   </button>
-  <button type="button" class="mv__btn mv__prev" aria-label="Previous item">
+  <button type="button" class="mv__btn mv__prev" aria-label={ui.mediaViewer.previousLabel}>
     <span aria-hidden="true">‹</span>
   </button>
   <div class="mv__stage">
     <img class="mv__img" alt="" />
   </div>
-  <button type="button" class="mv__btn mv__next" aria-label="Next item">
+  <button type="button" class="mv__btn mv__next" aria-label={ui.mediaViewer.nextLabel}>
     <span aria-hidden="true">›</span>
   </button>
   <p class="mv__meta" aria-live="polite">

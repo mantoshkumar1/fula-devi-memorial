@@ -5,14 +5,30 @@
  * institution. `og:image` falls back to the (placeholder) site default.
  */
 import '../styles/global.css';
+import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { site } from '../data/site.ts';
-import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
+import {
+  alternateEquivalentRouteFor,
+  alternateLocale,
+  equivalentRouteFor,
+  routeFor,
+  sharedUiFor,
+  type PublishedLocale,
+  type RouteReference,
+} from '../i18n/index.ts';
 
 interface Props {
   /** Explicit published locale; shared UI never falls back to English. */
   locale: PublishedLocale;
+  /** Explicit route identity; locale switching never rewrites path strings. */
+  route: RouteReference;
+  /** Stable fragments that may cross to the equivalent locale route. */
+  approvedFragments?: readonly string[];
+  /** Preserve query parameters on an explicit selector click. */
+  preserveQuery?: boolean;
   /** Page title, without the institution suffix. */
   title: string;
   /** Factual meta description (<= 160 chars). */
@@ -27,6 +43,9 @@ interface Props {
 
 const {
   locale,
+  route,
+  approvedFragments = [],
+  preserveQuery = true,
   title,
   description,
   ogImage,
@@ -47,8 +66,22 @@ const pageTitle = isHome
   ? ui.institution.displayName
   : `${title}${ui.metadata.titleSeparator}${ui.institution.displayName}`;
 
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const canonicalPath = equivalentRouteFor(route, locale) ?? Astro.url.pathname;
+const canonical = new URL(canonicalPath, Astro.site).href;
 const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
+const alternate = alternateLocale(locale);
+const alternatePath = alternateEquivalentRouteFor(route, locale);
+const alternateUrl = alternatePath
+  ? new URL(alternatePath, Astro.site).href
+  : null;
+const xDefaultUrl = route.key === 'home'
+  ? new URL(routeFor('home', 'en'), Astro.site).href
+  : null;
+const alternateUi = sharedUiFor(alternate);
+const preferenceVersion = createHash('sha256')
+  .update(readFileSync('public/scripts/language-preference.js'))
+  .digest('hex')
+  .slice(0, 10);
 ---
 
 <!doctype html>
@@ -62,6 +95,9 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
     <meta name="robots" content={robots} />
     <meta name="theme-color" content="#f7f4ee" />
     <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={locale} href={canonical} />
+    {alternateUrl && <link rel="alternate" hreflang={alternate} href={alternateUrl} />}
+    {xDefaultUrl && <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />}
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
@@ -74,6 +110,7 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:alt" content={ui.institution.displayName} />
     <meta property="og:locale" content={ui.metadata.openGraphLocale} />
+    <meta property="og:locale:alternate" content={alternateUi.metadata.openGraphLocale} />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -82,10 +119,21 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
     <meta name="twitter:image" content={socialImage} />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <script
+      type="module"
+      src={`/scripts/language-preference.js?v=${preferenceVersion}`}
+      is:inline
+    ></script>
   </head>
   <body>
     <a class="skip-link" href="#main">{ui.skipToContent}</a>
-    <Header locale={locale} showMastheadSubtitle={showMastheadSubtitle} />
+    <Header
+      locale={locale}
+      route={route}
+      approvedFragments={approvedFragments}
+      preserveQuery={preserveQuery}
+      showMastheadSubtitle={showMastheadSubtitle}
+    />
     <main id="main">
       <slot />
     </main>

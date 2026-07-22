@@ -21,6 +21,8 @@
   --font-serif: Georgia, 'Times New Roman', 'Noto Serif', serif; /* headings */
   --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, sans-serif; /* body */
+  --font-devanagari: system-ui, -apple-system, 'Noto Sans Devanagari',
+    'Kohinoor Devanagari', Mangal, 'Segoe UI', sans-serif;
 
   --text-sm: 0.875rem;
   --text-base: 1rem;

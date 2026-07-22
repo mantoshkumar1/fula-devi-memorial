@@ -32,6 +32,12 @@ const GENERATORS = {
   education: 'src/pages/records/education/[slug].astro',
 };
 
+/** Locale-neutral record views used by both English and Hindi generators. */
+const RECORD_VIEWS = {
+  clothing: 'src/views/ClothingRecordView.astro',
+  education: 'src/views/EducationRecordView.astro',
+};
+
 const errors = [];
 let assetsChecked = 0;
 let routesChecked = 0;
@@ -154,7 +160,7 @@ for (const pdf of pdfs) {
 
 // --- media kinds used by the record pages must be valid ---
 const KINDS = ['programme-photo', 'independent-coverage', 'academic-record-page'];
-const PAGE_TEMPLATES = [GENERATORS.clothing, GENERATORS.education];
+const PAGE_TEMPLATES = [RECORD_VIEWS.clothing, RECORD_VIEWS.education];
 for (const template of PAGE_TEMPLATES) {
   if (!(await exists(template))) continue;
   const src = await readFile(template, 'utf8');
@@ -177,15 +183,15 @@ if (/recordSummary\s*:/.test(text)) {
 // The clothing record page must show independent coverage immediately after the
 // lead photograph: the lead is index 0, coverage is index 1, and the remaining
 // gallery photographs start at 2 (or at 1 when a record has no coverage).
-const clothingTemplate = await readFile(GENERATORS.clothing, 'utf8');
+const clothingTemplate = await readFile(RECORD_VIEWS.clothing, 'utf8');
 if (!/coverageIndex\s*=\s*1\b/.test(clothingTemplate)) {
   errors.push(
-    `${GENERATORS.clothing} must place independent coverage at index 1, immediately after the lead photograph (coverageIndex = 1)`,
+    `${RECORD_VIEWS.clothing} must place independent coverage at index 1, immediately after the lead photograph (coverageIndex = 1)`,
   );
 }
-if (!/galleryStart\s*=\s*page\.coverage\s*\?\s*2\s*:\s*1/.test(clothingTemplate)) {
+if (!/galleryStart\s*=\s*record\.page\.coverage\s*\?\s*2\s*:\s*1/.test(clothingTemplate)) {
   errors.push(
-    `${GENERATORS.clothing} must start the remaining photographs after the coverage (galleryStart = page.coverage ? 2 : 1)`,
+    `${RECORD_VIEWS.clothing} must start the remaining photographs after the coverage (galleryStart = record.page.coverage ? 2 : 1)`,
   );
 }
 
