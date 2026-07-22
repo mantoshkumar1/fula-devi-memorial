@@ -7,7 +7,7 @@ export const englishPages = {
   home: {
     title: 'Home',
     heading: site.name,
-    description: `Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, on ${registrationDate}. Its work includes supporting the education of one child.`,
+    description: `Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, in ${site.registeredYear}. Its work includes supporting the education of one child.`,
     paragraphs: [
       [`Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, on ${registrationDate}.`],
       [
