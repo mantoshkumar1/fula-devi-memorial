@@ -23,3 +23,11 @@
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
   Referrer-Policy: same-origin
   X-Content-Type-Options: nosniff
+
+# Keep Cloudflare's managed email-obfuscation feature from rewriting the
+# reviewed contact markup or injecting its decoder script at the edge.
+/contact/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform
+
+/hi/contact/
+  Cache-Control: public, max-age=0, must-revalidate, no-transform

@@ -454,6 +454,14 @@ function validatePreferenceArtifact(root: string): string[] {
   if (headers.includes("script-src 'self' 'unsafe-inline'")) {
     failures.push('CSP permits inline executable scripts');
   }
+  for (const contactPath of ['/contact/', '/hi/contact/']) {
+    const noTransformPattern = new RegExp(
+      `${escapePattern(contactPath)}\\s+Cache-Control: [^\\n]*\\bno-transform\\b`,
+    );
+    if (!noTransformPattern.test(headers)) {
+      failures.push(`Contact output can be transformed at the edge: ${contactPath}`);
+    }
+  }
 
   return failures;
 }
