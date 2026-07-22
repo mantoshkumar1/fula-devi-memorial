@@ -18,9 +18,12 @@ interface Props {
   ogImage?: string;
   /** Keep the page out of search indexes (e.g. the 404 page). */
   noindex?: boolean;
+  /** Show the Hindi name in the masthead (home page only). */
+  showHindiName?: boolean;
 }
 
-const { title, description, ogImage, noindex = false } = Astro.props;
+const { title, description, ogImage, noindex = false, showHindiName = false } =
+  Astro.props;
 const robots = noindex
   ? 'noindex, follow'
   : 'index, follow, max-image-preview:large';
@@ -67,7 +70,7 @@ const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <Header />
+    <Header showHindiName={showHindiName} />
     <main id="main">
       <slot />
     </main>

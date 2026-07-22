@@ -22,9 +22,11 @@ interface Props {
   parent?: { name: string; href: string };
   /** Keep this page out of search indexes. */
   noindex?: boolean;
+  /** Show the Hindi name in the masthead (home page only). */
+  showHindiName?: boolean;
 }
 
-const { title, description, heading, standfirst, parent, noindex } =
+const { title, description, heading, standfirst, parent, noindex, showHindiName } =
   Astro.props;
 
 // BreadcrumbList structured data for inner pages (skip the home root).
@@ -47,7 +49,12 @@ const breadcrumbLd = {
 };
 ---
 
-<BaseLayout title={title} description={description} noindex={noindex}>
+<BaseLayout
+  title={title}
+  description={description}
+  noindex={noindex}
+  showHindiName={showHindiName}
+>
   <Container>
     <article class="content-page">
       <PageIntro title={heading ?? title} standfirst={standfirst} />

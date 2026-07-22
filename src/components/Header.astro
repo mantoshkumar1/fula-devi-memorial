@@ -1,14 +1,25 @@
 ---
 /**
- * Site header: institution name (English + Hindi) + primary navigation.
+ * Site header: institution name + primary navigation.
  * No hamburger, no JS — 7 static links that wrap on narrow screens.
  * The current page is marked with aria-current="page".
+ *
+ * The institution's name in Devanagari appears beneath the English name on the
+ * home masthead only. `showHindiName` carries that intent explicitly from the
+ * home page; it defaults to false, so every internal page stays English-only.
  */
 import { site } from '../data/site.ts';
 import { nav } from '../data/nav.ts';
 
-// The institution's name in its native Devanagari script — a subtitle beneath
-// the English name in the shared masthead, shown on every page.
+interface Props {
+  /** Show the Hindi name beneath the English masthead title (home only). */
+  showHindiName?: boolean;
+}
+
+const { showHindiName = false } = Astro.props;
+
+// The institution's name in its native Devanagari script — the one canonical
+// copy, rendered as a masthead subtitle only when showHindiName is set.
 const nameHindi = 'फुला देवी मेमोरियल सेवा संस्थान';
 
 const path = Astro.url.pathname;
@@ -18,7 +29,7 @@ const isCurrent = (href: string) =>
 
 <header class="site-header">
   <a class="site-name" href="/">{site.name}</a>
-  <p class="site-name-hi" lang="hi">{nameHindi}</p>
+  {showHindiName && <p class="site-name-hi" lang="hi">{nameHindi}</p>}
   <nav aria-label="Primary">
     <ul>
       {
