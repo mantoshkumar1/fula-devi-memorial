@@ -10,9 +10,9 @@
  *   <a data-mv data-mv-group="clothing-2021" data-mv-index="0"
  *      data-mv-kind="programme-photo" data-mv-caption="…" href="/…jpg">
  * Items are grouped by `data-mv-group` and ordered by `data-mv-index`, so one
- * year is a single sequence: programme photographs first, independent coverage
- * last. Clicking any thumbnail opens the sequence at that item. Collections
- * never mix.
+ * year is a single sequence: the lead photograph, then independent coverage
+ * where it exists, then the remaining photographs. Clicking any thumbnail opens
+ * the sequence at that item. Collections never mix.
  */
 const KIND_LABEL = {
   'programme-photo': 'Programme photograph',
@@ -25,7 +25,6 @@ const links = Array.from(document.querySelectorAll('a[data-mv]'));
 
 if (dialog && typeof dialog.showModal === 'function' && links.length) {
   const img = dialog.querySelector('.mv__img');
-  const stage = dialog.querySelector('.mv__stage');
   const status = dialog.querySelector('.mv__status');
   const caption = dialog.querySelector('.mv__caption');
   const prevBtn = dialog.querySelector('.mv__prev');
@@ -64,10 +63,6 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
     status.textContent =
       `${index + 1} of ${items.length}` + (kindLabel ? ` · ${kindLabel}` : '');
     caption.textContent = item.caption;
-    // A tall clipping is allowed to exceed the viewport and scroll vertically
-    // rather than shrink into unreadable text; photographs stay contained.
-    dialog.classList.toggle('mv--scroll', item.kind === 'independent-coverage');
-    if (stage) stage.scrollTop = 0;
     const many = items.length > 1;
     prevBtn.hidden = !many;
     nextBtn.hidden = !many;
@@ -167,7 +162,6 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
   dialog.addEventListener('close', () => {
     document.body.style.overflow = '';
     img.removeAttribute('src');
-    dialog.classList.remove('mv--scroll');
     if (opener && typeof opener.focus === 'function') opener.focus();
     opener = null;
   });

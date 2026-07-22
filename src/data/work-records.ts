@@ -56,9 +56,10 @@ export const MEDIA_KIND_LABEL: Record<MediaKind, string> = {
 };
 
 /**
- * One item in a record's single, ordered, visitor-facing media sequence.
- * Programme photographs always come first; independent coverage always comes
- * last. Both the page presentation and the viewer derive from this one order.
+ * One item in a record's single, ordered, visitor-facing media sequence. For a
+ * clothing record: the lead photograph first, then independent coverage where
+ * it exists (important external evidence, shown early), then the remaining
+ * photographs. Both the page presentation and the viewer derive from this order.
  */
 export interface MediaItem {
   src: string;
@@ -89,12 +90,6 @@ export interface ClothingRecord {
     yearLabel: string;
     /** e.g. "Community work before formal registration". */
     programmeLabel: string;
-    /**
-     * An optional one-line note shown on the preview, for a record that needs a
-     * word of context. Used only where relevant (e.g. the pre-registration
-     * chronology on the December 2021 record); omitted otherwise.
-     */
-    contextNote?: string;
     /** Display-only cover derivative used only for the main-page preview. */
     cover: string;
     coverAlt: string;
@@ -180,8 +175,6 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: 'December 2021',
       programmeLabel: 'Community work before formal registration',
-      contextNote:
-        'This programme took place shortly before the institution was formally registered in February 2022.',
       cover: '/records/clothing/2021/cover.jpg',
       coverAlt:
         'Villagers gathered on chairs in a tree-shaded courtyard at the December 2021 clothing distribution.',
@@ -440,34 +433,33 @@ export function resourceBySlug(slug: string): ResourceGuide | undefined {
 }
 
 /**
- * The one ordered, visitor-facing media sequence for a record. Programme
- * photographs first (lead, then gallery), independent coverage last; education
- * pages in reading order. Both the record page and the media viewer derive
- * from this, so they can never disagree.
+ * The one ordered, visitor-facing media sequence for a record. For a clothing
+ * record: the lead photograph first, then independent coverage where it exists
+ * (important external evidence, shown early), then the remaining programme
+ * photographs; education pages follow in reading order. Both the record page
+ * and the media viewer derive from this, so they can never disagree.
  */
 export function recordMedia(record: WorkRecord): MediaItem[] {
   if (record.type === 'clothing') {
-    const photos = [record.page.lead, ...record.page.gallery];
-    const items: MediaItem[] = photos.map((p, i) => ({
-      src: p.src,
-      kind: 'programme-photo',
-      alt: p.alt,
-      order: i,
-      width: p.width,
-      height: p.height,
-    }));
+    // Lead first, then independent coverage (shown early as external evidence),
+    // then the remaining programme photographs.
+    const sequence: { img: GalleryImage | Coverage; kind: MediaKind }[] = [
+      { img: record.page.lead, kind: 'programme-photo' },
+    ];
     if (record.page.coverage) {
-      const c = record.page.coverage;
-      items.push({
-        src: c.src,
-        kind: 'independent-coverage',
-        alt: c.alt,
-        order: items.length,
-        width: c.width,
-        height: c.height,
-      });
+      sequence.push({ img: record.page.coverage, kind: 'independent-coverage' });
     }
-    return items;
+    for (const p of record.page.gallery) {
+      sequence.push({ img: p, kind: 'programme-photo' });
+    }
+    return sequence.map(({ img, kind }, order) => ({
+      src: img.src,
+      kind,
+      alt: img.alt,
+      order,
+      width: img.width,
+      height: img.height,
+    }));
   }
   return record.page.pages.map((p, i) => ({
     src: p.src,

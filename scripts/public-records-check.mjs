@@ -174,12 +174,18 @@ if (/recordSummary\s*:/.test(text)) {
   );
 }
 
-// The clothing record page must place programme photos before coverage: the
-// lead is index 0, the gallery starts at 1, and coverage sorts after them.
+// The clothing record page must show independent coverage immediately after the
+// lead photograph: the lead is index 0, coverage is index 1, and the remaining
+// gallery photographs start at 2 (or at 1 when a record has no coverage).
 const clothingTemplate = await readFile(GENERATORS.clothing, 'utf8');
-if (!/coverageIndex\s*=\s*1\s*\+\s*page\.gallery\.length/.test(clothingTemplate)) {
+if (!/coverageIndex\s*=\s*1\b/.test(clothingTemplate)) {
   errors.push(
-    `${GENERATORS.clothing} must index independent coverage after every programme photograph (coverageIndex = 1 + page.gallery.length)`,
+    `${GENERATORS.clothing} must place independent coverage at index 1, immediately after the lead photograph (coverageIndex = 1)`,
+  );
+}
+if (!/galleryStart\s*=\s*page\.coverage\s*\?\s*2\s*:\s*1/.test(clothingTemplate)) {
+  errors.push(
+    `${GENERATORS.clothing} must start the remaining photographs after the coverage (galleryStart = page.coverage ? 2 : 1)`,
   );
 }
 

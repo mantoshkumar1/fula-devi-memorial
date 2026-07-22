@@ -85,6 +85,10 @@ const viewerVersion = createHash('sha256')
     overflow: auto;
   }
 
+  /* Every item — photograph, newspaper clipping or document page — is shown
+     fully contained within the stage: scaled down to fit the viewport, never
+     cropped and never enlarged past its natural size, so the whole image is
+     visible without scrolling. Native pinch zoom remains available for detail. */
   .mv__img {
     max-width: 100%;
     max-height: 100%;
@@ -92,18 +96,6 @@ const viewerVersion = createHash('sha256')
     height: auto;
     object-fit: contain;
     border-radius: var(--radius-sm);
-  }
-
-  /* A tall clipping is shown at full width and allowed to scroll vertically
-     within the stage, rather than shrinking into unreadable text. */
-  .mv--scroll .mv__stage {
-    align-items: flex-start;
-  }
-
-  .mv--scroll .mv__img {
-    max-height: none;
-    width: 100%;
-    height: auto;
   }
 
   .mv__btn {

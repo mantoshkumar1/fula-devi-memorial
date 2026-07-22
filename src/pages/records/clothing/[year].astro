@@ -30,12 +30,15 @@ interface Props {
 const { record } = Astro.props;
 const { page } = record;
 
-// One viewer sequence per year: programme photographs first (the lead is
-// image 1, then the gallery), the newspaper clipping last. The record page
-// still shows Photographs and Independent Coverage as separate sections, but
-// the viewer offers one continuous browse. Coverage sorts after every photo.
+// One viewer sequence per year, matching the visible page order: the lead
+// photograph (item 0), then independent coverage where it exists (item 1) as
+// important external evidence, then the remaining gallery photographs (from
+// item 2). Without coverage the gallery simply starts at item 1. The record
+// page shows Independent Coverage and Photographs as separate sections; the
+// viewer offers one continuous browse across them.
 const group = `clothing-${record.slug}`;
-const coverageIndex = 1 + page.gallery.length;
+const coverageIndex = 1;
+const galleryStart = page.coverage ? 2 : 1;
 
 // BreadcrumbList structured data, matching the visible trail exactly.
 const abs = (path: string) => new URL(path, Astro.site).href;
@@ -97,11 +100,6 @@ const breadcrumbLd = {
         </a>
       </figure>
 
-      <section class="section">
-        <h2>Photographs</h2>
-        <RecordGallery images={page.gallery} group={group} startIndex={1} />
-      </section>
-
       {
         page.coverage && (
           <section class="section">
@@ -125,11 +123,15 @@ const breadcrumbLd = {
                   decoding="async"
                 />
               </span>
-              <span class="clipping-action">View full clipping →</span>
             </a>
           </section>
         )
       }
+
+      <section class="section">
+        <h2>Photographs</h2>
+        <RecordGallery images={page.gallery} group={group} startIndex={galleryStart} />
+      </section>
 
       <p class="record-back record-back--bottom">
         <a href="/our-work/">← Back to Our Work</a>
@@ -205,9 +207,9 @@ const breadcrumbLd = {
     margin-block-end: var(--space-6);
   }
 
-  /* The whole coverage block is one link: a framed, uncropped preview plus a
-     clear action. The clipping is capped in height so a tall column does not
-     overwhelm the page. */
+  /* The coverage block is one link: the framed, uncropped clipping itself. The
+     image is the action — it opens in the viewer. The on-page preview is capped
+     in height so a tall column does not overwhelm the page. */
   .clipping-link {
     display: block;
     text-decoration: none;
@@ -233,17 +235,5 @@ const breadcrumbLd = {
 
   .clipping-link:hover .clipping {
     border-color: var(--color-brown);
-  }
-
-  .clipping-action {
-    display: inline-block;
-    margin-block-start: var(--space-3);
-    font-size: var(--text-sm);
-    color: var(--color-brown);
-  }
-
-  .clipping-link:hover .clipping-action {
-    color: var(--color-brown-strong);
-    text-decoration: underline;
   }
 </style>
