@@ -53,7 +53,7 @@ const website = {
   title={content.title}
   heading={content.heading}
   description={content.description}
-  showMastheadSubtitle={locale === 'en'}
+  identityMode="homepage"
   headingHidden
 >
   {content.paragraphs.map((parts) => <p><InlineParts locale={locale} parts={parts} /></p>)}

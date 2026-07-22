@@ -4,8 +4,7 @@
  * No hamburger, no JS — 7 static links that wrap on narrow screens.
  * The current page is marked with aria-current="page".
  *
- * The English home masthead keeps its existing Devanagari subtitle. Its
- * presence and language come from the locale module rather than this component.
+ * Homepage identity mode is bilingual; locale identity mode is single-language.
  */
 import { PRIMARY_NAV_ROUTE_KEYS } from '../data/nav.ts';
 import { routeFor, sharedUiFor, type PublishedLocale } from '../i18n/index.ts';
@@ -17,8 +16,8 @@ interface Props {
   route: RouteReference;
   approvedFragments?: readonly string[];
   preserveQuery?: boolean;
-  /** Show the locale's optional subtitle beneath the masthead title. */
-  showMastheadSubtitle?: boolean;
+  /** Select the shared homepage or internal-page identity contract. */
+  identityMode?: 'homepage' | 'locale';
 }
 
 const {
@@ -26,9 +25,28 @@ const {
   route,
   approvedFragments = [],
   preserveQuery = true,
-  showMastheadSubtitle = false,
+  identityMode = 'locale',
 } = Astro.props;
 const ui = sharedUiFor(locale);
+const englishUi = sharedUiFor('en');
+const hindiUi = sharedUiFor('hi');
+
+// Homepage identity is deliberately bilingual in both locales; internal-page
+// identity follows the active locale and remains a single line.
+const identity = identityMode === 'homepage'
+  ? {
+      name: englishUi.institution.displayName,
+      href: routeFor('home', 'en'),
+      subtitle: {
+        text: hindiUi.institution.displayName,
+        language: hindiUi.metadata.htmlLanguage,
+      },
+    }
+  : {
+      name: ui.institution.displayName,
+      href: routeFor('home', locale),
+      subtitle: undefined,
+    };
 const nav = PRIMARY_NAV_ROUTE_KEYS.map((routeKey) => ({
   label: ui.navigation.labels[routeKey],
   href: routeFor(routeKey, locale),
@@ -40,10 +58,10 @@ const isCurrent = (href: string) =>
 ---
 
 <header class="site-header">
-  <a class="site-name" href={routeFor('home', locale)}>{ui.institution.displayName}</a>
+  <a class="site-name" href={identity.href}>{identity.name}</a>
   {
-    showMastheadSubtitle && ui.institution.mastheadSubtitle && (
-      <p class="site-name-hi" lang={ui.institution.mastheadSubtitle.language}>{ui.institution.mastheadSubtitle.text}</p>
+    identity.subtitle && (
+      <p class="site-name-hi" lang={identity.subtitle.language}>{identity.subtitle.text}</p>
     )
   }
   <LanguageSelector

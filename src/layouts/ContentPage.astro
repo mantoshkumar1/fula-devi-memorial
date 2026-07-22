@@ -34,8 +34,8 @@ interface Props {
   parent?: { name: string; href: string };
   /** Keep this page out of search indexes. */
   noindex?: boolean;
-  /** Show this locale's optional masthead subtitle (home page only). */
-  showMastheadSubtitle?: boolean;
+  /** Select the shared homepage or internal-page identity contract. */
+  identityMode?: 'homepage' | 'locale';
   /** Render the h1 for assistive tech only, without a visible heading (home). */
   headingHidden?: boolean;
 }
@@ -51,7 +51,7 @@ const {
   standfirst,
   parent,
   noindex,
-  showMastheadSubtitle,
+  identityMode,
   headingHidden,
 } = Astro.props;
 const ui = sharedUiFor(locale);
@@ -86,7 +86,7 @@ const breadcrumbLd = {
   title={title}
   description={description}
   noindex={noindex}
-  showMastheadSubtitle={showMastheadSubtitle}
+  identityMode={identityMode}
 >
   <Container>
     <article class="content-page">

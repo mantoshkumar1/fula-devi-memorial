@@ -37,8 +37,8 @@ interface Props {
   ogImage?: string;
   /** Keep the page out of search indexes (e.g. the 404 page). */
   noindex?: boolean;
-  /** Show this locale's optional masthead subtitle (home page only). */
-  showMastheadSubtitle?: boolean;
+  /** Select the shared homepage or internal-page identity contract. */
+  identityMode?: 'homepage' | 'locale';
 }
 
 const {
@@ -50,7 +50,7 @@ const {
   description,
   ogImage,
   noindex = false,
-  showMastheadSubtitle = false,
+  identityMode = 'locale',
 } = Astro.props;
 const ui = sharedUiFor(locale);
 const robots = noindex
@@ -132,7 +132,7 @@ const preferenceVersion = createHash('sha256')
       route={route}
       approvedFragments={approvedFragments}
       preserveQuery={preserveQuery}
-      showMastheadSubtitle={showMastheadSubtitle}
+      identityMode={identityMode}
     />
     <main id="main">
       <slot />
