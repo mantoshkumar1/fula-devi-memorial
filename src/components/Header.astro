@@ -79,17 +79,16 @@ const isCurrent = (href: string) =>
   nav ul {
     list-style: none;
     padding: 0;
-    margin-top: var(--space-3);
+    margin-top: var(--space-2);
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3) var(--space-4);
+    gap: var(--space-2) var(--space-4);
   }
 
   nav a {
-    display: inline-block;
-    padding: var(--space-1) 0;
+    display: inline-flex;
+    align-items: center;
     min-height: 44px; /* touch target */
-    line-height: 2.5;
     text-decoration: none;
     color: var(--color-ink-soft);
   }

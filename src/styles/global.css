@@ -143,15 +143,15 @@ select {
  * .prose so layout chrome (header/nav) is unaffected. Uses the owl selector so
  * spacing lives between siblings, never above the first or below the last.
  */
-/* Paragraph spacing sits a little above the body line-height (1.6), so
- * paragraphs read as separate blocks rather than one continuous column. */
+/* Keep consecutive blocks distinct without letting short paragraphs make a
+ * page feel stretched. Major conceptual breaks use the larger heading gap. */
 .prose > * + * {
-  margin-block-start: var(--space-6);
+  margin-block-start: var(--space-5);
 }
 
 /* Headings get more breathing room above, less below (bound to what follows). */
 .prose > h2 {
-  margin-block-start: var(--space-12);
+  margin-block-start: var(--space-10);
 }
 
 .prose > h3 {
