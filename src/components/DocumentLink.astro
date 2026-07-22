@@ -10,12 +10,16 @@ interface Props {
   file: string;
   /** Human size label, e.g. "PDF, 320 KB". Optional. */
   sizeLabel?: string | null;
+  /** Human date label, e.g. "27 February 2022". Optional. */
+  dateLabel?: string | null;
   /** When true, the document is not yet available; render as text. */
   pending?: boolean;
 }
 
-const { title, file, sizeLabel, pending = false } = Astro.props;
-const meta = sizeLabel ?? 'PDF';
+const { title, file, sizeLabel, dateLabel, pending = false } = Astro.props;
+// One meta line: date first (when known), then format/size. Falls back to
+// "PDF" so the link never renders without at least its format.
+const meta = [dateLabel, sizeLabel].filter(Boolean).join(' · ') || 'PDF';
 ---
 
 {

@@ -1,31 +1,68 @@
 ---
 /**
- * Governance. The institution's registration and governing documents.
- * Documents are served as-is; pending ones show as "Not yet published" rather
- * than a broken or fake link.
+ * Governance. The institution's formal identity and its governing documents.
+ *
+ * File sizes are derived from the actual PDF bytes at build time (never stored
+ * by hand), so a replaced document can never disagree with its label. Document
+ * dates are shown only where explicitly recorded and confirmed from the visible
+ * document. Pending documents show as "Not yet published" rather than a broken
+ * or fake link.
  */
+import fs from 'node:fs';
+import path from 'node:path';
 import ContentPage from '../layouts/ContentPage.astro';
 import DocumentLink from '../components/DocumentLink.astro';
 import { governanceDocs } from '../data/governance.ts';
-import { site } from '../data/site.ts';
+import { site, formatLongDate } from '../data/site.ts';
+
+/** Human-readable size derived from the real file under /public. */
+function sizeLabel(publicFile: string): string {
+  const bytes = fs.statSync(path.join(process.cwd(), 'public', publicFile)).size;
+  const kb = bytes / 1024;
+  return kb < 1024 ? `PDF, ${Math.round(kb)} KB` : `PDF, ${(kb / 1024).toFixed(1)} MB`;
+}
+
+const docs = governanceDocs.map((d) => ({
+  ...d,
+  sizeLabel: d.pending ? null : sizeLabel(d.file),
+  dateLabel: d.date ? formatLongDate(d.date) : null,
+}));
+
+const registrationDate = formatLongDate(site.registrationDate);
 ---
 
 <ContentPage
   title="Governance"
-  description="Fula Devi Memorial Sewa Sansthan is a registered charitable institution in Bihar, India. Its governing documents are listed here."
+  description="The registration of Fula Devi Memorial Sewa Sansthan in Bihar, India, and its principal governing documents."
 >
   <p>
-    Fula Devi Memorial Sewa Sansthan is a registered charitable institution in
-    {site.jurisdiction}, established in {site.registeredYear}.
+    Fula Devi Memorial Sewa Sansthan was formally registered in {site.jurisdiction},
+    on {registrationDate}. Community work associated with the institution had
+    begun before its registration.
   </p>
-  <p>Its governing documents:</p>
+
+  <h2>Registration</h2>
+  <ul>
+    <li>Registered name — {site.name}</li>
+    <li>Registration number — {site.registrationNumber}</li>
+    <li>Registration date — {registrationDate}</li>
+    <li>Registered address — {site.registeredAddress}</li>
+    <li>Jurisdiction — {site.jurisdiction}</li>
+  </ul>
+
+  <h2>Governing documents</h2>
+  <p>
+    The institution's principal registration and governance documents are
+    available below.
+  </p>
   <div class="doc-list">
     {
-      governanceDocs.map((d) => (
+      docs.map((d) => (
         <DocumentLink
           title={d.title}
           file={d.file}
           sizeLabel={d.sizeLabel}
+          dateLabel={d.dateLabel}
           pending={d.pending}
         />
       ))

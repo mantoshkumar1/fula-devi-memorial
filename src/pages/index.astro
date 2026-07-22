@@ -5,9 +5,10 @@
  */
 import ContentPage from '../layouts/ContentPage.astro';
 import Quote from '../components/Quote.astro';
-import { site } from '../data/site.ts';
+import { site, formatLongDate } from '../data/site.ts';
 
 const siteUrl = Astro.site?.href;
+const registrationDate = formatLongDate(site.registrationDate);
 
 const org = {
   '@context': 'https://schema.org',
@@ -35,13 +36,13 @@ const website = {
 <ContentPage
   title="Home"
   heading={site.name}
-  description="Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, on 27 February 2022. Its work includes supporting the education of one child."
+  description={`Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, on ${registrationDate}. Its work includes supporting the education of one child.`}
   showHindiName={true}
   headingHidden={true}
 >
   <p>
     Fula Devi Memorial Sewa Sansthan is a charitable institution registered in
-    Bihar, India, on 27 February 2022.
+    Bihar, India, on {registrationDate}.
   </p>
   <p>
     Established in memory of Fula Devi, the institution seeks to continue the
