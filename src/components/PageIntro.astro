@@ -8,19 +8,32 @@ interface Props {
   title: string;
   /** Optional one-line introduction beneath the heading. */
   standfirst?: string;
+  /**
+   * Render the h1 for assistive technology only, without a visible heading.
+   * Used on the home page, where the masthead already shows the name visibly
+   * and repeating it as a large heading is redundant.
+   */
+  headingHidden?: boolean;
 }
 
-const { title, standfirst } = Astro.props;
+const { title, standfirst, headingHidden = false } = Astro.props;
 ---
 
-<div class="page-intro">
-  <h1>{title}</h1>
+<div class:list={['page-intro', { 'is-heading-hidden': headingHidden }]}>
+  <h1 class:list={[{ 'visually-hidden': headingHidden }]}>{title}</h1>
   {standfirst && <p class="standfirst">{standfirst}</p>}
 </div>
 
 <style>
   .page-intro {
     margin-bottom: var(--space-8);
+  }
+
+  /* When the heading is visually hidden there is nothing to space away from, so
+   * the intro paragraph sits directly at the page's top padding — the natural
+   * position the heading would have occupied. */
+  .page-intro.is-heading-hidden {
+    margin-bottom: 0;
   }
 
   .standfirst {

@@ -14,6 +14,8 @@ export interface SiteData {
   shortName: string;
   /** Year the institution was registered. */
   registeredYear: number;
+  /** City of the registered office. */
+  registeredCity: string;
   /** State / country of registration. */
   jurisdiction: string;
   /** Registration number — public only if confirmed. */
@@ -34,10 +36,12 @@ export const site: SiteData = {
   name: 'Fula Devi Memorial Sewa Sansthan',
   shortName: 'Fula Devi Memorial Sewa Sansthan',
   registeredYear: 2022,
+  registeredCity: 'Patna',
   jurisdiction: 'Bihar, India',
 
-  // PENDING: confirm whether the registration number is to be shown publicly.
-  registrationNumber: null,
+  // Confirmed public: the registration number appears on the institution's own
+  // public banner and may be shown on the site.
+  registrationNumber: 'S000380',
 
   // PENDING: confirm the official, publishable contact email.
   contactEmail: null,

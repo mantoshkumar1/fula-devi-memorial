@@ -24,10 +24,20 @@ interface Props {
   noindex?: boolean;
   /** Show the Hindi name in the masthead (home page only). */
   showHindiName?: boolean;
+  /** Render the h1 for assistive tech only, without a visible heading (home). */
+  headingHidden?: boolean;
 }
 
-const { title, description, heading, standfirst, parent, noindex, showHindiName } =
-  Astro.props;
+const {
+  title,
+  description,
+  heading,
+  standfirst,
+  parent,
+  noindex,
+  showHindiName,
+  headingHidden,
+} = Astro.props;
 
 // BreadcrumbList structured data for inner pages (skip the home root).
 const isHome = Astro.url.pathname === '/';
@@ -57,7 +67,11 @@ const breadcrumbLd = {
 >
   <Container>
     <article class="content-page">
-      <PageIntro title={heading ?? title} standfirst={standfirst} />
+      <PageIntro
+        title={heading ?? title}
+        standfirst={standfirst}
+        headingHidden={headingHidden}
+      />
       <div class="prose">
         <slot />
       </div>

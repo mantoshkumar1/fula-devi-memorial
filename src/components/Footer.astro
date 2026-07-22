@@ -9,7 +9,9 @@ import { site } from '../data/site.ts';
 <footer class="site-footer">
   <p class="footer-name">{site.name}</p>
   <p class="footer-meta">
-    Registered in {site.jurisdiction}, {site.registeredYear}.
+    <span class="footer-fact">{site.registeredCity}, {site.jurisdiction}</span>
+    <span class="footer-sep" aria-hidden="true">·</span>
+    <span class="footer-fact">Registration No. {site.registrationNumber}</span>
   </p>
   <nav aria-label="Footer">
     <ul>
@@ -39,6 +41,25 @@ import { site } from '../data/site.ts';
     margin-top: var(--space-1);
   }
 
+  /* Each fact stays whole; a line break may fall only at the separator. */
+  .footer-fact {
+    white-space: nowrap;
+  }
+
+  /* Below the reference phone width the line cannot sit comfortably on one row,
+   * so the two facts stack and the middot separator is dropped — it must never
+   * dangle at the start or end of a line. This also covers browser zoom, which
+   * narrows the effective width. */
+  @media (max-width: 359px) {
+    .footer-fact {
+      display: block;
+    }
+
+    .footer-sep {
+      display: none;
+    }
+  }
+
   nav ul {
     list-style: none;
     padding: 0;
@@ -53,5 +74,9 @@ import { site } from '../data/site.ts';
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+  }
+
+  nav a:hover {
+    color: var(--color-brown-strong);
   }
 </style>
