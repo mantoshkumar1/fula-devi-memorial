@@ -29,7 +29,7 @@ export interface SiteData {
   registrationNumber: string | null;
   /** Official contact email — rendered as a mailto link. */
   contactEmail: string | null;
-  /** Default Open Graph image (path under /public). Placeholder for now. */
+  /** Default Open Graph social-preview image (path under /public). */
   ogImage: string;
 }
 
@@ -55,8 +55,7 @@ export const site: SiteData = {
   // public contact channel.
   contactEmail: 'Fula.Devi.NGO@outlook.com',
 
-  // PENDING: replace with a real 1200x630 raster social image before launch.
-  ogImage: '/og-default.svg',
+  ogImage: '/og-default.png',
 };
 
 const MONTHS = [

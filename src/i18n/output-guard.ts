@@ -18,6 +18,13 @@ interface RoutePair {
   indexable: boolean;
 }
 
+const SOCIAL_IMAGE_PATH = '/og-default.png';
+const SOCIAL_IMAGE_ALT =
+  'Fula Devi Memorial Sewa Sansthan — institutional social preview';
+const SOCIAL_IMAGE_WIDTH = 1200;
+const SOCIAL_IMAGE_HEIGHT = 630;
+const MAX_SOCIAL_IMAGE_BYTES = 300 * 1024;
+
 function filesUnder(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = resolve(directory, entry.name);
@@ -199,6 +206,7 @@ function validatePagePair(
     const html = readFileSync(resolve(root, path), 'utf8');
     const canonical = absoluteUrl(origin, edition.route);
     const alternate = absoluteUrl(origin, edition.other);
+    const socialImage = absoluteUrl(origin, SOCIAL_IMAGE_PATH);
 
     if (!hasTag(html, 'html', { lang: edition.locale })) {
       failures.push(`Incorrect html lang on ${path}`);
@@ -275,6 +283,31 @@ function validatePagePair(
       content: ogAlternate,
     })) {
       failures.push(`Incorrect Open Graph locale alternate on ${path}`);
+    }
+    const socialMeta = [
+      { property: 'og:image', content: socialImage },
+      { property: 'og:image:type', content: 'image/png' },
+      { property: 'og:image:width', content: String(SOCIAL_IMAGE_WIDTH) },
+      { property: 'og:image:height', content: String(SOCIAL_IMAGE_HEIGHT) },
+      { property: 'og:image:alt', content: SOCIAL_IMAGE_ALT },
+    ];
+    for (const expected of socialMeta) {
+      if (!hasTag(html, 'meta', expected)) {
+        failures.push(`Incorrect ${expected.property} metadata on ${path}`);
+      }
+    }
+    const twitterMeta = [
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:image', content: socialImage },
+      { name: 'twitter:image:alt', content: SOCIAL_IMAGE_ALT },
+    ];
+    for (const expected of twitterMeta) {
+      if (!hasTag(html, 'meta', expected)) {
+        failures.push(`Incorrect ${expected.name} metadata on ${path}`);
+      }
+    }
+    if (html.includes('og-default.svg')) {
+      failures.push(`Retired social-preview SVG referenced on ${path}`);
     }
 
     const title = html.match(/<title>([^<]+)<\/title>/i)?.[1] ?? '';
@@ -425,6 +458,40 @@ function validatePreferenceArtifact(root: string): string[] {
   return failures;
 }
 
+function validateSocialPreviewArtifact(root: string, files: string[]): string[] {
+  const failures: string[] = [];
+  const publicFiles = new Set(files.map((file) => publicPath(root, file)));
+
+  if (!publicFiles.has(SOCIAL_IMAGE_PATH.slice(1))) {
+    return [`Missing social-preview artifact: ${SOCIAL_IMAGE_PATH}`];
+  }
+  if (publicFiles.has('og-default.svg')) {
+    failures.push('Retired social-preview SVG remains in output');
+  }
+
+  const image = readFileSync(resolve(root, SOCIAL_IMAGE_PATH.slice(1)));
+  const pngSignature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+  if (image.length < 24 || !image.subarray(0, 8).equals(pngSignature)) {
+    failures.push('Social-preview artifact is not a valid PNG');
+    return failures;
+  }
+
+  const width = image.readUInt32BE(16);
+  const height = image.readUInt32BE(20);
+  if (width !== SOCIAL_IMAGE_WIDTH || height !== SOCIAL_IMAGE_HEIGHT) {
+    failures.push(
+      `Social-preview dimensions are ${width}x${height}; expected ${SOCIAL_IMAGE_WIDTH}x${SOCIAL_IMAGE_HEIGHT}`,
+    );
+  }
+  if (image.length > MAX_SOCIAL_IMAGE_BYTES) {
+    failures.push(
+      `Social-preview size is ${image.length} bytes; expected no more than ${MAX_SOCIAL_IMAGE_BYTES}`,
+    );
+  }
+
+  return failures;
+}
+
 function validateBilingualOutput(
   root: string,
   files: string[],
@@ -439,6 +506,7 @@ function validateBilingualOutput(
     ...validateSitemap(root, origin, pairs),
     ...validateInternalLinks(root, origin, pairs),
     ...validatePreferenceArtifact(root),
+    ...validateSocialPreviewArtifact(root, files),
   ];
 }
 

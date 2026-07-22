@@ -2,7 +2,7 @@
 /**
  * The single site layout. Provides landmarks, skip link, and all <head> meta.
  * Pages pass a factual `title` and `description`; nothing here inflates the
- * institution. `og:image` falls back to the (placeholder) site default.
+ * institution. `og:image` falls back to the site-wide social preview.
  */
 import '../styles/global.css';
 import { readFileSync } from 'node:fs';
@@ -69,6 +69,8 @@ const pageTitle = isHome
 const canonicalPath = equivalentRouteFor(route, locale) ?? Astro.url.pathname;
 const canonical = new URL(canonicalPath, Astro.site).href;
 const socialImage = new URL(ogImage ?? site.ogImage, Astro.site).href;
+const socialImageAlt =
+  'Fula Devi Memorial Sewa Sansthan — institutional social preview';
 const alternate = alternateLocale(locale);
 const alternatePath = alternateEquivalentRouteFor(route, locale);
 const alternateUrl = alternatePath
@@ -108,7 +110,10 @@ const preferenceVersion = createHash('sha256')
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
-    <meta property="og:image:alt" content={ui.institution.displayName} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={socialImageAlt} />
     <meta property="og:locale" content={ui.metadata.openGraphLocale} />
     <meta property="og:locale:alternate" content={alternateUi.metadata.openGraphLocale} />
 
@@ -117,6 +122,7 @@ const preferenceVersion = createHash('sha256')
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     <script
