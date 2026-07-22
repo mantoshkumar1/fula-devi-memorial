@@ -131,6 +131,7 @@ export interface UpdatesContent extends PageMeta {
 export interface GovernanceContent extends PageMeta {
   introduction: string;
   registrationHeading: string;
+  registeredName: string;
   labels: {
     registeredName: string;
     registrationNumber: string;

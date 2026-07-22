@@ -245,6 +245,7 @@ export const englishPages = {
     description: 'The registration of Fula Devi Memorial Sewa Sansthan in Bihar, India, and its principal governing documents.',
     introduction: `Fula Devi Memorial Sewa Sansthan was formally registered in ${site.jurisdiction}, on ${registrationDate}. Community work associated with the institution had begun before its registration.`,
     registrationHeading: 'Registration',
+    registeredName: site.name,
     labels: {
       registeredName: 'Registered name',
       registrationNumber: 'Registration number',
