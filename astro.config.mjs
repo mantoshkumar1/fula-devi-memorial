@@ -1,6 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { validateI18nFoundation } from './src/i18n/validate.ts';
+
+// Validate the Version 1.1 localization declarations whenever Astro loads the
+// project. This does not enable i18n routing or create Hindi pages.
+validateI18nFoundation();
 
 // The production domain. It drives canonical URLs, the sitemap, and Open Graph
 // absolute paths — change it here and everything else follows.
