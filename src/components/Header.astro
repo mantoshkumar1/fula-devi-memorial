@@ -1,11 +1,15 @@
 ---
 /**
- * Site header: institution name + primary navigation.
+ * Site header: institution name (English + Hindi) + primary navigation.
  * No hamburger, no JS — 7 static links that wrap on narrow screens.
  * The current page is marked with aria-current="page".
  */
 import { site } from '../data/site.ts';
 import { nav } from '../data/nav.ts';
+
+// The institution's name in its native Devanagari script — a subtitle beneath
+// the English name in the shared masthead, shown on every page.
+const nameHindi = 'फुला देवी मेमोरियल सेवा संस्थान';
 
 const path = Astro.url.pathname;
 const isCurrent = (href: string) =>
@@ -14,6 +18,7 @@ const isCurrent = (href: string) =>
 
 <header class="site-header">
   <a class="site-name" href="/">{site.name}</a>
+  <p class="site-name-hi" lang="hi">{nameHindi}</p>
   <nav aria-label="Primary">
     <ul>
       {
@@ -47,6 +52,17 @@ const isCurrent = (href: string) =>
     color: var(--color-ink);
     text-decoration: none;
     overflow-wrap: break-word;
+  }
+
+  /* Institution name in Devanagari — a subtle official subtitle beneath the
+   * English masthead title. It must not compete with the English name: body
+   * font (Georgia carries no Devanagari), muted ink, regular weight. */
+  .site-name-hi {
+    margin-top: var(--space-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 400;
+    color: var(--color-ink-soft);
   }
 
   nav ul {
