@@ -14,7 +14,11 @@ import PageIntro from '../../../components/PageIntro.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import RecordGallery from '../../../components/RecordGallery.astro';
 import MediaViewer from '../../../components/MediaViewer.astro';
-import { clothingRecords, type ClothingRecord } from '../../../data/work-records.ts';
+import {
+  clothingRecords,
+  recordBackHref,
+  type ClothingRecord,
+} from '../../../data/work-records.ts';
 
 export function getStaticPaths() {
   return clothingRecords.map((record) => ({
@@ -39,6 +43,10 @@ const { page } = record;
 const group = `clothing-${record.slug}`;
 const coverageIndex = 1;
 const galleryStart = page.coverage ? 2 : 1;
+
+// "Back to Our Work" returns to this record's own card on the listing, so the
+// visitor lands where they left rather than at the top of the page.
+const backHref = recordBackHref(record);
 
 // BreadcrumbList structured data, matching the visible trail exactly.
 const abs = (path: string) => new URL(path, Astro.site).href;
@@ -75,7 +83,7 @@ const breadcrumbLd = {
       <p class="lede">{page.opening}</p>
 
       <p class="record-back record-back--top">
-        <a href="/our-work/">← Back to Our Work</a>
+        <a href={backHref}>← Back to Our Work</a>
       </p>
 
       <figure class="lead">
@@ -134,7 +142,7 @@ const breadcrumbLd = {
       </section>
 
       <p class="record-back record-back--bottom">
-        <a href="/our-work/">← Back to Our Work</a>
+        <a href={backHref}>← Back to Our Work</a>
       </p>
     </article>
   </Container>

@@ -17,7 +17,11 @@ import Container from '../../../components/Container.astro';
 import PageIntro from '../../../components/PageIntro.astro';
 import Breadcrumbs from '../../../components/Breadcrumbs.astro';
 import MediaViewer from '../../../components/MediaViewer.astro';
-import { educationRecords, type EducationRecord } from '../../../data/work-records.ts';
+import {
+  educationRecords,
+  recordBackHref,
+  type EducationRecord,
+} from '../../../data/work-records.ts';
 
 export function getStaticPaths() {
   return educationRecords.map((record) => ({
@@ -33,6 +37,10 @@ interface Props {
 const { record } = Astro.props;
 const { page } = record;
 const docGroup = `education-${record.slug}`;
+
+// "Back to Our Work" returns to this record's own card on the listing, so the
+// visitor lands where they left rather than at the top of the page.
+const backHref = recordBackHref(record);
 
 const abs = (path: string) => new URL(path, Astro.site).href;
 const crumbs = [
@@ -71,7 +79,7 @@ const breadcrumbLd = {
       </p>
 
       <p class="record-back record-back--top">
-        <a href="/our-work/">← Back to Our Work</a>
+        <a href={backHref}>← Back to Our Work</a>
       </p>
 
       <div class="document">
@@ -100,7 +108,7 @@ const breadcrumbLd = {
       </div>
 
       <p class="record-back record-back--bottom">
-        <a href="/our-work/">← Back to Our Work</a>
+        <a href={backHref}>← Back to Our Work</a>
       </p>
     </article>
   </Container>

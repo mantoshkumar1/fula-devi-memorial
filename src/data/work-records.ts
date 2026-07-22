@@ -471,6 +471,27 @@ export function recordMedia(record: WorkRecord): MediaItem[] {
   }));
 }
 
+/**
+ * Contextual back-navigation for record pages.
+ *
+ * Every record is listed on Our Work as a card. A record page's "Back to Our
+ * Work" link targets that card's anchor, so the visitor returns to the exact
+ * place they left rather than the top of the listing. The listing card's `id`
+ * and the record page's back link both derive from `recordAnchor`, so they can
+ * never drift apart, and any new record collection inherits the behaviour for
+ * free. Purely static — an ordinary link that needs no JavaScript; a browser
+ * that cannot find the fragment simply lands at the top of Our Work, which is
+ * the graceful default.
+ */
+export function recordAnchor(record: WorkRecord): string {
+  return `record-${record.type}-${record.slug}`;
+}
+
+/** The Our Work URL a record's "Back to Our Work" link returns to. */
+export function recordBackHref(record: WorkRecord): string {
+  return `/our-work/#${recordAnchor(record)}`;
+}
+
 /** Number of programme photographs in a clothing record (lead + gallery). */
 export function photoCount(record: ClothingRecord): number {
   return 1 + record.page.gallery.length;
