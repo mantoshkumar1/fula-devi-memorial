@@ -11,6 +11,7 @@
 import ContentPage from '../layouts/ContentPage.astro';
 import RecordPreview from '../components/RecordPreview.astro';
 import ResourceCard from '../components/ResourceCard.astro';
+import SectionHeading from '../components/SectionHeading.astro';
 import {
   clothingRecords,
   educationRecords,
@@ -37,7 +38,7 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     every commitment is made with the intention that it can continue.
   </p>
 
-  <h2>Education</h2>
+  <SectionHeading id="education" text="Education" />
   <p class="meta-line">Ongoing · Since 2025</p>
   <p>
     The institution has committed to supporting one child through graduation by
@@ -62,7 +63,7 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     )
   }
 
-  <h2>Seasonal Clothing Distribution</h2>
+  <SectionHeading id="seasonal-clothing" text="Seasonal Clothing Distribution" />
   <p class="meta-line">Recurring · Since 2020</p>
   <p>
     Seasonal clothing is distributed in the village, with priority given to
@@ -100,7 +101,7 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     }
   </div>
 
-  <h2>Access to Public Healthcare</h2>
+  <SectionHeading id="public-healthcare" text="Access to Public Healthcare" />
   <p class="meta-line">Completed · 2024</p>
   <p>
     The institution helped eligible families throughout the village understand
@@ -125,7 +126,7 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     )
   }
 
-  <h2>Financial Awareness</h2>
+  <SectionHeading id="financial-awareness" text="Financial Awareness" />
   <p class="meta-line">Completed · 2024</p>
   <p>
     The institution helped villagers understand the Pradhan Mantri Jeevan Jyoti
@@ -150,7 +151,7 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     )
   }
 
-  <h2>Looking Ahead</h2>
+  <SectionHeading id="looking-ahead" text="Looking Ahead" />
   <p>
     The institution will undertake additional work only when existing
     commitments can continue responsibly.
@@ -176,9 +177,12 @@ const guideTitle = (g: { title: string; scope?: string }) =>
   }
 
   /* The previews and resource cards are whole-card links; the prose
-     underline for inline links must not run across them. */
+     underline for inline links must not run across them. The section
+     permalinks are quiet glyphs, not prose links, so they carry no underline
+     either. */
   :global(.prose a.record-row),
-  :global(.prose a.resource) {
+  :global(.prose a.resource),
+  :global(.prose h2 a.heading-permalink) {
     text-decoration: none;
   }
 </style>

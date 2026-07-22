@@ -1,0 +1,76 @@
+---
+/**
+ * A major section heading with a permanent deep link.
+ *
+ * Renders an <h2 id="…"> so each section has its own stable URL fragment
+ * (e.g. /our-work#education), plus a muted permalink a visitor can click to put
+ * that URL in the address bar and then copy, bookmark or share it. Purely
+ * static: an ordinary same-page anchor — no JavaScript, no clipboard, no copy
+ * button, no toast. On pointer devices the permalink stays hidden until the
+ * heading is hovered or the link takes keyboard focus, keeping the page calm;
+ * on touch devices it remains gently visible so it is always tappable.
+ *
+ * The `id` is supplied explicitly and never derived from the heading text, so
+ * it stays stable if the wording is ever refined. Section ids are plain words
+ * (education, looking-ahead) and so never collide with the record-card anchors,
+ * which are namespaced `record-…`.
+ */
+interface Props {
+  /** Stable, permanent fragment id, e.g. "education". */
+  id: string;
+  /** The visible heading text, also used to build the permalink's aria-label. */
+  text: string;
+}
+
+const { id, text } = Astro.props;
+---
+
+<h2 id={id}>
+  {text}
+  <a
+    class="heading-permalink"
+    href={`#${id}`}
+    aria-label={`Permanent link to the ${text} section`}
+  >
+    <span aria-hidden="true">#</span>
+  </a>
+</h2>
+
+<style>
+  /* When a permalink (or a shared/bookmarked URL) targets this section, leave
+     room above the heading so it lands clear of the viewport edge rather than
+     jammed to it — matches the record cards' scroll offset. */
+  h2 {
+    scroll-margin-top: var(--space-8);
+  }
+
+  .heading-permalink {
+    margin-inline-start: var(--space-2);
+    color: var(--color-ink-soft);
+    font-weight: 400;
+    /* Opacity is animated for the hover reveal; colour for the interaction. */
+    transition:
+      opacity var(--motion-fast),
+      color var(--motion-fast);
+  }
+
+  .heading-permalink:hover,
+  .heading-permalink:focus-visible {
+    color: var(--color-brown);
+  }
+
+  /* Pointer devices: keep the permalink out of sight until the heading is
+     hovered or the link itself receives keyboard focus. Opacity (not display)
+     leaves it in the layout — no shift — and in the accessibility tree, so
+     screen-reader users always reach it. */
+  @media (hover: hover) {
+    .heading-permalink {
+      opacity: 0;
+    }
+
+    h2:hover .heading-permalink,
+    .heading-permalink:focus-visible {
+      opacity: 1;
+    }
+  }
+</style>
