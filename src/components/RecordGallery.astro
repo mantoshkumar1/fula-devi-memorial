@@ -17,16 +17,25 @@ interface Props {
   images: GalleryImage[];
   /** Viewer collection key, e.g. "clothing-2021". */
   group: string;
+  /** Sequence index of the first gallery image (the lead is 0). */
+  startIndex?: number;
 }
 
-const { images, group } = Astro.props;
+const { images, group, startIndex = 0 } = Astro.props;
 ---
 
 <ul class="gallery">
   {
-    images.map((image) => (
+    images.map((image, i) => (
       <li>
-        <a href={image.src} data-mv data-mv-group={group} data-mv-caption={image.alt}>
+        <a
+          href={image.src}
+          data-mv
+          data-mv-group={group}
+          data-mv-index={startIndex + i}
+          data-mv-kind="programme-photo"
+          data-mv-caption={image.alt}
+        >
           <img
             src={image.src}
             alt={image.alt}

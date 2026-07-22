@@ -1,27 +1,22 @@
 ---
 /**
- * Accessible in-site media viewer — one reusable implementation for
- * photographs, newspaper clippings and document pages.
+ * Accessible, mobile-first in-site media viewer — one reusable implementation
+ * for photographs, newspaper clippings and document pages.
  *
  * PROGRESSIVE ENHANCEMENT. Without JavaScript every thumbnail stays a plain
  * link to its full-size file, which simply opens — the site works exactly as
  * before. With JavaScript, those links open here instead: a native modal
- * <dialog> that browses one collection at a time.
+ * <dialog> that browses one year's sequence (programme photographs first,
+ * independent coverage last).
  *
- * A thumbnail opts in by carrying data attributes on its link:
- *   <a data-mv data-mv-group="clothing-2021" data-mv-caption="…" href="/…jpg">
- * Items are grouped by `data-mv-group`; the link's href is the image shown and
- * the no-JS fallback. Collections never mix. No filename is ever displayed.
- *
- * Place once per page. The single <dialog> serves every collection on it.
- *
- * The behaviour lives in a static, same-origin module (public/scripts/
- * media-viewer.js) referenced below, so it loads under the site's strict
- * `script-src 'self'` policy with no inline script and no hash to maintain.
+ * Items opt in via data attributes on the link (see public/scripts/
+ * media-viewer.js). The behaviour lives in that static, same-origin module, so
+ * it loads under the strict `script-src 'self'` policy with no inline script.
  *
  * Accessibility: native <dialog> gives a real focus trap, Escape-to-close and
- * focus restoration to the opening thumbnail. Arrow keys and swipe navigate; a
- * polite live region announces "2 of 7" and the caption when the image changes.
+ * focus restoration to the opening thumbnail. Arrow keys and horizontal swipe
+ * navigate; a polite live region announces "5 of 6 · Independent coverage" and
+ * the caption when the image changes.
  */
 ---
 
@@ -29,17 +24,17 @@
   <button type="button" class="mv__btn mv__close" aria-label="Close viewer">
     <span aria-hidden="true">×</span>
   </button>
-  <button type="button" class="mv__btn mv__prev" aria-label="Previous image">
+  <button type="button" class="mv__btn mv__prev" aria-label="Previous item">
     <span aria-hidden="true">‹</span>
   </button>
   <div class="mv__stage">
     <img class="mv__img" alt="" />
   </div>
-  <button type="button" class="mv__btn mv__next" aria-label="Next image">
+  <button type="button" class="mv__btn mv__next" aria-label="Next item">
     <span aria-hidden="true">›</span>
   </button>
   <p class="mv__meta" aria-live="polite">
-    <span class="mv__counter"></span>
+    <span class="mv__status"></span>
     <span class="mv__caption"></span>
   </p>
 </dialog>
@@ -68,7 +63,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-12) clamp(var(--space-4), 12vw, var(--space-16));
+    /* Leave room for the controls (top/sides) and the caption bar (bottom),
+       and respect device safe areas so nothing hides under a notch. */
+    padding:
+      calc(var(--space-12) + env(safe-area-inset-top))
+      calc(clamp(var(--space-8), 14vw, var(--space-16)) + env(safe-area-inset-right))
+      calc(var(--space-16) + env(safe-area-inset-bottom))
+      calc(clamp(var(--space-8), 14vw, var(--space-16)) + env(safe-area-inset-left));
+    overflow: auto;
   }
 
   .mv__img {
@@ -78,6 +80,18 @@
     height: auto;
     object-fit: contain;
     border-radius: var(--radius-sm);
+  }
+
+  /* A tall clipping is shown at full width and allowed to scroll vertically
+     within the stage, rather than shrinking into unreadable text. */
+  .mv--scroll .mv__stage {
+    align-items: flex-start;
+  }
+
+  .mv--scroll .mv__img {
+    max-height: none;
+    width: 100%;
+    height: auto;
   }
 
   .mv__btn {
@@ -91,7 +105,7 @@
     padding: var(--space-2);
     border: none;
     border-radius: var(--radius-sm);
-    background: rgba(20, 18, 16, 0.55);
+    background: rgba(20, 18, 16, 0.6);
     color: #f7f4ee;
     font-size: 1.75rem;
     line-height: 1;
@@ -99,23 +113,23 @@
   }
 
   .mv__btn:hover {
-    background: rgba(20, 18, 16, 0.8);
+    background: rgba(20, 18, 16, 0.85);
   }
 
   .mv__close {
-    top: var(--space-3);
-    right: var(--space-3);
+    top: calc(var(--space-3) + env(safe-area-inset-top));
+    right: calc(var(--space-3) + env(safe-area-inset-right));
     font-size: 1.5rem;
   }
 
   .mv__prev {
-    left: var(--space-2);
+    left: calc(var(--space-2) + env(safe-area-inset-left));
     top: 50%;
     transform: translateY(-50%);
   }
 
   .mv__next {
-    right: var(--space-2);
+    right: calc(var(--space-2) + env(safe-area-inset-right));
     top: 50%;
     transform: translateY(-50%);
   }
@@ -127,21 +141,23 @@
     bottom: 0;
     margin: 0;
     max-width: none;
-    padding: var(--space-3) var(--space-4);
+    padding:
+      var(--space-3)
+      var(--space-4)
+      calc(var(--space-3) + env(safe-area-inset-bottom));
     display: flex;
-    gap: var(--space-3);
-    align-items: baseline;
-    justify-content: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
     text-align: center;
     color: #f1ece3;
     font-size: var(--text-sm);
-    background: linear-gradient(to top, rgba(20, 18, 16, 0.7), transparent);
+    background: linear-gradient(to top, rgba(20, 18, 16, 0.75), transparent);
+    pointer-events: none;
   }
 
-  .mv__counter {
+  .mv__status {
     color: #cfc7ba;
-    white-space: nowrap;
   }
 
   /* Focus stays clearly visible on the dark backdrop. */

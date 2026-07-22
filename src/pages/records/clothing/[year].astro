@@ -30,10 +30,12 @@ interface Props {
 const { record } = Astro.props;
 const { page } = record;
 
-// One viewer collection per year for the photographs; the clipping, when
-// present, is a separate single-item collection so the two never mix.
-const photoGroup = `clothing-${record.slug}`;
-const clippingGroup = `clipping-${record.slug}`;
+// One viewer sequence per year: programme photographs first (the lead is
+// image 1, then the gallery), the newspaper clipping last. The record page
+// still shows Photographs and Independent Coverage as separate sections, but
+// the viewer offers one continuous browse. Coverage sorts after every photo.
+const group = `clothing-${record.slug}`;
+const coverageIndex = 1 + page.gallery.length;
 
 // BreadcrumbList structured data, matching the visible trail exactly.
 const abs = (path: string) => new URL(path, Astro.site).href;
@@ -78,7 +80,9 @@ const breadcrumbLd = {
           class="lead-link"
           href={page.lead.src}
           data-mv
-          data-mv-group={photoGroup}
+          data-mv-group={group}
+          data-mv-index="0"
+          data-mv-kind="programme-photo"
           data-mv-caption={page.lead.alt}
         >
           <img
@@ -93,6 +97,11 @@ const breadcrumbLd = {
         </a>
       </figure>
 
+      <section class="section">
+        <h2>Photographs</h2>
+        <RecordGallery images={page.gallery} group={group} startIndex={1} />
+      </section>
+
       {
         page.coverage && (
           <section class="section">
@@ -101,7 +110,9 @@ const breadcrumbLd = {
               class="clipping-link"
               href={page.coverage.src}
               data-mv
-              data-mv-group={clippingGroup}
+              data-mv-group={group}
+              data-mv-index={coverageIndex}
+              data-mv-kind="independent-coverage"
               data-mv-caption={page.coverage.alt}
             >
               <span class="clipping">
@@ -119,11 +130,6 @@ const breadcrumbLd = {
           </section>
         )
       }
-
-      <section class="section">
-        <h2>Photographs</h2>
-        <RecordGallery images={page.gallery} group={photoGroup} />
-      </section>
 
       <p class="record-back record-back--bottom">
         <a href="/our-work/">← Back to Our Work</a>

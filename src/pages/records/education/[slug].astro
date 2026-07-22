@@ -76,12 +76,14 @@ const breadcrumbLd = {
 
       <div class="document">
         {
-          page.pages.map((docPage) => (
+          page.pages.map((docPage, i) => (
             <a
               class="document__page"
               href={docPage.src}
               data-mv
               data-mv-group={docGroup}
+              data-mv-index={i}
+              data-mv-kind="academic-record-page"
               data-mv-caption={docPage.alt}
             >
               <img
@@ -89,7 +91,7 @@ const breadcrumbLd = {
                 alt={docPage.alt}
                 width={docPage.width}
                 height={docPage.height}
-                loading="lazy"
+                loading={i === 0 ? 'eager' : 'lazy'}
                 decoding="async"
               />
             </a>

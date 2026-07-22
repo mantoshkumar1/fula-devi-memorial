@@ -6,8 +6,17 @@ Permanent operating rules for this repository.
 
 The public website of a small registered charitable institution in Bihar, India
 (registered 2022). Astro + TypeScript, static output, no adapter, deployed on
-Cloudflare Pages. No backend, database, CMS, authentication, or client-side
-JavaScript. Live at https://fuladevi.org.
+Cloudflare Pages. No backend, database, CMS or authentication. Live at
+https://fuladevi.org.
+
+The website is primarily static and requires no client-side JavaScript for its
+core content. One small, same-origin JavaScript module progressively enhances
+public-record media browsing (the in-site viewer); every public record remains
+accessible through ordinary links when JavaScript is unavailable. Keep it this
+way: static-first, no client framework and no application architecture beyond
+that one module; same-origin scripts only; no inline executable scripts and no
+third-party scripts; a strict CSP (`script-src 'self'`); and an ordinary-link
+fallback so core content never depends on JavaScript.
 
 ## Content Integrity
 
@@ -134,7 +143,8 @@ Actions) verifies that data source against the files it references: existence,
 stable naming, generated routes, and that draft guides carry `noindex`.
 
 When new public records are added, follow `docs/ADDING_PUBLIC_RECORDS.md`. Do
-not improvise a new publication structure.
+not improvise a new publication structure. Public guides must follow
+`docs/WRITING_PUBLIC_GUIDES.md`.
 
 ## Privacy Pipeline
 

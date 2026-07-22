@@ -40,6 +40,38 @@ export interface Coverage {
 }
 
 /**
+ * What a single media item is. This distinction drives the record page (which
+ * section it appears in) and the viewer (its type label in the counter).
+ */
+export type MediaKind =
+  | 'programme-photo'
+  | 'independent-coverage'
+  | 'academic-record-page';
+
+/** Human label for each media kind, shown in the viewer counter. */
+export const MEDIA_KIND_LABEL: Record<MediaKind, string> = {
+  'programme-photo': 'Programme photograph',
+  'independent-coverage': 'Independent coverage',
+  'academic-record-page': 'Academic record',
+};
+
+/**
+ * One item in a record's single, ordered, visitor-facing media sequence.
+ * Programme photographs always come first; independent coverage always comes
+ * last. Both the page presentation and the viewer derive from this one order.
+ */
+export interface MediaItem {
+  src: string;
+  kind: MediaKind;
+  /** Accessible description, doubling as the viewer caption. Never identifying. */
+  alt: string;
+  /** Position in the unified sequence, from 0. */
+  order: number;
+  width: number;
+  height: number;
+}
+
+/**
  * A seasonal clothing distribution, documented for one year.
  * `discriminator: type === 'clothing'`.
  */
@@ -57,8 +89,6 @@ export interface ClothingRecord {
     yearLabel: string;
     /** e.g. "Community work before formal registration". */
     programmeLabel: string;
-    /** e.g. "7 photographs" or "4 photographs · Independent coverage". */
-    recordSummary: string;
     /** Display-only cover derivative used only for the main-page preview. */
     cover: string;
     coverAlt: string;
@@ -87,10 +117,10 @@ export interface ClothingRecord {
  * An academic record the institution supports, published as one multi-page
  * document. `discriminator: type === 'education'`.
  *
- * No education record is published at present: the available report-card copies
- * still expose a signatory's handwriting, so the record is withheld under the
- * privacy rules above. The type is retained so a privacy-cleared record can be
- * added later without reshaping the data. See docs/ADDING_PUBLIC_RECORDS.md.
+ * A record appears here only after a full-resolution human privacy review of
+ * every page confirms no child or third-party identifier remains — name,
+ * parents' names, date of birth, roll number, any ID, QR/barcode, or any
+ * signature and its date. See docs/ADDING_PUBLIC_RECORDS.md.
  */
 export interface EducationRecord {
   type: 'education';
@@ -144,7 +174,6 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: 'December 2021',
       programmeLabel: 'Community work before formal registration',
-      recordSummary: '7 photographs',
       cover: '/records/clothing/2021/cover.jpg',
       coverAlt:
         'Villagers gathered on chairs in a tree-shaded courtyard at the December 2021 clothing distribution.',
@@ -211,7 +240,6 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: '2024',
       programmeLabel: 'Seasonal clothing distribution',
-      recordSummary: '5 photographs · Independent coverage',
       cover: '/records/clothing/2024/cover.jpg',
       coverAlt:
         'Villagers seated beneath a pink canopy at the 2024 seasonal clothing distribution.',
@@ -272,7 +300,6 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: '2025',
       programmeLabel: 'Winter blanket distribution',
-      recordSummary: '5 photographs · Independent coverage',
       cover: '/records/clothing/2025/cover.jpg',
       coverAlt:
         'Villagers in a courtyard at the 2025 winter blanket distribution beneath the institution’s banner.',
@@ -325,23 +352,63 @@ export const workRecords: WorkRecord[] = [
       ],
     },
   },
+  {
+    type: 'education',
+    slug: '2025-2026',
+    route: '/records/education/2025-2026/',
+    status: 'ongoing',
+    page: {
+      title: 'Education Support — Academic Year 2025–2026',
+      description:
+        'The 2025–2026 academic report card of the child the institution supports, published with all identifying information removed.',
+      opening:
+        'The institution began supporting this student in 2025 and has committed to continuing that support through graduation.',
+      academicYear: '2025–2026',
+      pages: [
+        {
+          src: '/records/education/report-card-2025-2026-page-1.jpg',
+          alt: 'Report card for academic year 2025–2026, page 1 of 2, with identifying details removed.',
+          width: 1182,
+          height: 1578,
+        },
+        {
+          src: '/records/education/report-card-2025-2026-page-2.jpg',
+          alt: 'Report card for academic year 2025–2026, page 2 of 2, with identifying details removed.',
+          width: 1200,
+          height: 1600,
+        },
+      ],
+    },
+  },
 ];
 
-/** Draft public guides, surfaced as designed resource cards on Our Work. */
+/**
+ * Public guides, surfaced as designed resource cards on Our Work. Both are
+ * final, completed Hindi guides. Each scope was verified against the PDF's own
+ * content (see docs/WRITING_PUBLIC_GUIDES.md): the Ayushman guide describes a
+ * national scheme with practical help prepared mainly for Bihar; the PMJJBY
+ * guide is national and presents no state-specific process as universal.
+ */
 export const resourceGuides: ResourceGuide[] = [
   {
     slug: 'ayushman-bharat-guide',
     title: 'Ayushman Bharat Guide',
     description: 'Eligibility, required documents and application steps.',
-    state: 'draft',
+    state: 'final',
     href: '/records/healthcare/ayushman-bharat-guide.pdf',
+    scope: 'Bihar-focused',
+    scopeNote:
+      'PM-JAY is a national scheme. This guide includes practical information prepared mainly for people in Bihar.',
   },
   {
     slug: 'pmjjby-guide',
     title: 'PMJJBY Guide',
     description: 'An introduction to the scheme, eligibility and enrolment.',
-    state: 'draft',
+    state: 'final',
     href: '/records/financial-awareness/pmjjby-guide.pdf',
+    scope: 'India-wide',
+    scopeNote:
+      'This guide explains the national PMJJBY scheme and is not limited to one state.',
   },
 ];
 
@@ -362,4 +429,59 @@ export const educationRecords = workRecords.filter(
 /** A resource guide by slug, for the Our Work resource cards. */
 export function resourceBySlug(slug: string): ResourceGuide | undefined {
   return resourceGuides.find((g) => g.slug === slug);
+}
+
+/**
+ * The one ordered, visitor-facing media sequence for a record. Programme
+ * photographs first (lead, then gallery), independent coverage last; education
+ * pages in reading order. Both the record page and the media viewer derive
+ * from this, so they can never disagree.
+ */
+export function recordMedia(record: WorkRecord): MediaItem[] {
+  if (record.type === 'clothing') {
+    const photos = [record.page.lead, ...record.page.gallery];
+    const items: MediaItem[] = photos.map((p, i) => ({
+      src: p.src,
+      kind: 'programme-photo',
+      alt: p.alt,
+      order: i,
+      width: p.width,
+      height: p.height,
+    }));
+    if (record.page.coverage) {
+      const c = record.page.coverage;
+      items.push({
+        src: c.src,
+        kind: 'independent-coverage',
+        alt: c.alt,
+        order: items.length,
+        width: c.width,
+        height: c.height,
+      });
+    }
+    return items;
+  }
+  return record.page.pages.map((p, i) => ({
+    src: p.src,
+    kind: 'academic-record-page',
+    alt: p.alt,
+    order: i,
+    width: p.width,
+    height: p.height,
+  }));
+}
+
+/** Number of programme photographs in a clothing record (lead + gallery). */
+export function photoCount(record: ClothingRecord): number {
+  return 1 + record.page.gallery.length;
+}
+
+/**
+ * The Our Work preview summary, derived from the actual media so the count is
+ * always accurate and photographs are counted separately from coverage.
+ */
+export function recordSummary(record: ClothingRecord): string {
+  const n = photoCount(record);
+  const photos = `${n} photograph${n === 1 ? '' : 's'}`;
+  return record.page.coverage ? `${photos} · Independent coverage` : photos;
 }

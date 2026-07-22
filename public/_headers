@@ -3,13 +3,13 @@
 #
 # The CSP stays strict: every asset is self-hosted and no external origin is
 # ever contacted. The site runs ONE small, same-origin, progressive-enhancement
-# script — the in-site media viewer — bundled by Astro under /_astro/. Pages
-# still work with scripting disabled (thumbnails remain plain links to the
-# full-size files). Keep it this way: adding analytics, embeds, or CDN fonts
-# would force this policy to be weakened.
+# script — the in-site media viewer at /scripts/media-viewer.js. Pages still
+# work with scripting disabled (thumbnails remain plain links to the full-size
+# files). Keep it this way: adding analytics, embeds, or CDN fonts would force
+# this policy to be weakened.
 #
 # Notes:
-# - script-src 'self' allows only the bundled same-origin viewer module. No
+# - script-src 'self' allows only the same-origin viewer module. No
 #   'unsafe-inline', no external script origins. The JSON-LD blocks are
 #   <script type="application/ld+json"> data blocks, not executed script.
 # - style-src needs 'unsafe-inline' because Astro inlines one scoped <style> per
@@ -24,17 +24,3 @@
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), usb=()
   Referrer-Policy: same-origin
   X-Content-Type-Options: nosniff
-
-# Draft public guides — placeholders, not finished resources. Keep them out of
-# search indexes and archives so a draft is never surfaced as the real guide.
-# Cloudflare applies these rules on top of the /* block above, so these paths
-# still receive every security header.
-#
-# REMOVE both blocks below when the finished guide replaces the draft at the
-# same URL. A published, indexable guide must not carry noindex — and follow the
-# Cloudflare Cache Policy in CLAUDE.md when swapping the file at an existing URL.
-/records/healthcare/ayushman-bharat-guide.pdf
-  X-Robots-Tag: noindex, noarchive
-
-/records/financial-awareness/pmjjby-guide.pdf
-  X-Robots-Tag: noindex, noarchive

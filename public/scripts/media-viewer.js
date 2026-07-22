@@ -7,33 +7,43 @@
  * file; this script simply upgrades those links into an accessible modal viewer.
  *
  * Thumbnails opt in with data attributes:
- *   <a data-mv data-mv-group="clothing-2021" data-mv-caption="…" href="/…jpg">
- * Items are grouped by `data-mv-group`; the link's href is the image shown.
- * Collections never mix.
+ *   <a data-mv data-mv-group="clothing-2021" data-mv-index="0"
+ *      data-mv-kind="programme-photo" data-mv-caption="…" href="/…jpg">
+ * Items are grouped by `data-mv-group` and ordered by `data-mv-index`, so one
+ * year is a single sequence: programme photographs first, independent coverage
+ * last. Clicking any thumbnail opens the sequence at that item. Collections
+ * never mix.
  */
+const KIND_LABEL = {
+  'programme-photo': 'Programme photograph',
+  'independent-coverage': 'Independent coverage',
+  'academic-record-page': 'Academic record',
+};
+
 const dialog = document.querySelector('dialog.mv');
 const links = Array.from(document.querySelectorAll('a[data-mv]'));
 
 if (dialog && typeof dialog.showModal === 'function' && links.length) {
   const img = dialog.querySelector('.mv__img');
-  const counter = dialog.querySelector('.mv__counter');
+  const stage = dialog.querySelector('.mv__stage');
+  const status = dialog.querySelector('.mv__status');
   const caption = dialog.querySelector('.mv__caption');
   const prevBtn = dialog.querySelector('.mv__prev');
   const nextBtn = dialog.querySelector('.mv__next');
   const closeBtn = dialog.querySelector('.mv__close');
 
-  const LABELS = {
-    clothing: 'Photograph viewer',
-    clipping: 'Newspaper clipping viewer',
-    education: 'Document viewer',
-  };
-
-  // Group opt-in links into collections, preserving document order.
+  // Group opt-in links, then order each group by its sequence index so the
+  // viewer order is the intended one regardless of DOM order.
   const groups = new Map();
   for (const a of links) {
     const key = a.dataset.mvGroup || 'default';
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(a);
+  }
+  for (const list of groups.values()) {
+    list.sort(
+      (a, b) => Number(a.dataset.mvIndex || 0) - Number(b.dataset.mvIndex || 0),
+    );
   }
 
   let items = [];
@@ -50,9 +60,15 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
     if (!item) return;
     img.src = item.src;
     img.alt = item.caption;
+    const kindLabel = KIND_LABEL[item.kind] || '';
+    status.textContent =
+      `${index + 1} of ${items.length}` + (kindLabel ? ` · ${kindLabel}` : '');
     caption.textContent = item.caption;
+    // A tall clipping is allowed to exceed the viewport and scroll vertically
+    // rather than shrink into unreadable text; photographs stay contained.
+    dialog.classList.toggle('mv--scroll', item.kind === 'independent-coverage');
+    if (stage) stage.scrollTop = 0;
     const many = items.length > 1;
-    counter.textContent = many ? `${index + 1} of ${items.length}` : '';
     prevBtn.hidden = !many;
     nextBtn.hidden = !many;
     if (many) {
@@ -72,11 +88,11 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
     if (!group) return;
     items = group.map((a) => ({
       src: a.getAttribute('href') || '',
+      kind: a.dataset.mvKind || '',
       caption: a.dataset.mvCaption || (a.querySelector('img') && a.querySelector('img').alt) || '',
     }));
     index = start;
     opener = from;
-    dialog.setAttribute('aria-label', LABELS[groupKey.split('-')[0]] || 'Media viewer');
     render();
     document.body.style.overflow = 'hidden';
     dialog.showModal();
@@ -114,12 +130,19 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
     // Escape is handled natively by <dialog>.
   });
 
-  // Swipe on touch devices. Passive listeners keep pinch-zoom working.
+  // Swipe on touch devices. Passive listeners keep pinch-zoom and vertical
+  // scrolling working; only a clearly horizontal drag navigates.
   let startX = null;
+  let startY = null;
   dialog.addEventListener(
     'touchstart',
     (event) => {
+      if (event.touches.length !== 1) {
+        startX = null; // a pinch, not a swipe
+        return;
+      }
       startX = event.changedTouches[0].clientX;
+      startY = event.changedTouches[0].clientY;
     },
     { passive: true },
   );
@@ -128,8 +151,14 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
     (event) => {
       if (startX === null) return;
       const dx = event.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 45) go(dx < 0 ? 1 : -1);
+      const dy = event.changedTouches[0].clientY - startY;
+      // Navigate only when the movement is clearly horizontal, so vertical
+      // scrolling of a tall clipping is never hijacked.
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        go(dx < 0 ? 1 : -1);
+      }
       startX = null;
+      startY = null;
     },
     { passive: true },
   );
@@ -138,6 +167,7 @@ if (dialog && typeof dialog.showModal === 'function' && links.length) {
   dialog.addEventListener('close', () => {
     document.body.style.overflow = '';
     img.removeAttribute('src');
+    dialog.classList.remove('mv--scroll');
     if (opener && typeof opener.focus === 'function') opener.focus();
     opener = null;
   });

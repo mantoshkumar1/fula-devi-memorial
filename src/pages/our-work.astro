@@ -11,10 +11,20 @@
 import ContentPage from '../layouts/ContentPage.astro';
 import RecordPreview from '../components/RecordPreview.astro';
 import ResourceCard from '../components/ResourceCard.astro';
-import { clothingRecords, resourceBySlug } from '../data/work-records.ts';
+import {
+  clothingRecords,
+  educationRecords,
+  recordSummary,
+  resourceBySlug,
+} from '../data/work-records.ts';
 
+const education = educationRecords[0];
 const ayushman = resourceBySlug('ayushman-bharat-guide');
 const pmjjby = resourceBySlug('pmjjby-guide');
+
+/** A guide's displayed title carries its verified scope, e.g. "… — Bihar-focused". */
+const guideTitle = (g: { title: string; scope?: string }) =>
+  g.scope ? `${g.title} — ${g.scope}` : g.title;
 ---
 
 <ContentPage
@@ -32,6 +42,23 @@ const pmjjby = resourceBySlug('pmjjby-guide');
     The institution has committed to supporting one child through graduation by
     meeting educational and essential living needs.
   </p>
+  {
+    education && (
+      <div class="record-list">
+        <RecordPreview
+          href={education.route}
+          cover="/records/education/report-card-2025-2026-page-1.jpg"
+          coverAlt="The 2025–2026 report card, page 1, with identifying details removed."
+          coverWidth={1182}
+          coverHeight={1578}
+          coverPosition="top"
+          yearLabel="Academic Year 2025–2026"
+          programmeLabel="Two-page academic record"
+          action="View academic record →"
+        />
+      </div>
+    )
+  }
 
   <h2>Seasonal Clothing Distribution</h2>
   <p class="meta-line">Recurring · Since 2020</p>
@@ -58,7 +85,7 @@ const pmjjby = resourceBySlug('pmjjby-guide');
           coverHeight={record.preview.coverHeight}
           yearLabel={record.preview.yearLabel}
           programmeLabel={record.preview.programmeLabel}
-          recordSummary={record.preview.recordSummary}
+          recordSummary={recordSummary(record)}
           action="View programme record →"
         />
       ))
@@ -84,8 +111,9 @@ const pmjjby = resourceBySlug('pmjjby-guide');
   {
     ayushman && (
       <ResourceCard
-        title={ayushman.title}
+        title={guideTitle(ayushman)}
         description={ayushman.description}
+        note={ayushman.scopeNote}
         state={ayushman.state}
         href={ayushman.href}
         action="Open guide →"
@@ -108,8 +136,9 @@ const pmjjby = resourceBySlug('pmjjby-guide');
   {
     pmjjby && (
       <ResourceCard
-        title={pmjjby.title}
+        title={guideTitle(pmjjby)}
         description={pmjjby.description}
+        note={pmjjby.scopeNote}
         state={pmjjby.state}
         href={pmjjby.href}
         action="Open guide →"

@@ -14,8 +14,11 @@ interface Props {
   coverHeight: number;
   yearLabel: string;
   programmeLabel: string;
-  recordSummary: string;
+  /** Optional third line (e.g. a photograph count). Omitted when absent. */
+  recordSummary?: string;
   action: string;
+  /** How the cover is framed in the panel: 'center' (default) or 'top'. */
+  coverPosition?: 'center' | 'top';
 }
 
 const {
@@ -28,6 +31,7 @@ const {
   programmeLabel,
   recordSummary,
   action,
+  coverPosition = 'center',
 } = Astro.props;
 ---
 
@@ -38,6 +42,7 @@ const {
       alt={coverAlt}
       width={coverWidth}
       height={coverHeight}
+      style={`object-position: ${coverPosition === 'top' ? 'top' : 'center'};`}
       loading="lazy"
       decoding="async"
     />
@@ -45,7 +50,7 @@ const {
   <span class="record-row__body">
     <span class="record-row__year">{yearLabel}</span>
     <span class="record-row__label">{programmeLabel}</span>
-    <span class="record-row__summary">{recordSummary}</span>
+    {recordSummary && <span class="record-row__summary">{recordSummary}</span>}
     <span class="record-row__action">{action}</span>
   </span>
 </a>

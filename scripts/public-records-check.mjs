@@ -112,34 +112,75 @@ for (const route of routes) {
   if (!(await exists(generator))) {
     errors.push(`Route ${route} has no generator page at ${generator}`);
   }
-  // The record's own directory of files should exist under public/.
-  const dir = path.join(PUBLIC, route);
+  // The record's files must exist under public/. Clothing keeps a per-year
+  // directory; an education record's pages carry the year in the filename and
+  // live directly under the area directory.
+  const dir =
+    area === 'education'
+      ? path.join(PUBLIC, 'records', area)
+      : path.join(PUBLIC, route);
   if (!(await exists(dir))) {
     errors.push(`Route ${route} has no directory at ${dir}`);
   }
 }
 
-// --- resource guides: explicit state, and drafts kept out of indexes ---
+// --- resource guides: explicit state, and draft-only indexing rules ---
+// A draft guide must be kept out of search indexes; a final guide must NOT
+// carry that draft-only restriction. The header for a path is noindex only if
+// its block actually contains an X-Robots-Tag: noindex line.
+const headerNoindex = (pdf) => {
+  const hi = headers.indexOf(pdf);
+  return hi >= 0 && /X-Robots-Tag:\s*noindex/i.test(headers.slice(hi, hi + 200));
+};
 const pdfs = assets.filter((a) => a.endsWith('.pdf'));
 for (const pdf of pdfs) {
   // The guide's object literal is small; look at the text around its href.
   const at = text.indexOf(`'${pdf}'`);
-  const window = at >= 0 ? text.slice(Math.max(0, at - 500), at + 200) : '';
+  const window = at >= 0 ? text.slice(Math.max(0, at - 600), at + 400) : '';
   const state = window.match(/state:\s*'(draft|final)'/);
   if (!state) {
     errors.push(`Resource guide ${pdf} has no explicit state: 'draft' | 'final'`);
     continue;
   }
-  if (state[1] === 'draft') {
-    if (!headers.includes(pdf)) {
-      errors.push(`Draft guide ${pdf} is not listed in ${HEADERS}`);
-    } else {
-      const hi = headers.indexOf(pdf);
-      if (!/X-Robots-Tag:\s*noindex/i.test(headers.slice(hi, hi + 200))) {
-        errors.push(`Draft guide ${pdf} lacks "X-Robots-Tag: noindex" in ${HEADERS}`);
-      }
+  if (state[1] === 'draft' && !headerNoindex(pdf)) {
+    errors.push(`Draft guide ${pdf} lacks "X-Robots-Tag: noindex" in ${HEADERS}`);
+  }
+  if (state[1] === 'final' && headerNoindex(pdf)) {
+    errors.push(
+      `Final guide ${pdf} still carries a draft-only "X-Robots-Tag: noindex" in ${HEADERS} — remove it`,
+    );
+  }
+}
+
+// --- media kinds used by the record pages must be valid ---
+const KINDS = ['programme-photo', 'independent-coverage', 'academic-record-page'];
+const PAGE_TEMPLATES = [GENERATORS.clothing, GENERATORS.education];
+for (const template of PAGE_TEMPLATES) {
+  if (!(await exists(template))) continue;
+  const src = await readFile(template, 'utf8');
+  for (const m of src.matchAll(/data-mv-kind=["']([^"']+)["']/g)) {
+    if (!KINDS.includes(m[1])) {
+      errors.push(`Invalid media kind "${m[1]}" in ${template}`);
     }
   }
+}
+
+// --- counts are derived, never hardcoded ---
+// A stale hardcoded "N photographs" summary would drift from the real file
+// count; the summary must be computed from the data.
+if (/recordSummary\s*:/.test(text)) {
+  errors.push(
+    `${DATA} hardcodes a recordSummary — the Our Work count must be derived from the media, not stored`,
+  );
+}
+
+// The clothing record page must place programme photos before coverage: the
+// lead is index 0, the gallery starts at 1, and coverage sorts after them.
+const clothingTemplate = await readFile(GENERATORS.clothing, 'utf8');
+if (!/coverageIndex\s*=\s*1\s*\+\s*page\.gallery\.length/.test(clothingTemplate)) {
+  errors.push(
+    `${GENERATORS.clothing} must index independent coverage after every programme photograph (coverageIndex = 1 + page.gallery.length)`,
+  );
 }
 
 // --- report ---

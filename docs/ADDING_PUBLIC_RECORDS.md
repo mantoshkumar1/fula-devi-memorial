@@ -175,20 +175,30 @@ nothing. A guide that is not finished is published as a clearly labelled
 How records are shown is as permanent as where they are stored. Keep it uniform;
 do not invent a new presentation per record.
 
+### Media sequence
+
+- One year has **one** visitor-facing media sequence.
+- Programme photographs appear **first**; Independent Coverage appears **last**.
+- The record page still displays Independent Coverage as its own section on the
+  page — the single sequence is for the viewer, not for the page layout.
+- Clicking a photograph **or** a clipping opens the same year-specific viewer at
+  the selected item; Previous from the clipping steps back into the photographs.
+- Different years never share a sequence.
+
+This is expressed on each thumbnail with `data-mv-group="clothing-<year>"`,
+`data-mv-index` (the lead is `0`, the gallery follows, coverage is last) and
+`data-mv-kind` (`programme-photo` or `independent-coverage`). The viewer orders
+by index and shows the kind in its counter, e.g. `6 of 6 · Independent coverage`.
+
 ### Photographs
 
-- One wide overview photograph is the lead image, and it is image 1 in the
-  viewer sequence.
-- All of a year's selected photographs belong to one year-specific collection
-  (`data-mv-group="clothing-<year>"`). Collections never mix years.
-- Order the photographs to tell the documentary story where possible: overview →
-  gathering or coordination → distribution in progress → handover moments.
-- Clicking any photograph — lead or grid — opens the shared in-site viewer
-  (`src/components/MediaViewer.astro`): previous, next, close, an image counter,
-  keyboard arrows, Escape, swipe, focus return to the thumbnail.
+- One wide overview photograph is the lead image, and it is item 1 in the
+  sequence. Order the rest to tell the documentary story where possible:
+  overview → gathering or coordination → distribution in progress → handover.
 - Every thumbnail is also a plain link to its full-size file, so the page still
   works with scripting disabled. Never publish a raw attachment list or a
-  filename as the visitor interface.
+  filename as the visitor interface, and never expose a filename in a caption,
+  accessible name, metadata or visible text.
 - Privacy rules 6–10 above still govern what may be shown. Children and close-up
   adult beneficiaries must remain non-identifiable without documented consent;
   organisers and volunteers acting publicly may remain visible.
@@ -196,32 +206,40 @@ do not invent a new presentation per record.
 ### Newspaper coverage
 
 - Store under the programme year; present under an `Independent Coverage`
-  heading, always separate from the photograph sequence.
-- Show a readable inline preview with the action `View full clipping →`.
-- Opening a clipping uses the same viewer, as its own single-item collection
-  (`data-mv-group="clipping-<year>"`). If a year ever has several clippings, the
-  viewer navigates only among that year's clippings.
+  heading, with a readable inline preview and the action `View full clipping →`.
+- The clipping is the **last** item of that year's single sequence — not a
+  separate collection. If a year later has several clippings, they all appear
+  after the photographs, each labelled Independent Coverage.
 - Preserve the clipping exactly as published; never blur or alter it.
 
 ### Education documents
 
-- Present a multi-page report card as one academic record, one route per
-  academic year (`/records/education/<academic-year>/`).
-- The pages browse inside the same viewer (`1 of 2`, `2 of 2`).
-- Never expose a child identifier — name, parents' names, date of birth, roll
-  number, phone number, any signature — in the image, alt text, caption,
-  metadata, filename, structured data or URL.
+- Present a multi-page report card as **one academic record**, one route per
+  academic year (`/records/education/<academic-year>/`), pages in reading order.
+- Every page receives a full-resolution human privacy review before publication.
+- The pages browse inside the same viewer (`1 of 2 · Academic record`).
+- **Signatures and handwritten identifying dates are private.** Never expose any
+  child identifier — name, parents' names, date of birth, roll number, any ID,
+  QR code, barcode, or any signature or its date — in the image, alt text,
+  caption, metadata, filename, structured data or URL.
 
-### PDFs and guides
+### Guides
 
+- Public guides follow `docs/WRITING_PUBLIC_GUIDES.md`: familiar everyday Hindi,
+  every instruction a complete sentence, no compressed labels or difficult
+  official vocabulary, and the reader never has to decode the document.
 - Present as a designed resource card, never a raw filename.
+- A guide's geographic scope label is **verified from the actual PDF**. Do not
+  call a guide national if it presents a state-specific process as universal; if
+  the content is narrower, use a narrower label and report why.
 - Open the PDF in a new tab (`target="_blank"`, `rel="noopener noreferrer"`,
-  plus a visually-hidden "(opens in a new tab)"), so Our Work stays open.
-- Label geographic scope only when the PDF's own content confirms it. Do not
-  call a guide national if it contains state-specific instructions presented as
-  universal, and do not attach a scope the document does not actually contain.
-- A placeholder draft stays labelled a draft and keeps its `noindex` header
-  until real content replaces it.
+  plus a visually-hidden "opens in a new tab") so Our Work stays open.
+- A guide may be published as an honest **draft** (`state: 'draft'`, a "Draft
+  resource" label, and an `X-Robots-Tag: noindex, noarchive` header). When the
+  finished guide replaces it at the same URL, set `state: 'final'` **and remove
+  that path's draft-only `noindex` header** — `records:check` enforces both
+  directions. Replacing a PDF at an existing URL requires cache verification
+  (Cloudflare Cache Policy in `CLAUDE.md`).
 
 ### Navigation
 
@@ -230,39 +248,35 @@ do not invent a new presentation per record.
 - A visitor never has to depend on the browser Back button, and the viewer
   always closes back into the same record page at the same scroll position.
 
----
+### Mobile-first behaviour
 
-## Draft guides
+Mobile is the primary design target; the desktop layout enhances the mobile
+structure rather than replacing it. Design primarily for 360–390px screens, and
+also test 768px and 1440px.
 
-A guide may be published before it is finished, but only as an honest draft:
-
-- Mark it `state: 'draft'` in `src/data/work-records.ts`. The card then shows a
-  "Draft resource" label.
-- The draft PDF must say plainly that it is a draft and must not be relied upon.
-- Add the draft's path to `public/_headers` with
-  `X-Robots-Tag: noindex, noarchive` so a placeholder is never indexed.
-- `records:check` enforces that every draft PDF carries that header.
-
-When the finished guide replaces the draft **at the same URL**:
-
-- change `state` to `'final'`;
-- remove that path's `noindex` block from `public/_headers`;
-- follow the Cloudflare Cache Policy in `CLAUDE.md` (step 24).
+- Viewer controls (Close, Previous, Next) are at least ~44×44px, respect device
+  safe-area insets, and never overlap the image, caption or counter.
+- No horizontal page overflow at any width.
+- Swipe navigates only on a clearly horizontal drag, so it never blocks vertical
+  scrolling. A tall clipping scrolls vertically inside the viewer and keeps
+  normal pinch-zoom; it is shown with `object-fit: contain` and never cropped or
+  shrunk into unreadable text.
+- Record-preview rows on Our Work stack the image above the text on mobile;
+  resource cards and the education preview stay readable and easy to tap.
+- Test focus visibility, orientation changes and one-handed reach.
 
 ---
 
-## The withheld education record
+## The published education record
 
-There is no published education record. A request to publish the 2025–2026
-report card was made, but the final visual check still found a signatory's
-handwritten signature and date exposed below the redaction box in the annual
-signature area of page 2 — a prohibited identifier, and irreversible once
-published. The record is therefore withheld: the Education section on Our Work
-carries its text only, with no visual preview and no record page. The report-card
-files remain untracked in `public/records/education/` and are not deployed.
+The 2025–2026 academic record is published at `/records/education/2025-2026/`.
+Its two report-card pages passed a full-resolution privacy review: the child's
+name, parents' names, mobile numbers, date of birth, roll number and the school
+identifier are redacted, and the signatory's handwritten signature and date on
+page 2 were covered with a solid redaction before publication. The untouched
+originals are preserved in git-ignored `private-media/`, outside `public/`.
 
-The record page (`src/pages/records/education/[slug].astro`) and the shared
-viewer are ready for it. To publish it later: fully cover the signature on the
-public copy, confirm none of the prohibited identifiers above remain, name the
-files `report-card-2025-2026-page-1.jpg` / `-page-2.jpg`, add an
-`EducationRecord` entry to the data source, and run the full verification.
+The record is declared in `src/data/work-records.ts` as an `EducationRecord`
+and rendered by `src/pages/records/education/[slug].astro`. To publish a future
+year, repeat the full-resolution review, name the pages
+`report-card-<year>-<year>-page-N.jpg`, and add another `EducationRecord`.
