@@ -4,10 +4,16 @@
  * separators. Deliberately quiet.
  */
 import { site } from '../data/site.ts';
+
+// The name links home, mirroring the masthead. On the home page it points to
+// the current page, so mark it for assistive tech (no visible active styling).
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 ---
 
 <footer class="site-footer">
-  <p class="footer-name">{site.name}</p>
+  <p class="footer-name">
+    <a href="/" aria-current={isHome ? 'page' : undefined}>{site.name}</a>
+  </p>
   <p class="footer-meta">
     <span class="footer-fact">{site.registeredCity}, {site.jurisdiction}</span>
     <span class="footer-sep" aria-hidden="true">·</span>
@@ -35,6 +41,18 @@ import { site } from '../data/site.ts';
   .footer-name {
     font-family: var(--font-serif);
     color: var(--color-ink);
+  }
+
+  /* The name is a home link but stays visually identical to the plain text:
+   * inherits the serif ink treatment, no underline. Only the hover colour
+   * signals interactivity, matching the footer links and the rest of the site. */
+  .footer-name a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .footer-name a:hover {
+    color: var(--color-brown-strong);
   }
 
   .footer-meta {
