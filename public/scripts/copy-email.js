@@ -15,7 +15,11 @@
  */
 const button = document.querySelector('[data-copy-email]');
 
-if (button) {
+if (
+  button &&
+  navigator.clipboard &&
+  typeof navigator.clipboard.writeText === 'function'
+) {
   const email = button.getAttribute('data-copy-email') || '';
   const successMessage = button.getAttribute('data-copy-success') || '';
   const status = document.querySelector('[data-copy-status]');
@@ -37,20 +41,7 @@ if (button) {
 
   const copy = async () => {
     try {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        await navigator.clipboard.writeText(email);
-      } else {
-        // Fallback for browsers without the async clipboard API.
-        const field = document.createElement('textarea');
-        field.value = email;
-        field.setAttribute('readonly', '');
-        field.style.position = 'fixed';
-        field.style.top = '-9999px';
-        document.body.appendChild(field);
-        field.select();
-        document.execCommand('copy');
-        field.remove();
-      }
+      await navigator.clipboard.writeText(email);
       announce(successMessage);
     } catch {
       // Copying can be blocked by the browser; the address stays on screen to
