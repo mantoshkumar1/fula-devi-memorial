@@ -15,13 +15,20 @@ interface RelatedLink {
   href: string;
 }
 
+/**
+ * A body is one or more segments in reading order. A string is a plain text
+ * run; a RelatedLink renders as an ordinary inline link. This keeps approved
+ * copy as data (never raw HTML) while allowing a single word to be linked.
+ */
+type BodySegment = string | RelatedLink;
+
 interface Entry {
   /** Machine-readable date for the <time> element. */
   iso: string;
   /** Display date, exactly as approved. */
   date: string;
   title: string;
-  body: string;
+  body: BodySegment[];
   related: RelatedLink[];
 }
 
@@ -35,16 +42,20 @@ const entries: Entry[] = [
     iso: '2026-07-22',
     date: '22 July 2026',
     title: 'Website published',
-    body:
-      "The institution's website was published on the twentieth anniversary of Fula Devi's death, bringing together its purpose, governance, programme history, documentary evidence, and public guides into a single public record.",
+    body: [
+      "The institution's website was published on the twentieth anniversary of ",
+      { label: 'Fula Devi', href: '/fula-devi/' },
+      "'s death, bringing together its purpose, governance, programme history, documentary evidence, and public guides into a single public record.",
+    ],
     related: [institution, governance, ourWork],
   },
   {
     iso: '2022-02-27',
     date: '27 February 2022',
     title: 'Institution registered',
-    body:
+    body: [
       'Fula Devi Memorial Sewa Sansthan was formally registered in Bihar. Community work associated with the institution had begun before its registration.',
+    ],
     related: [institution, governance],
   },
 ];
@@ -66,7 +77,11 @@ const entries: Entry[] = [
           <time datetime={entry.iso}>{entry.date}</time>
         </p>
         <h2>{entry.title}</h2>
-        <p class="record-body">{entry.body}</p>
+        <p class="record-body">
+          {entry.body.map((part) =>
+            typeof part === 'string' ? part : <a href={part.href}>{part.label}</a>,
+          )}
+        </p>
         <p class="record-related">
           <span class="record-related-label">Related:</span>{' '}
           {entry.related.map((link, i) => (
