@@ -9,6 +9,12 @@ import { site } from '../data/site.ts';
 
 const siteUrl = Astro.site?.href;
 
+// The institution's name in its native Devanagari script. Shown on the home
+// hero only, directly beneath the English h1, as a bilingual identity block.
+// Intentionally not part of site.name — the shared header and every other page
+// stay English-only.
+const nameHindi = 'फुला देवी मेमोरियल सेवा संस्थान';
+
 const org = {
   '@context': 'https://schema.org',
   '@type': 'NGO',
@@ -35,6 +41,7 @@ const website = {
 <ContentPage
   title="Home"
   heading={site.name}
+  altName={{ text: nameHindi, lang: 'hi' }}
   description="Fula Devi Memorial Sewa Sansthan is a charitable institution registered in Bihar, India, on 27 February 2022. Its work includes supporting the education of one child."
 >
   <p>

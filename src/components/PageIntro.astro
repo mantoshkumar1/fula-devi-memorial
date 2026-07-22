@@ -2,25 +2,43 @@
 /**
  * Page top: the single <h1> plus an optional standfirst.
  * Every page uses this to guarantee exactly one h1 and consistent rhythm.
+ *
+ * `altName` optionally renders the heading in a second script directly beneath
+ * the h1, so the two read as one identity block. Only the home hero uses it
+ * (the institution's Hindi name); every other page omits it and is unaffected.
  */
 interface Props {
   /** The page heading — the one and only h1. */
   title: string;
   /** Optional one-line introduction beneath the heading. */
   standfirst?: string;
+  /** Optional native-script form of the heading, shown tight beneath the h1. */
+  altName?: { text: string; lang: string };
 }
 
-const { title, standfirst } = Astro.props;
+const { title, standfirst, altName } = Astro.props;
 ---
 
 <div class="page-intro">
   <h1>{title}</h1>
+  {altName && <p class="alt-name" lang={altName.lang}>{altName.text}</p>}
   {standfirst && <p class="standfirst">{standfirst}</p>}
 </div>
 
 <style>
   .page-intro {
     margin-bottom: var(--space-8);
+  }
+
+  /* Native-script form of the name: subordinate to the h1 and tight beneath it,
+   * so the two read as one identity block. Body font (never the serif heading
+   * font), regular weight, muted ink. */
+  .alt-name {
+    margin-top: var(--space-1);
+    font-family: var(--font-sans);
+    font-size: var(--text-lg);
+    font-weight: 400;
+    color: var(--color-ink-soft);
   }
 
   .standfirst {

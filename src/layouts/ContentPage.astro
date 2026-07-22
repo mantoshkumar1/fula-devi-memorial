@@ -18,13 +18,15 @@ interface Props {
   description: string;
   heading?: string;
   standfirst?: string;
+  /** Optional native-script form of the heading, shown tight beneath the h1. */
+  altName?: { text: string; lang: string };
   /** An intermediate breadcrumb level, e.g. Updates for an update entry. */
   parent?: { name: string; href: string };
   /** Keep this page out of search indexes. */
   noindex?: boolean;
 }
 
-const { title, description, heading, standfirst, parent, noindex } =
+const { title, description, heading, standfirst, altName, parent, noindex } =
   Astro.props;
 
 // BreadcrumbList structured data for inner pages (skip the home root).
@@ -50,7 +52,11 @@ const breadcrumbLd = {
 <BaseLayout title={title} description={description} noindex={noindex}>
   <Container>
     <article class="content-page">
-      <PageIntro title={heading ?? title} standfirst={standfirst} />
+      <PageIntro
+        title={heading ?? title}
+        standfirst={standfirst}
+        altName={altName}
+      />
       <div class="prose">
         <slot />
       </div>
