@@ -20,6 +20,7 @@ export interface SharedUi {
   navigation: {
     primaryAriaLabel: string;
     footerAriaLabel: string;
+    languageAriaLabel: string;
     labels: Record<StaticRouteKey, string>;
   };
   footer: {

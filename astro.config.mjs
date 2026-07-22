@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { validateI18nFoundation } from './src/i18n/validate.ts';
+import { publicationOutputGuard } from './src/i18n/output-guard.ts';
 
 // Validate the Version 1.1 localization declarations whenever Astro loads the
 // project. This does not enable i18n routing or create Hindi pages.
@@ -18,7 +19,7 @@ export default defineConfig({
   output: 'static',
   trailingSlash: 'always',
   // No adapter: pure static output. `dist/` is portable to any static host.
-  integrations: [sitemap()],
+  integrations: [sitemap(), publicationOutputGuard()],
   build: {
     // Emit `page/index.html` so trailing-slash URLs resolve cleanly everywhere.
     format: 'directory',

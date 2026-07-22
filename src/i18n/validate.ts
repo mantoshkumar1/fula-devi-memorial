@@ -14,6 +14,8 @@ import {
 } from './routes.ts';
 import { PRIMARY_NAV_ROUTE_KEYS } from '../data/nav.ts';
 import { SHARED_UI_BY_LOCALE } from './ui.ts';
+import { validateConfiguredPublicationReadiness } from './publication-readiness.ts';
+import { validatePhase3Infrastructure } from './validate-phase3.ts';
 
 const PLACEHOLDER = /:([a-z][a-z0-9]*)/g;
 
@@ -59,10 +61,6 @@ function validateNavigation(
 }
 
 function validateSharedUi(): void {
-  if (PUBLISHED_LOCALES.length !== 1 || PUBLISHED_LOCALES[0] !== 'en') {
-    throw new Error('Phase 2 must publish only the English locale');
-  }
-
   for (const locale of PUBLISHED_LOCALES) {
     const ui = SHARED_UI_BY_LOCALE[locale];
     if (ui.locale !== locale) {
@@ -77,6 +75,7 @@ function validateSharedUi(): void {
       ['skipToContent', ui.skipToContent],
       ['navigation.primaryAriaLabel', ui.navigation.primaryAriaLabel],
       ['navigation.footerAriaLabel', ui.navigation.footerAriaLabel],
+      ['navigation.languageAriaLabel', ui.navigation.languageAriaLabel],
       ['footer.registrationNumberLabel', ui.footer.registrationNumberLabel],
       ['breadcrumbs.ariaLabel', ui.breadcrumbs.ariaLabel],
       ['breadcrumbs.homeLabel', ui.breadcrumbs.homeLabel],
@@ -174,4 +173,6 @@ export function validateI18nFoundation(): void {
   }
 
   validateSharedUi();
+  validateConfiguredPublicationReadiness();
+  validatePhase3Infrastructure();
 }

@@ -1,0 +1,98 @@
+---
+/**
+ * Dormant until more than one locale is published and an equivalent route
+ * exists. Future Header integration must place it after the identity and before
+ * primary navigation so its mobile reading order remains natural.
+ */
+import {
+  alternateEquivalentRouteFor,
+  type RouteReference,
+} from '../i18n/equivalent-routes.ts';
+import { buildLanguageSelectorState } from '../i18n/selector.ts';
+import { sharedUiFor } from '../i18n/ui.ts';
+import type { PublishedLocale } from '../i18n/types.ts';
+
+interface Props {
+  locale: PublishedLocale;
+  route: RouteReference;
+  approvedFragments?: readonly string[];
+  preserveQuery?: boolean;
+}
+
+const {
+  locale,
+  route,
+  approvedFragments = [],
+  preserveQuery = true,
+} = Astro.props;
+const ui = sharedUiFor(locale);
+const alternateHref = alternateEquivalentRouteFor(route, locale, {
+  currentUrl: Astro.url,
+  preserveQuery,
+  approvedFragments,
+});
+const state = buildLanguageSelectorState({
+  currentLocale: locale,
+  alternateHref,
+  ariaLabel: ui.navigation.languageAriaLabel,
+});
+---
+
+{
+  state && (
+    <nav class="language-selector" aria-label={state.ariaLabel} data-language-selector>
+      {state.items.map((item, index) => (
+        <Fragment>
+          {index > 0 && <span aria-hidden="true"> | </span>}
+          {item.kind === 'active' ? (
+            <span lang={item.language} aria-current={item.ariaCurrent}>{item.label}</span>
+          ) : (
+            <a
+              href={item.href}
+              hreflang={item.hreflang}
+              lang={item.language}
+              data-language-choice={item.locale}
+            >
+              {item.label}
+            </a>
+          )}
+        </Fragment>
+      ))}
+    </nav>
+  )
+}
+
+<style>
+  .language-selector {
+    display: flex;
+    align-items: center;
+    margin-block: var(--space-2);
+    color: var(--color-ink-soft);
+    font-size: var(--text-sm);
+  }
+
+  .language-selector a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: var(--space-2);
+    color: var(--color-ink-soft);
+  }
+
+  .language-selector a:hover {
+    color: var(--color-brown-strong);
+  }
+
+  @media (min-width: 48rem) {
+    :global(.site-header) {
+      position: relative;
+    }
+
+    .language-selector {
+      position: absolute;
+      inset-block-start: var(--space-4);
+      inset-inline-end: var(--space-4);
+      margin: 0;
+    }
+  }
+</style>

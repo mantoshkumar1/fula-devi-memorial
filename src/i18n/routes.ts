@@ -20,11 +20,16 @@ export const STATIC_ROUTE_KEYS = [
 export type StaticRouteKey = (typeof STATIC_ROUTE_KEYS)[number];
 
 /**
- * Dynamic route families that already produce published English record pages.
- * Update-detail routes are intentionally absent: no English detail route is
- * currently published, so Phase 1 must not plan or expose a Hindi counterpart.
+ * Dynamic route families used for locale equivalence. The record families
+ * already publish in English; update-detail paths are declared for future
+ * equivalence only. No update detail currently builds, and a declaration never
+ * publishes a route.
  */
-export const DYNAMIC_ROUTE_KEYS = ['clothingRecord', 'educationRecord'] as const;
+export const DYNAMIC_ROUTE_KEYS = [
+  'clothingRecord',
+  'educationRecord',
+  'updateDetail',
+] as const;
 
 export type DynamicRouteKey = (typeof DYNAMIC_ROUTE_KEYS)[number];
 export type RouteKey = StaticRouteKey | DynamicRouteKey;
@@ -32,6 +37,7 @@ export type RouteKey = StaticRouteKey | DynamicRouteKey;
 export interface RouteParamsByKey {
   clothingRecord: { year: string };
   educationRecord: { slug: string };
+  updateDetail: { slug: string };
 }
 
 interface StaticRouteDefinition {
@@ -97,6 +103,14 @@ export const ROUTES = {
     paths: {
       en: '/records/education/:slug/',
       hi: '/hi/records/education/:slug/',
+    },
+    params: ['slug'],
+  },
+  updateDetail: {
+    kind: 'dynamic',
+    paths: {
+      en: '/updates/:slug/',
+      hi: '/hi/updates/:slug/',
     },
     params: ['slug'],
   },

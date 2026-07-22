@@ -20,6 +20,7 @@ export const englishUi = {
   navigation: {
     primaryAriaLabel: 'Primary',
     footerAriaLabel: 'Footer',
+    languageAriaLabel: 'Language',
     labels: {
       home: 'Home',
       institution: 'The Institution',
