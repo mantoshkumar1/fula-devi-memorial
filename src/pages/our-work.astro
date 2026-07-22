@@ -85,17 +85,13 @@ const guideTitle = (g: { title: string; scope?: string }) =>
           coverHeight={record.preview.coverHeight}
           yearLabel={record.preview.yearLabel}
           programmeLabel={record.preview.programmeLabel}
+          contextNote={record.preview.contextNote}
           recordSummary={recordSummary(record)}
           action="View programme record →"
         />
       ))
     }
   </div>
-  <p class="historical-note">
-    Seasonal clothing distributions began in 2020, before the institution was
-    formally registered in February 2022. The December 2021 programme shown here
-    was early community work immediately preceding registration.
-  </p>
 
   <h2>Access to Public Healthcare</h2>
   <p class="meta-line">Completed · 2024</p>
@@ -147,10 +143,6 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     )
   }
 
-  <h2>Educational Materials</h2>
-  <p class="meta-line">Completed · 2024</p>
-  <p>Books and study materials were donated to the village school.</p>
-
   <h2>Looking Ahead</h2>
   <p>
     The institution will undertake additional work only when existing
@@ -174,13 +166,6 @@ const guideTitle = (g: { title: string; scope?: string }) =>
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
-  }
-
-  /* The registration history sits after the records, quieter than the copy
-     above it: context, not the headline. */
-  .historical-note {
-    font-size: var(--text-sm);
-    color: var(--color-ink-soft);
   }
 
   /* The previews and resource cards are whole-card links; the prose

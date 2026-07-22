@@ -14,7 +14,9 @@ interface Props {
   coverHeight: number;
   yearLabel: string;
   programmeLabel: string;
-  /** Optional third line (e.g. a photograph count). Omitted when absent. */
+  /** Optional one-line context note, shown under the label when present. */
+  contextNote?: string;
+  /** Optional line (e.g. a photograph count). Omitted when absent. */
   recordSummary?: string;
   action: string;
   /** How the cover is framed in the panel: 'center' (default) or 'top'. */
@@ -29,6 +31,7 @@ const {
   coverHeight,
   yearLabel,
   programmeLabel,
+  contextNote,
   recordSummary,
   action,
   coverPosition = 'center',
@@ -50,6 +53,7 @@ const {
   <span class="record-row__body">
     <span class="record-row__year">{yearLabel}</span>
     <span class="record-row__label">{programmeLabel}</span>
+    {contextNote && <span class="record-row__note">{contextNote}</span>}
     {recordSummary && <span class="record-row__summary">{recordSummary}</span>}
     <span class="record-row__action">{action}</span>
   </span>
@@ -101,6 +105,11 @@ const {
 
   .record-row__label {
     color: var(--color-ink);
+  }
+
+  .record-row__note {
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
   }
 
   .record-row__summary {

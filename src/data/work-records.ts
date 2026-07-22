@@ -89,6 +89,12 @@ export interface ClothingRecord {
     yearLabel: string;
     /** e.g. "Community work before formal registration". */
     programmeLabel: string;
+    /**
+     * An optional one-line note shown on the preview, for a record that needs a
+     * word of context. Used only where relevant (e.g. the pre-registration
+     * chronology on the December 2021 record); omitted otherwise.
+     */
+    contextNote?: string;
     /** Display-only cover derivative used only for the main-page preview. */
     cover: string;
     coverAlt: string;
@@ -174,6 +180,8 @@ export const workRecords: WorkRecord[] = [
     preview: {
       yearLabel: 'December 2021',
       programmeLabel: 'Community work before formal registration',
+      contextNote:
+        'This programme took place shortly before the institution was formally registered in February 2022.',
       cover: '/records/clothing/2021/cover.jpg',
       coverAlt:
         'Villagers gathered on chairs in a tree-shaded courtyard at the December 2021 clothing distribution.',
